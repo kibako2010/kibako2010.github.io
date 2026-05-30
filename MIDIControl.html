@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIDI Controller Settings</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      color: #a78bfa;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+
+    .status-bar {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ef4444;
+      transition: background 0.3s;
+    }
+    .status-dot.connected { background: #22c55e; }
+
+    #status-text { font-size: 0.9rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .card h2 {
+      font-size: 0.95rem;
+      color: #a78bfa;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #0f3460;
+      padding-bottom: 6px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+
+    select, input[type="number"], input[type="range"] {
+      width: 100%;
+      background: #0f3460;
+      border: 1px solid #1e40af;
+      border-radius: 6px;
+      color: #e0e0e0;
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    select:focus, input[type="number"]:focus {
+      border-color: #a78bfa;
+    }
+
+    input[type="range"] {
+      padding: 4px 0;
+      cursor: pointer;
+      accent-color: #a78bfa;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .range-row input[type="range"] { flex: 1; }
+    .range-val {
+      min-width: 36px;
+      text-align: right;
+      font-size: 0.85rem;
+      color: #a78bfa;
+      font-weight: bold;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 9px 18px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: bold;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary { background: #7c3aed; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #6d28d9; }
+    .btn-danger  { background: #b91c1c; color: #fff; }
+    .btn-danger:hover:not(:disabled)  { background: #991b1b; }
+    .btn-success { background: #15803d; color: #fff; }
+    .btn-success:hover:not(:disabled) { background: #166534; }
+    .btn-gray    { background: #374151; color: #e0e0e0; }
+    .btn-gray:hover:not(:disabled)    { background: #4b5563; }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    /* Monitor */
+    #monitor {
+      background: #0a0a1a;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      height: 180px;
+      overflow-y: auto;
+      margin-top: 6px;
+      color: #4ade80;
+    }
+
+    #monitor .msg-in  { color: #4ade80; }
+    #monitor .msg-out { color: #60a5fa; }
+    #monitor .msg-sys { color: #fbbf24; }
+
+    /* Channel mapping table */
+    #mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+    #mapping-table th {
+      background: #0f3460;
+      padding: 6px 8px;
+      text-align: left;
+      color: #a78bfa;
+    }
+    #mapping-table td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #1e293b;
+    }
+    #mapping-table input, #mapping-table select {
+      padding: 3px 6px;
+      font-size: 0.78rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      background: #1e3a5f;
+      color: #93c5fd;
+      margin-left: 6px;
+    }
+
+    /* MIDI visualizer */
+    .viz-bar-wrap {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      height: 60px;
+      align-items: flex-end;
+    }
+    .viz-bar {
+      background: #1e3a5f;
+      border-radius: 3px 3px 0 0;
+      transition: height 0.08s, background 0.08s;
+      height: 2px;
+    }
+
+    .full-card {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .full-card h2 {
+      font-size: 0.95rem;
+      color: #a78bfa;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #0f3460;
+      padding-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎛️ MIDI Controller Settings</h1>
+
+<!-- ステータスバー -->
+<div class="status-bar">
+  <div class="status-dot" id="status-dot"></div>
+  <span id="status-text">Web MIDI API に接続中...</span>
+</div>
+
+<!-- デバイス選択 & 基本設定 -->
+<div class="grid">
+  <div class="card">
+    <h2>デバイス</h2>
+
+    <label>MIDIデバイス（入力）</label>
+    <select id="input-select"><option value="">-- 接続を待機中 --</option></select>
+
+    <label>MIDIデバイス（出力）</label>
+    <select id="output-select"><option value="">-- 接続を待機中 --</option></select>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-refresh">🔄 再スキャン</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>グローバル設定</h2>
+
+    <label>送信チャンネル (1–16)</label>
+    <input type="number" id="global-ch" min="1" max="16" value="1">
+
+    <label>トランスポーズ (半音) <span class="tag" id="transpose-tag">0</span></label>
+    <div class="range-row">
+      <input type="range" id="transpose" min="-24" max="24" value="0">
+      <span class="range-val" id="transpose-val">0</span>
+    </div>
+
+    <label>ベロシティスケール <span class="tag" id="vel-tag">100%</span></label>
+    <div class="range-row">
+      <input type="range" id="vel-scale" min="1" max="200" value="100">
+      <span class="range-val" id="vel-val">100%</span>
+    </div>
+  </div>
+</div>
+
+<!-- SysEx / パラメータ送信 -->
+<div class="grid">
+  <div class="card">
+    <h2>コントロールチェンジ (CC) 送信</h2>
+
+    <label>CC番号 (0–127)</label>
+    <input type="number" id="cc-num" min="0" max="127" value="7">
+
+    <label>CC値 (0–127)</label>
+    <div class="range-row">
+      <input type="range" id="cc-val-slider" min="0" max="127" value="64">
+      <span class="range-val" id="cc-val-disp">64</span>
+    </div>
+
+    <label>チャンネル (1–16)</label>
+    <input type="number" id="cc-ch" min="1" max="16" value="1">
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-send-cc" disabled>▶ CC送信</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Program Change 送信</h2>
+
+    <label>プログラム番号 (0–127)</label>
+    <input type="number" id="pc-num" min="0" max="127" value="0">
+
+    <label>チャンネル (1–16)</label>
+    <input type="number" id="pc-ch" min="1" max="16" value="1">
+
+    <div class="btn-row">
+      <button class="btn btn-success" id="btn-send-pc" disabled>▶ PC送信</button>
+    </div>
+
+    <h2 style="margin-top:18px;">SysEx 送信</h2>
+    <label>16進数バイト列（スペース区切り）</label>
+    <input type="text" id="sysex-input" placeholder="F0 41 10 42 12 40 00 7F 00 41 F7"
+      style="width:100%;background:#0f3460;border:1px solid #1e40af;border-radius:6px;
+             color:#e0e0e0;padding:7px 10px;font-size:0.82rem;font-family:monospace;outline:none;">
+
+    <div class="btn-row">
+      <button class="btn btn-danger" id="btn-send-sysex" disabled>▶ SysEx送信</button>
+    </div>
+  </div>
+</div>
+
+<!-- CCマッピング -->
+<div class="full-card">
+  <h2>CCチャンネルマッピング（受信リマップ）</h2>
+  <table id="mapping-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>受信CC</th>
+        <th>送信CC</th>
+        <th>チャンネル変換</th>
+        <th>スケール (0–200%)</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody id="mapping-body"></tbody>
+  </table>
+  <div class="btn-row">
+    <button class="btn btn-gray" id="btn-add-map">＋ マッピング追加</button>
+  </div>
+</div>
+
+<!-- リアルタイムビジュアライザ -->
+<div class="full-card">
+  <h2>リアルタイム CC ビジュアライザ（最近8ch）</h2>
+  <div class="viz-bar-wrap" id="viz-bars"></div>
+  <div id="viz-labels" style="display:grid;grid-template-columns:repeat(8,1fr);gap:4px;
+       margin-top:4px;font-size:0.68rem;color:#64748b;text-align:center;"></div>
+</div>
+
+<!-- モニター -->
+<div class="full-card">
+  <h2>MIDIモニター</h2>
+  <div id="monitor"></div>
+  <div class="btn-row">
+    <button class="btn btn-gray" id="btn-clear-log">🗑 クリア</button>
+    <button class="btn btn-gray" id="btn-toggle-monitor">⏸ 一時停止</button>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+//  状態管理
+// ─────────────────────────────────────────
+let midiAccess = null;
+let selectedInput  = null;
+let selectedOutput = null;
+let monitorPaused  = false;
+let mappingRows    = [];
+let mapCount       = 0;
+
+// ビジュアライザ
+const VIZ_CH = 8;
+const vizData = Array(VIZ_CH).fill({ cc: '--', val: 0 }).map(x => ({ ...x }));
+const vizBarEls   = [];
+const vizLabelEls = [];
+
+// ─────────────────────────────────────────
+//  DOM refs
+// ─────────────────────────────────────────
+const $  = id => document.getElementById(id);
+const statusDot  = $('status-dot');
+const statusText = $('status-text');
+const inputSel   = $('input-select');
+const outputSel  = $('output-select');
+const monitorEl  = $('monitor');
+const vizBarsEl  = $('viz-bars');
+const vizLabels  = $('viz-labels');
+
+// ─────────────────────────────────────────
+//  ビジュアライザ初期化
+// ─────────────────────────────────────────
+for (let i = 0; i < VIZ_CH; i++) {
+  const bar = document.createElement('div');
+  bar.className = 'viz-bar';
+  vizBarsEl.appendChild(bar);
+  vizBarEls.push(bar);
+
+  const lbl = document.createElement('div');
+  lbl.textContent = '--';
+  vizLabels.appendChild(lbl);
+  vizLabelEls.push(lbl);
+}
+
+// ─────────────────────────────────────────
+//  ログ
+// ─────────────────────────────────────────
+function log(msg, type = 'sys') {
+  if (monitorPaused) return;
+  const d = new Date();
+  const ts = `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}.${d.getMilliseconds().toString().padStart(3,'0')}`;
+  const line = document.createElement('div');
+  line.className = `msg-${type}`;
+  line.textContent = `[${ts}] ${msg}`;
+  monitorEl.appendChild(line);
+  // 最大500行
+  while (monitorEl.children.length > 500) monitorEl.removeChild(monitorEl.firstChild);
+  monitorEl.scrollTop = monitorEl.scrollHeight;
+}
+
+// ─────────────────────────────────────────
+//  Web MIDI 初期化
+// ─────────────────────────────────────────
+async function initMIDI() {
+  try {
+    midiAccess = await navigator.requestMIDIAccess({ sysex: true });
+    setStatus(true, 'Web MIDI API 接続済み');
+    populateDevices();
+    midiAccess.onstatechange = e => {
+      log(`デバイス変化: ${e.port.name} (${e.port.state})`, 'sys');
+      populateDevices();
+    };
+  } catch (e) {
+    setStatus(false, `MIDI接続失敗: ${e.message}`);
+    log(`エラー: ${e.message}`, 'sys');
+  }
+}
+
+function setStatus(ok, msg) {
+  statusDot.className = 'status-dot' + (ok ? ' connected' : '');
+  statusText.textContent = msg;
+}
+
+// ─────────────────────────────────────────
+//  デバイス列挙
+// ─────────────────────────────────────────
+function populateDevices() {
+  const prevIn  = inputSel.value;
+  const prevOut = outputSel.value;
+
+  inputSel.innerHTML  = '<option value="">-- 入力を選択 --</option>';
+  outputSel.innerHTML = '<option value="">-- 出力を選択 --</option>';
+
+  for (const [id, port] of midiAccess.inputs) {
+    const opt = new Option(`${port.name} (${port.manufacturer || 'N/A'})`, id);
+    inputSel.appendChild(opt);
+  }
+  for (const [id, port] of midiAccess.outputs) {
+    const opt = new Option(`${port.name} (${port.manufacturer || 'N/A'})`, id);
+    outputSel.appendChild(opt);
+  }
+
+  if (prevIn)  inputSel.value  = prevIn;
+  if (prevOut) outputSel.value = prevOut;
+
+  onInputChange();
+  onOutputChange();
+}
+
+// ─────────────────────────────────────────
+//  入出力選択
+// ─────────────────────────────────────────
+function onInputChange() {
+  if (selectedInput) selectedInput.onmidimessage = null;
+  const id = inputSel.value;
+  selectedInput = id ? midiAccess.inputs.get(id) : null;
+  if (selectedInput) {
+    selectedInput.onmidimessage = onMIDIMessage;
+    log(`入力デバイス選択: ${selectedInput.name}`, 'sys');
+  }
+}
+
+function onOutputChange() {
+  selectedOutput = outputSel.value ? midiAccess.outputs.get(outputSel.value) : null;
+  const hasOut = !!selectedOutput;
+  $('btn-send-cc').disabled    = !hasOut;
+  $('btn-send-pc').disabled    = !hasOut;
+  $('btn-send-sysex').disabled = !hasOut;
+  if (selectedOutput) log(`出力デバイス選択: ${selectedOutput.name}`, 'sys');
+}
+
+// ─────────────────────────────────────────
+//  MIDIメッセージ受信
+// ─────────────────────────────────────────
+function onMIDIMessage(event) {
+  const [status, data1, data2] = event.data;
+  const type    = status & 0xF0;
+  const channel = (status & 0x0F) + 1;
+
+  const labels = {
+    0x80: 'Note Off', 0x90: 'Note On', 0xA0: 'Aftertouch',
+    0xB0: 'CC', 0xC0: 'Program Change', 0xD0: 'Channel Pressure',
+    0xE0: 'Pitch Bend', 0xF0: 'SysEx'
+  };
+  const typeName = labels[type] || `0x${type.toString(16).toUpperCase()}`;
+
+  let logMsg = `IN  [Ch${channel}] ${typeName}`;
+  if (type === 0xB0) logMsg += ` CC${data1}=${data2}`;
+  else if (type === 0x90 || type === 0x80) logMsg += ` Note${data1} Vel${data2 || 0}`;
+  else if (data1 !== undefined) logMsg += ` ${data1}${data2 !== undefined ? ` ${data2}` : ''}`;
+  log(logMsg, 'in');
+
+  // CCビジュアライザ更新
+  if (type === 0xB0) updateViz(data1, data2);
+
+  // CCリマッピング
+  if (type === 0xB0 && selectedOutput) {
+    for (const row of mappingRows) {
+      const fromCC  = parseInt(row.fromCC.value);
+      const toCC    = parseInt(row.toCC.value);
+      const fromCh  = parseInt(row.fromCh.value);
+      const toCh    = parseInt(row.toCh.value);
+      const scale   = parseInt(row.scale.value) / 100;
+
+      if (data1 === fromCC && channel === fromCh) {
+        const newVal = Math.min(127, Math.round(data2 * scale));
+        const outStatus = 0xB0 | (toCh - 1);
+        selectedOutput.send([outStatus, toCC, newVal]);
+        log(`MAP CC${fromCC}→CC${toCC} Ch${fromCh}→Ch${toCh} val${data2}→${newVal}`, 'out');
+      }
+    }
+  }
+
+  // ノートのトランスポーズ＆ベロシティスケール
+  if ((type === 0x90 || type === 0x80) && selectedOutput) {
+    const transpose  = parseInt($('transpose').value);
+    const velScale   = parseInt($('vel-scale').value) / 100;
+    const globalCh   = parseInt($('global-ch').value) - 1;
+    const newNote    = Math.max(0, Math.min(127, data1 + transpose));
+    const newVel     = Math.min(127, Math.round(data2 * velScale));
+    selectedOutput.send([0x90 | globalCh, newNote, type === 0x80 ? 0 : newVel]);
+    log(`OUT [Ch${globalCh+1}] ${type===0x90?'Note On':'Note Off'} Note${newNote} Vel${newVel}`, 'out');
+  }
+}
+
+// ─────────────────────────────────────────
+//  CCビジュアライザ
+// ─────────────────────────────────────────
+const vizQueue = {}; // cc → val の最新マップ（最近8CC）
+const vizOrder = []; // 表示順
+
+function updateViz(cc, val) {
+  if (!vizQueue.hasOwnProperty(cc)) {
+    if (vizOrder.length >= VIZ_CH) vizOrder.shift();
+    vizOrder.push(cc);
+  }
+  vizQueue[cc] = val;
+
+  for (let i = 0; i < VIZ_CH; i++) {
+    const c = vizOrder[i];
+    if (c === undefined) {
+      vizBarEls[i].style.height = '2px';
+      vizBarEls[i].style.background = '#1e3a5f';
+      vizLabelEls[i].textContent = '--';
+    } else {
+      const v = vizQueue[c];
+      const pct = (v / 127) * 100;
+      vizBarEls[i].style.height = `${Math.max(2, pct)}%`;
+      const hue = Math.round(200 + pct * 1.4);
+      vizBarEls[i].style.background = `hsl(${hue},80%,55%)`;
+      vizLabelEls[i].textContent = `CC${c}:${v}`;
+    }
+  }
+}
+
+// ─────────────────────────────────────────
+//  CC送信
+// ─────────────────────────────────────────
+$('btn-send-cc').addEventListener('click', () => {
+  if (!selectedOutput) return;
+  const ch  = parseInt($('cc-ch').value) - 1;
+  const num = parseInt($('cc-num').value);
+  const val = parseInt($('cc-val-slider').value);
+  selectedOutput.send([0xB0 | ch, num, val]);
+  log(`OUT [Ch${ch+1}] CC CC${num}=${val}`, 'out');
+});
+
+// ─────────────────────────────────────────
+//  PC送信
+// ─────────────────────────────────────────
+$('btn-send-pc').addEventListener('click', () => {
+  if (!selectedOutput) return;
+  const ch  = parseInt($('pc-ch').value) - 1;
+  const num = parseInt($('pc-num').value);
+  selectedOutput.send([0xC0 | ch, num]);
+  log(`OUT [Ch${ch+1}] Program Change ${num}`, 'out');
+});
+
+// ─────────────────────────────────────────
+//  SysEx送信
+// ─────────────────────────────────────────
+$('btn-send-sysex').addEventListener('click', () => {
+  if (!selectedOutput) return;
+  const raw = $('sysex-input').value.trim();
+  const bytes = raw.split(/\s+/).map(h => parseInt(h, 16)).filter(n => !isNaN(n));
+  if (!bytes.length || bytes[0] !== 0xF0 || bytes[bytes.length-1] !== 0xF7) {
+    alert('SysExはF0で始まりF7で終わる必要があります');
+    return;
+  }
+  selectedOutput.send(bytes);
+  log(`OUT SysEx [${bytes.map(b=>b.toString(16).toUpperCase().padStart(2,'0')).join(' ')}]`, 'out');
+});
+
+// ─────────────────────────────────────────
+//  CCマッピング行追加
+// ─────────────────────────────────────────
+$('btn-add-map').addEventListener('click', addMappingRow);
+
+function addMappingRow() {
+  const idx = ++mapCount;
+  const row = document.createElement('tr');
+
+  function mk(type, min, max, val, width='60px') {
+    const el = document.createElement('input');
+    el.type = type; el.min = min; el.max = max; el.value = val;
+    el.style.width = width;
+    return el;
+  }
+
+  const fromCC = mk('number', 0, 127, 0);
+  const toCC   = mk('number', 0, 127, 0);
+  const fromCh = mk('number', 1,  16, 1);
+  const toCh   = mk('number', 1,  16, 1);
+  const scale  = mk('number', 0, 200, 100, '70px');
+
+  const delBtn = document.createElement('button');
+  delBtn.className = 'btn btn-danger';
+  delBtn.style.padding = '3px 10px';
+  delBtn.textContent = '削除';
+  delBtn.onclick = () => {
+    row.remove();
+    mappingRows = mappingRows.filter(r => r !== rowData);
+  };
+
+  row.innerHTML = `<td>${idx}</td>`;
+  [fromCC, toCC, fromCh, toCh, scale].forEach((el, i) => {
+    const td = document.createElement('td');
+    if (i === 3) { // chの列にラベル付き
+      const wrap = document.createElement('span');
+      wrap.appendChild(fromCh); // ← ここは i===2 のとき
+    }
+    td.appendChild(el);
+    row.appendChild(td);
+  });
+  const tdDel = document.createElement('td');
+  tdDel.appendChild(delBtn);
+  row.appendChild(tdDel);
+
+  $('mapping-body').appendChild(row);
+  const rowData = { fromCC, toCC, fromCh, toCh, scale };
+  mappingRows.push(rowData);
+}
+
+// ─────────────────────────────────────────
+//  スライダー連動
+// ─────────────────────────────────────────
+function bindRange(sliderId, displayId, suffix='') {
+  const sl = $(sliderId), dsp = $(displayId);
+  sl.addEventListener('input', () => { dsp.textContent = sl.value + suffix; });
+}
+bindRange('transpose',    'transpose-val');
+bindRange('vel-scale',    'vel-val', '%');
+bindRange('cc-val-slider','cc-val-disp');
+
+$('transpose').addEventListener('input', () => {
+  $('transpose-tag').textContent = $('transpose').value;
+});
+$('vel-scale').addEventListener('input', () => {
+  $('vel-tag').textContent = $('vel-scale').value + '%';
+});
+
+// ─────────────────────────────────────────
+//  その他ボタン
+// ─────────────────────────────────────────
+$('btn-refresh').addEventListener('click', () => {
+  if (midiAccess) populateDevices();
+  else initMIDI();
+});
+
+$('btn-clear-log').addEventListener('click', () => { monitorEl.innerHTML = ''; });
+
+$('btn-toggle-monitor').addEventListener('click', () => {
+  monitorPaused = !monitorPaused;
+  $('btn-toggle-monitor').textContent = monitorPaused ? '▶ 再開' : '⏸ 一時停止';
+});
+
+inputSel.addEventListener('change',  onInputChange);
+outputSel.addEventListener('change', onOutputChange);
+
+// ─────────────────────────────────────────
+//  起動
+// ─────────────────────────────────────────
+if (navigator.requestMIDIAccess) {
+  initMIDI();
+} else {
+  setStatus(false, 'このブラウザはWeb MIDI APIに対応していません（Chrome推奨）');
+  log('Web MIDI API 非対応ブラウザです', 'sys');
+}
+</script>
+</body>
+</html>
