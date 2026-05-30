@@ -57,9 +57,9 @@ header{display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(
 .bd{background:rgba(233,69,96,.13);color:var(--accent);border:1.5px solid rgba(233,69,96,.28)}.bd:hover{background:rgba(233,69,96,.26)}
 .bw{background:rgba(79,195,247,.09);color:var(--accent2);border:1.5px solid rgba(79,195,247,.22)}.bw:hover{background:rgba(79,195,247,.2)}
 .bw.rand-on{background:rgba(79,195,247,.32);border-color:var(--accent2);color:#fff}
+.bg{background:rgba(76,175,130,.13);color:var(--ok);border:1.5px solid rgba(76,175,130,.28)}.bg:hover{background:rgba(76,175,130,.26)}.bg:disabled{opacity:.35;cursor:not-allowed}
 .sb{font-size:11px;padding:6px 10px;border-radius:8px;margin-top:6px;background:rgba(255,255,255,.04);min-height:30px;line-height:1.6;word-break:break-all;white-space:pre-wrap}
 .sb.ok{color:var(--ok)}.sb.warn{color:var(--warn)}.sb.err{color:var(--accent)}
-/* 診断ボックス */
 .diag-box{margin-top:8px;padding:10px 12px;border-radius:10px;border:1.5px solid rgba(233,69,96,.4);background:rgba(233,69,96,.07);font-size:11px;line-height:1.7;color:var(--text);display:none}
 .diag-box.show{display:block}
 .diag-box .diag-title{font-weight:700;color:var(--accent);margin-bottom:4px;font-size:12px}
@@ -96,6 +96,11 @@ header{display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(
 .pm-cr input[type=range]{flex:1;accent-color:var(--accent2);cursor:pointer;min-width:0}
 .pm-cr input[type=number]{width:50px;background:#1a1a3a;color:var(--text);border:1px solid var(--border);border-radius:5px;padding:2px 3px;font-size:10px;text-align:right;-moz-appearance:textfield}
 .pm-cr input[type=number]::-webkit-inner-spin-button,.pm-cr input[type=number]::-webkit-outer-spin-button{opacity:.5}
+/* 進捗バー（書き出し用） */
+#exp-prog-wrap{margin-top:6px;display:none}
+#exp-prog-bg{background:rgba(255,255,255,.07);border-radius:5px;height:7px;overflow:hidden}
+#exp-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;border-radius:5px;transition:width .12s}
+#exp-prog-label{font-size:10px;color:var(--dim);margin-top:3px;font-variant-numeric:tabular-nums}
 #cw{flex:1;position:relative;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
 canvas{display:block;max-width:100%;max-height:100%}
 #hud{position:absolute;top:11px;left:14px;font-size:11px;color:rgba(255,255,255,.5);line-height:1.8;pointer-events:none;font-variant-numeric:tabular-nums;text-shadow:0 1px 4px rgba(0,0,0,.9);transition:opacity .35s;opacity:0}
@@ -148,7 +153,13 @@ canvas{display:block;max-width:100%;max-height:100%}
       </div>
     </div>
     <div class="sec">
-      <h3>録画</h3>
+      <h3>書き出し</h3>
+      <div class="cr"><label>FPS</label>
+        <select id="ctl-fps">
+          <option value="60" selected>60 fps</option>
+          <option value="30">30 fps</option>
+        </select>
+      </div>
       <div class="cr"><label>品質</label>
         <select id="ctl-quality">
           <option value="8000000">高画質 8Mbps</option>
@@ -156,8 +167,20 @@ canvas{display:block;max-width:100%;max-height:100%}
           <option value="2000000">軽量 2Mbps</option>
         </select>
       </div>
-      <button class="btn bp" id="btn-rs" disabled>⏺ 録画開始</button>
-      <button class="btn bd" id="btn-rstop" style="display:none">⏹ 停止・保存</button>
+      <!-- 高速書き出しボタン -->
+      <button class="btn bg" id="btn-fast" disabled>⚡ 高速書き出し (MP4)</button>
+      <button class="btn bd" id="btn-fast-cancel" style="display:none">✕ キャンセル</button>
+      <!-- 進捗 -->
+      <div id="exp-prog-wrap">
+        <div id="exp-prog-bg"><div id="exp-prog-fill"></div></div>
+        <div id="exp-prog-label">0%</div>
+      </div>
+      <!-- リアルタイム録画（フォールバック） -->
+      <div style="margin-top:10px">
+        <div class="divider">リアルタイム録画（フォールバック）</div>
+        <button class="btn bp" id="btn-rs" disabled>⏺ 録画開始</button>
+        <button class="btn bd" id="btn-rstop" style="display:none">⏹ 停止・保存</button>
+      </div>
       <div class="sb ok" id="st-rec">ファイルを読み込んでください</div>
     </div>
   </div>
@@ -166,27 +189,21 @@ canvas{display:block;max-width:100%;max-height:100%}
   <div id="s-mic" style="display:none">
     <div class="sec">
       <h3>🎤 入力デバイス</h3>
-
-      <!-- 環境診断ボックス（問題がある場合のみ表示） -->
       <div class="diag-box" id="diag-box">
         <div class="diag-title" id="diag-title">⚠ マイクが使用できません</div>
         <div id="diag-body"></div>
       </div>
-
       <button class="btn bs" id="btn-scan" style="margin-top:8px">🔍 デバイスをスキャン</button>
-
       <div class="cr" style="margin-top:8px">
         <label>マスター</label>
         <input type="range" id="mic-master" min="0" max="3" step="0.01" value="1">
         <span class="v" id="v-mmaster">1.00</span>
       </div>
-
       <div id="mic-list" class="mic-list">
         <div class="sb" style="margin-top:0;color:var(--dim);font-size:11px">
           「デバイスをスキャン」を押してください
         </div>
       </div>
-
       <div style="display:flex;gap:5px;margin-top:8px">
         <button class="btn bp" id="btn-ms" style="flex:1;margin-top:0" disabled>▶ 選択デバイスで開始</button>
         <button class="btn bd" id="btn-mstop" style="flex:0 0 auto;width:auto;padding:7px 13px;margin-top:0;display:none">⏹</button>
@@ -218,7 +235,6 @@ canvas{display:block;max-width:100%;max-height:100%}
         <option value="4:3">4:3</option><option value="3:4">3:4</option><option value="1:1">1:1</option>
       </select>
     </div>
-    <!-- HUD デフォルト OFF -->
     <div class="ck"><input type="checkbox" id="chk-hud"><span>HUD 表示</span></div>
   </div>
   <div class="sec">
@@ -317,135 +333,68 @@ class Bars{constructor(W,H){this.W=W;this.H=H;}draw(ctx,fft,S,gH){const n=fft.le
 /* ── Engine ── */
 class Engine{constructor(cv){this.cv=cv;this.ctx=cv.getContext('2d',{alpha:false,desynchronized:true});this.W=cv.width;this.H=cv.height;this.blobs=[];this.waves=[];this.particles=[];this.radial=this.tunnel=this.bars=null;this.T=0;this.hs=0;this.fft=new Uint8Array(128).fill(0);this.bass=this.mid=this.high=this.energy=0;this.beat=false;this.S={sens:2,trail:.18,bn:16,wn:6,pn:120,sat:.8,bri:.85,cmode:'rainbow',h1:0,h2:.5,hspd:.018,showBlobs:true,showWaves:true,showParticles:true,showRadial:true,showBars:true,showTunnel:true};this._raf=null;this._rebuild();}resize(W,H){this.W=W;this.H=H;this.cv.width=W;this.cv.height=H;this._rebuild();}_rebuild(){const{bn,wn,pn}=this.S;this.blobs=Array.from({length:bn},(_,i)=>new Blob(this.W,this.H,i,bn));this.waves=Array.from({length:wn},(_,i)=>new Wave(this.W,this.H,i,wn));this.particles=Array.from({length:pn},(_,i)=>new Particle(this.W,this.H,i,pn));this.radial=new Radial(this.W,this.H);this.tunnel=new Tunnel(this.W,this.H);this.bars=new Bars(this.W,this.H);}set(s){const p={...this.S};Object.assign(this.S,s);if(s.bn!==p.bn||s.wn!==p.wn||s.pn!==p.pn)this._rebuild();}start(){if(this._raf)return;this._last=performance.now();const loop=now=>{this._raf=requestAnimationFrame(loop);const dt=Math.min((now-this._last)/1000,.05);this._last=now;this._frame(dt);};this._raf=requestAnimationFrame(loop);}stop(){if(this._raf){cancelAnimationFrame(this._raf);this._raf=null;}}_frame(dt){this.T+=dt;this.hs=(this.hs+this.S.hspd*dt*60)%1;const S=this.S,{bass,mid,high,energy,beat,fft}=this;if(S.showBlobs)this.blobs.forEach(b=>b.update(dt,bass,mid,high,beat,S,this.T));if(S.showWaves)this.waves.forEach(w=>w.update(dt,bass,mid,beat,S,this.T));if(S.showParticles)this.particles.forEach(p=>p.update(dt,energy,beat,S,this.T));if(S.showRadial)this.radial.update(dt,beat);if(S.showTunnel)this.tunnel.update(dt,energy,beat,S);this._draw();}_draw(){const ctx=this.ctx,S=this.S,{fft,energy,beat}=this,W=this.W,H=this.H;ctx.globalAlpha=S.trail;ctx.fillStyle=`hsl(${this.hs*360|0},50%,4%)`;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;{const br=energy*S.sens,g=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.62);g.addColorStop(0,hsvStr(this.hs,resolveSat(S)*.55,.06+br*.07,1));g.addColorStop(1,hsvStr(this.hs+.33,resolveSat(S)*.75,.02,1));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}if(S.showTunnel)this.tunnel.draw(ctx,fft,energy,S,this.hs,this.T);if(S.showWaves)this.waves.forEach(w=>w.draw(ctx,fft,S,this.hs,this.T));if(S.showBlobs){ctx.globalCompositeOperation='screen';this.blobs.forEach(b=>b.draw(ctx,S,this.hs,this.T));ctx.globalCompositeOperation='source-over';}if(S.showRadial)this.radial.draw(ctx,fft,energy,beat,S,this.hs,this.T);if(S.showParticles){ctx.globalCompositeOperation='lighter';this.particles.forEach(p=>p.draw(ctx,S,this.hs,this.T));ctx.globalCompositeOperation='source-over';}if(S.showBars)this.bars.draw(ctx,fft,S,this.hs);}}
 
-/* ================================================================
-   環境診断
-   ブラウザ / オリジン / 権限の状態を調べて診断結果を返す
-================================================================ */
+/* ── 環境診断 ── */
 async function diagnoseEnv(){
   const result={
-    isSecure: window.isSecureContext,
-    protocol: location.protocol,
-    isFile:   location.protocol === 'file:',
-    isLocalhost: ['localhost','127.0.0.1','[::1]'].includes(location.hostname),
-    hasMediaDevices: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-    permState: 'unknown', // 'granted' | 'denied' | 'prompt' | 'unknown'
+    isSecure:window.isSecureContext,
+    protocol:location.protocol,
+    isFile:location.protocol==='file:',
+    isLocalhost:['localhost','127.0.0.1','[::1]'].includes(location.hostname),
+    hasMediaDevices:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
+    permState:'unknown',
   };
-
-  // Permissions API で状態を確認
   if(navigator.permissions){
-    try{
-      const ps = await navigator.permissions.query({name:'microphone'});
-      result.permState = ps.state; // 'granted' | 'denied' | 'prompt'
-    }catch(_){ result.permState = 'unknown'; }
+    try{const ps=await navigator.permissions.query({name:'microphone'});result.permState=ps.state;}catch(_){}
   }
-
   return result;
 }
 
-/* ================================================================
-   DeviceScanner
-   getUserMedia ストリームを「保持したまま」enumerate し、
-   enumerate 完了後に close する
-================================================================ */
+/* ── DeviceScanner ── */
 class DeviceScanner{
-  constructor(){ this._devices=[]; this._permOk=false; }
-  get devices(){ return this._devices; }
-  get permOk(){ return this._permOk; }
-
+  constructor(){this._devices=[];this._permOk=false;}
+  get devices(){return this._devices;}
+  get permOk(){return this._permOk;}
   async scan(){
-    // ─── 許可取得（制約を最小にして成功率を上げる）───
     let permStream=null;
     const attempts=[
-      {audio:true,              video:false},
-      {audio:{echoCancellation:true},  video:false},
-      {audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}, video:false},
+      {audio:true,video:false},
+      {audio:{echoCancellation:true},video:false},
+      {audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},
     ];
     let lastErr=null;
-    for(const c of attempts){
-      try{ permStream=await navigator.mediaDevices.getUserMedia(c); break; }
-      catch(e){ lastErr=e; }
-    }
-    if(!permStream) throw lastErr||new Error('マイクの許可が得られませんでした');
+    for(const c of attempts){try{permStream=await navigator.mediaDevices.getUserMedia(c);break;}catch(e){lastErr=e;}}
+    if(!permStream)throw lastErr||new Error('マイクの許可が得られませんでした');
     this._permOk=true;
-
-    // ─── ストリームを保持したまま列挙 ───
-    // Chrome は activeなストリームがある間だけラベルを返す
     let raw=[];
-    try{ raw=await navigator.mediaDevices.enumerateDevices(); }
-    finally{
-      // 列挙完了後に必ず close
-      permStream.getTracks().forEach(t=>t.stop());
-    }
-
+    try{raw=await navigator.mediaDevices.enumerateDevices();}
+    finally{permStream.getTracks().forEach(t=>t.stop());}
     return this._buildList(raw);
   }
-
-  /** デバイス変更通知後の再列挙（権限は既取得済み前提） */
-  async refresh(){
-    const raw=await navigator.mediaDevices.enumerateDevices();
-    return this._buildList(raw, true);
-  }
-
-  _buildList(raw, preserveLabels=false){
-    const VIRT=['virtual','cable','vb-audio','vb audio','voicemeeter',
-      'blackhole','soundflower','loop','pipe','stereo mix',
-      'what u hear','wave out mix'];
-    const isVirt=l=>{ const ll=(l||'').toLowerCase(); return VIRT.some(k=>ll.includes(k)); };
-
+  async refresh(){const raw=await navigator.mediaDevices.enumerateDevices();return this._buildList(raw,true);}
+  _buildList(raw,preserveLabels=false){
+    const VIRT=['virtual','cable','vb-audio','vb audio','voicemeeter','blackhole','soundflower','loop','pipe','stereo mix','what u hear','wave out mix'];
+    const isVirt=l=>{const ll=(l||'').toLowerCase();return VIRT.some(k=>ll.includes(k));};
     const prevMap=new Map(this._devices.map(d=>[d.deviceId,d]));
     const seen=new Set();
     const inputs=raw.filter(d=>d.kind==='audioinput');
-
-    this._devices=inputs
-      .filter(d=>{
-        if(!d.deviceId) return false;
-        if(seen.has(d.deviceId)) return false;
-        seen.add(d.deviceId); return true;
-      })
-      .map(d=>{
-        const prev=prevMap.get(d.deviceId);
-        // ラベルが空の場合は前回キャッシュを使う
-        const label=d.label||(preserveLabels&&prev&&prev.label)||`入力デバイス (${d.deviceId.slice(0,8)})`;
-        return{
-          deviceId:  d.deviceId,
-          label,
-          groupId:   d.groupId||'',
-          isVirt:    isVirt(label),
-          isDefault: d.deviceId==='default',
-          isComm:    d.deviceId==='communications',
-        };
-      });
+    this._devices=inputs.filter(d=>{if(!d.deviceId)return false;if(seen.has(d.deviceId))return false;seen.add(d.deviceId);return true;}).map(d=>{
+      const prev=prevMap.get(d.deviceId);
+      const label=d.label||(preserveLabels&&prev&&prev.label)||`入力デバイス (${d.deviceId.slice(0,8)})`;
+      return{deviceId:d.deviceId,label,groupId:d.groupId||'',isVirt:isVirt(label),isDefault:d.deviceId==='default',isComm:d.deviceId==='communications'};
+    });
     return this._devices;
   }
-
   async openStream(deviceId){
-    const cs=
-      deviceId==='default'||deviceId==='communications'
-        ?[
-          {audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},
-          {audio:true,video:false},
-        ]
-        :[
-          {audio:{deviceId:{exact:deviceId},echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},
-          {audio:{deviceId:{exact:deviceId}},video:false},
-          {audio:{deviceId:{ideal:deviceId},echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},
-          {audio:{deviceId:{ideal:deviceId}},video:false},
-        ];
+    const cs=deviceId==='default'||deviceId==='communications'
+      ?[{audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},{audio:true,video:false}]
+      :[{audio:{deviceId:{exact:deviceId},echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},{audio:{deviceId:{exact:deviceId}},video:false},{audio:{deviceId:{ideal:deviceId},echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},{audio:{deviceId:{ideal:deviceId}},video:false}];
     let lastErr=null;
-    for(const c of cs){
-      try{
-        const s=await navigator.mediaDevices.getUserMedia(c);
-        if(s.getAudioTracks().length) return s;
-        s.getTracks().forEach(t=>t.stop());
-      }catch(e){ lastErr=e; }
-    }
+    for(const c of cs){try{const s=await navigator.mediaDevices.getUserMedia(c);if(s.getAudioTracks().length)return s;s.getTracks().forEach(t=>t.stop());}catch(e){lastErr=e;}}
     throw lastErr||new Error(`デバイス ${deviceId} を開けませんでした`);
   }
 }
 
-/* ================================================================
-   MicMixer
-================================================================ */
+/* ── MicMixer ── */
 class MicMixer{
   constructor(eng){this.eng=eng;this.actx=null;this.analyser=null;this._sg=null;this._dest=null;this._entries=[];this._master=null;this._arr=null;this._tArr=null;this._hist=new Float32Array(30);this._hi=0;this._level=0;this._polling=false;}
   get inputLevel(){return this._level;}
@@ -475,22 +424,160 @@ class MicMixer{
 }
 
 /* ── saveBlob / applyRatio ── */
-async function saveBlob(blob,name){if(window.showSaveFilePicker){const ext=name.split('.').pop(),isMP4=ext==='mp4';try{const fh=await window.showSaveFilePicker({suggestedName:name,types:[{description:isMP4?'MP4 Video':'WebM Video',accept:isMP4?{'video/mp4':['.mp4']}:{'video/webm':['.webm']}}]});const w=await fh.createWritable();await w.write(blob);await w.close();return;}catch(e){if(e.name==='AbortError')return;}}const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);}
+async function saveBlob(blob,name){
+  if(window.showSaveFilePicker){
+    const ext=name.split('.').pop(),isMP4=ext==='mp4';
+    try{
+      const fh=await window.showSaveFilePicker({suggestedName:name,types:[{description:isMP4?'MP4 Video':'WebM Video',accept:isMP4?{'video/mp4':['.mp4']}:{'video/webm':['.webm']}}]});
+      const w=await fh.createWritable();await w.write(blob);await w.close();return;
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+}
 const RATIOS={'16:9':[16,9],'9:16':[9,16],'4:3':[4,3],'3:4':[3,4],'1:1':[1,1]};
-function applyRatio(r,wrap,cv,eng){const[rw,rh]=RATIOS[r]||[16,9],ww=wrap.clientWidth,wh=wrap.clientHeight;let W,H;if(ww/wh>rw/rh){H=wh;W=H*rw/rh;}else{W=ww;H=W*rh/rw;}W=Math.round(W);H=Math.round(H);cv.style.width=W+'px';cv.style.height=H+'px';cv.width=W;cv.height=H;eng.resize(W,H);}
+function applyRatio(r,wrap,cv,eng){
+  const[rw,rh]=RATIOS[r]||[16,9],ww=wrap.clientWidth,wh=wrap.clientHeight;
+  let W,H;
+  if(ww/wh>rw/rh){H=wh;W=H*rw/rh;}else{W=ww;H=W*rh/rw;}
+  W=Math.round(W);H=Math.round(H);
+  cv.style.width=W+'px';cv.style.height=H+'px';cv.width=W;cv.height=H;eng.resize(W,H);
+}
 
-/* ── 高速書き出し ── */
-const EFS=256,EFB=EFS>>1;const EFW=new Float32Array(EFS);for(let i=0;i<EFS;i++)EFW[i]=.5-.5*Math.cos(TAU*i/(EFS-1));
-const EFFP=(()=>{const n=EFS,bits=Math.log2(n)|0,br=new Uint16Array(n);for(let i=0;i<n;i++){let x=i,y=0;for(let b=0;b<bits;b++){y=(y<<1)|(x&1);x>>=1;}br[i]=y;}const cs=new Float32Array(n>>1),ss=new Float32Array(n>>1);for(let i=0;i<n>>1;i++){const a=TAU*i/n;cs[i]=Math.cos(a);ss[i]=Math.sin(a);}return{n,br,cs,ss};})();
+/* ── 高速書き出しユーティリティ ── */
+const EFS=256,EFB=EFS>>1;
+const EFW=new Float32Array(EFS);
+for(let i=0;i<EFS;i++)EFW[i]=.5-.5*Math.cos(TAU*i/(EFS-1));
+const EFFP=(()=>{
+  const n=EFS,bits=Math.log2(n)|0,br=new Uint16Array(n);
+  for(let i=0;i<n;i++){let x=i,y=0;for(let b=0;b<bits;b++){y=(y<<1)|(x&1);x>>=1;}br[i]=y;}
+  const cs=new Float32Array(n>>1),ss=new Float32Array(n>>1);
+  for(let i=0;i<n>>1;i++){const a=TAU*i/n;cs[i]=Math.cos(a);ss[i]=Math.sin(a);}
+  return{n,br,cs,ss};
+})();
 function mkEC(W,H){if(typeof OffscreenCanvas!=='undefined')return new OffscreenCanvas(W,H);const c=document.createElement('canvas');c.width=W;c.height=H;return c;}
-async function getFAC(ab){if(!ab||typeof AudioEncoder==='undefined')return null;const cfg={codec:'mp4a.40.2',sampleRate:ab.sampleRate,numberOfChannels:Math.min(2,Math.max(1,ab.numberOfChannels)),bitrate:128000};if(typeof AudioEncoder.isConfigSupported!=='function')return cfg;try{const r=await AudioEncoder.isConfigSupported(cfg);return r&&r.supported?cfg:null;}catch(_){return null;}}
+async function getFAC(ab){
+  if(!ab||typeof AudioEncoder==='undefined')return null;
+  const cfg={codec:'mp4a.40.2',sampleRate:ab.sampleRate,numberOfChannels:Math.min(2,Math.max(1,ab.numberOfChannels)),bitrate:128000};
+  if(typeof AudioEncoder.isConfigSupported!=='function')return cfg;
+  try{const r=await AudioEncoder.isConfigSupported(cfg);return r&&r.supported?cfg:null;}catch(_){return null;}
+}
 function cloneES(src,dst){dst.set({...src.S});dst.T=0;dst.hs=0;dst.bass=dst.mid=dst.high=dst.energy=0;dst.beat=false;dst.fft=new Uint8Array(src.fft&&src.fft.length?src.fft.length:EFB);}
 function mix2mono(ab){const n=ab.length,ch=Math.max(1,ab.numberOfChannels);if(ch===1)return new Float32Array(ab.getChannelData(0));const m=new Float32Array(n);for(let c=0;c<ch;c++){const d=ab.getChannelData(c);for(let i=0;i<n;i++)m[i]+=d[i];}const g=1/ch;for(let i=0;i<n;i++)m[i]*=g;return m;}
-function fftMag(mono,si,out,re,im){const{n,br,cs,ss}=EFFP,half=n>>1,start=(si-half)|0;for(let i=0;i<n;i++){const s=start+i;re[i]=(s>=0&&s<mono.length?mono[s]:0)*EFW[i];im[i]=0;}for(let i=0;i<n;i++){const j=br[i];if(j>i){let tr=re[i];re[i]=re[j];re[j]=tr;let ti=im[i];im[i]=im[j];im[j]=ti;}}for(let sz=2;sz<=n;sz<<=1){const hs=sz>>1,step=n/sz;for(let off=0;off<n;off+=sz){for(let j=0;j<hs;j++){const idx=j*step,wr=cs[idx],wi=-ss[idx],i0=off+j,i1=i0+hs,tr=re[i1]*wr-im[i1]*wi,ti=re[i1]*wi+im[i1]*wr;re[i1]=re[i0]-tr;im[i1]=im[i0]-ti;re[i0]+=tr;im[i0]+=ti;}}}const fl=-72,cl=0;for(let i=0;i<out.length;i++){const rr=re[i],ii=im[i],mag=Math.sqrt(rr*rr+ii*ii)+1e-8,db=20*Math.log10(mag);out[i]=clamp((db-fl)/(cl-fl)*255,0,255)|0;}}
-async function buildFF(ab,dur,fps,cb,ct){const mono=mix2mono(ab),sr=ab.sampleRate,tot=Math.max(1,Math.ceil(dur*fps)),frames=new Array(tot),fft=new Uint8Array(EFB),sm=new Float32Array(EFB),re=new Float32Array(EFS),im=new Float32Array(EFS),hist=new Float32Array(30);let hi=0,hs=0;for(let fi=0;fi<tot;fi++){if(ct.cancelled)return null;fftMag(mono,Math.round(fi/fps*sr),fft,re,im);let bs=0,ms=0,_hs=0,rms=0;const be=Math.max(1,fft.length*.12|0),me=Math.max(2,fft.length*.45|0);for(let i=0;i<fft.length;i++){sm[i]=sm[i]*.78+fft[i]*.22;const v=sm[i]/255;if(i<be)bs+=v;else if(i<me)ms+=v;else _hs+=v;rms+=v*v;fft[i]=sm[i]|0;}const bass=bs/be,mid=ms/(me-be),high=_hs/(fft.length-me),energy=Math.sqrt(rms/fft.length);hs-=hist[hi%hist.length];hist[hi%hist.length]=energy;hs+=energy;hi++;const avg=hs/Math.min(hi,hist.length),beat=energy>avg*1.55&&energy>.038;frames[fi]={fft:new Uint8Array(fft),bass,mid,high,energy,beat};if(cb&&(fi&31)===0)cb((fi+1)/tot);if((fi&63)===0)await sleep(0);}return frames;}
-async function decodeAF(file){const ab=await file.arrayBuffer(),tc=new OfflineAudioContext(1,1,44100),buf=await tc.decodeAudioData(ab.slice(0));try{await tc.close();}catch(_){}return buf;}
-async function encAT({audioBuf,muxer,ct,audioCfg}){if(!audioBuf||!audioCfg)return false;let done=false;const enc=new AudioEncoder({output:(c,m)=>{if(!done)muxer.addAudioChunk(c,m);},error:e=>console.error(e)});enc.configure(audioCfg);const sr=audioCfg.sampleRate,ch=audioCfg.numberOfChannels,sL=audioBuf.getChannelData(0),sR=ch>1?audioBuf.getChannelData(1):sL;const cs=8192;let off=0;while(off<audioBuf.length){if(ct.cancelled)break;const len=Math.min(cs,audioBuf.length-off),pl=new Float32Array(len*ch);pl.set(sL.subarray(off,off+len),0);if(ch>1)pl.set(sR.subarray(off,off+len),len);const ad=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:len,numberOfChannels:ch,timestamp:Math.round(off/sr*1e6),data:pl});if(enc.state==='configured')enc.encode(ad);ad.close();off+=len;if(enc.encodeQueueSize>8&&(off&32767)===0)await enc.flush();if((off/cs&15)===0)await sleep(0);}if(enc.state==='configured')await enc.flush();done=true;enc.close();return!ct.cancelled;}
-async function fastExport({eng,audioFile,duration,fps,bitrate,W,H,progressCb,cancelToken}){if(typeof Mp4Muxer==='undefined')throw new Error('mp4-muxer が読み込まれていません');const tot=Math.max(1,Math.ceil(duration*fps));let audioBuf=null,ff=null,ac=null;if(audioFile){audioBuf=await decodeAF(audioFile);if(cancelToken.cancelled)return null;ff=await buildFF(audioBuf,duration,fps,p=>{if(progressCb)progressCb(p*.18);},cancelToken);if(cancelToken.cancelled||!ff)return null;ac=await getFAC(audioBuf);}const muxer=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},audio:ac?{codec:'aac',sampleRate:ac.sampleRate,numberOfChannels:ac.numberOfChannels}:undefined,fastStart:'in-memory',firstTimestampBehavior:'offset'});let vD=false;const ve=new VideoEncoder({output:(c,m)=>{if(!vD)muxer.addVideoChunk(c,m);},error:e=>console.error(e)});ve.configure({codec:'avc1.42001f',width:W,height:H,bitrate,bitrateMode:'variable',framerate:fps,latencyMode:'quality'});if(audioBuf&&ac){await encAT({audioBuf,muxer,ct:cancelToken,audioCfg:ac,progressCb:p=>{if(progressCb)progressCb(.18+p*.12);}});}else if(progressCb){progressCb(.30);}if(cancelToken.cancelled){if(ve.state==='configured')ve.close();return null;}const ec=mkEC(W,H),ee=new Engine(ec);cloneES(eng,ee);const dt=1/fps,kfe=Math.max(1,Math.round(fps));for(let fi=0;fi<tot;fi++){if(cancelToken.cancelled)break;const feat=ff?ff[Math.min(fi,ff.length-1)]:null;if(feat){ee.fft.set(feat.fft);ee.bass=feat.bass;ee.mid=feat.mid;ee.high=feat.high;ee.energy=feat.energy;ee.beat=feat.beat;}else{ee.fft.fill(0);ee.bass=ee.mid=ee.high=ee.energy=0;ee.beat=false;}ee._frame(dt);const frame=new VideoFrame(ec,{timestamp:Math.round(fi*1e6/fps),duration:Math.round(1e6/fps)});ve.encode(frame,{keyFrame:fi%kfe===0});frame.close();if(progressCb&&(fi&15)===0){const base=audioBuf?.18:0,span=audioBuf?.82:1;progressCb(base+((fi+1)/tot)*span);}if(ve.encodeQueueSize>16&&(fi&15)===0)await ve.flush();if((fi&31)===0)await sleep(0);}if(ve.state==='configured')await ve.flush();vD=true;ve.close();if(cancelToken.cancelled)return null;muxer.finalize();return new Blob([muxer.target.buffer],{type:'video/mp4'});}
+function fftMag(mono,si,out,re,im){
+  const{n,br,cs,ss}=EFFP,half=n>>1,start=(si-half)|0;
+  for(let i=0;i<n;i++){const s=start+i;re[i]=(s>=0&&s<mono.length?mono[s]:0)*EFW[i];im[i]=0;}
+  for(let i=0;i<n;i++){const j=br[i];if(j>i){let tr=re[i];re[i]=re[j];re[j]=tr;let ti=im[i];im[i]=im[j];im[j]=ti;}}
+  for(let sz=2;sz<=n;sz<<=1){const hs=sz>>1,step=n/sz;for(let off=0;off<n;off+=sz){for(let j=0;j<hs;j++){const idx=j*step,wr=cs[idx],wi=-ss[idx],i0=off+j,i1=i0+hs,tr=re[i1]*wr-im[i1]*wi,ti=re[i1]*wi+im[i1]*wr;re[i1]=re[i0]-tr;im[i1]=im[i0]-ti;re[i0]+=tr;im[i0]+=ti;}}}
+  const fl=-72,cl=0;
+  for(let i=0;i<out.length;i++){const rr=re[i],ii=im[i],mag=Math.sqrt(rr*rr+ii*ii)+1e-8,db=20*Math.log10(mag);out[i]=clamp((db-fl)/(cl-fl)*255,0,255)|0;}
+}
+async function buildFF(ab,dur,fps,cb,ct){
+  const mono=mix2mono(ab),sr=ab.sampleRate,tot=Math.max(1,Math.ceil(dur*fps));
+  const frames=new Array(tot),fft=new Uint8Array(EFB),sm=new Float32Array(EFB),re=new Float32Array(EFS),im=new Float32Array(EFS),hist=new Float32Array(30);
+  let hi=0,hs=0;
+  for(let fi=0;fi<tot;fi++){
+    if(ct.cancelled)return null;
+    fftMag(mono,Math.round(fi/fps*sr),fft,re,im);
+    let bs=0,ms=0,_hs=0,rms=0;
+    const be=Math.max(1,fft.length*.12|0),me=Math.max(2,fft.length*.45|0);
+    for(let i=0;i<fft.length;i++){sm[i]=sm[i]*.78+fft[i]*.22;const v=sm[i]/255;if(i<be)bs+=v;else if(i<me)ms+=v;else _hs+=v;rms+=v*v;fft[i]=sm[i]|0;}
+    const bass=bs/be,mid=ms/(me-be),high=_hs/(fft.length-me),energy=Math.sqrt(rms/fft.length);
+    hs-=hist[hi%hist.length];hist[hi%hist.length]=energy;hs+=energy;hi++;
+    const avg=hs/Math.min(hi,hist.length),beat=energy>avg*1.55&&energy>.038;
+    frames[fi]={fft:new Uint8Array(fft),bass,mid,high,energy,beat};
+    if(cb&&(fi&31)===0)cb((fi+1)/tot);
+    if((fi&63)===0)await sleep(0);
+  }
+  return frames;
+}
+async function decodeAF(file){
+  const ab=await file.arrayBuffer(),tc=new OfflineAudioContext(1,1,44100),buf=await tc.decodeAudioData(ab.slice(0));
+  try{await tc.close();}catch(_){}
+  return buf;
+}
+async function encAT({audioBuf,muxer,ct,audioCfg}){
+  if(!audioBuf||!audioCfg)return false;
+  let done=false;
+  const enc=new AudioEncoder({output:(c,m)=>{if(!done)muxer.addAudioChunk(c,m);},error:e=>console.error(e)});
+  enc.configure(audioCfg);
+  const sr=audioCfg.sampleRate,ch=audioCfg.numberOfChannels,sL=audioBuf.getChannelData(0),sR=ch>1?audioBuf.getChannelData(1):sL;
+  const cs=8192;let off=0;
+  while(off<audioBuf.length){
+    if(ct.cancelled)break;
+    const len=Math.min(cs,audioBuf.length-off),pl=new Float32Array(len*ch);
+    pl.set(sL.subarray(off,off+len),0);
+    if(ch>1)pl.set(sR.subarray(off,off+len),len);
+    const ad=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:len,numberOfChannels:ch,timestamp:Math.round(off/sr*1e6),data:pl});
+    if(enc.state==='configured')enc.encode(ad);
+    ad.close();off+=len;
+    if(enc.encodeQueueSize>8&&(off&32767)===0)await enc.flush();
+    if((off/cs&15)===0)await sleep(0);
+  }
+  if(enc.state==='configured')await enc.flush();
+  done=true;enc.close();
+  return!ct.cancelled;
+}
+async function fastExport({eng,audioFile,duration,fps,bitrate,W,H,progressCb,cancelToken}){
+  if(typeof Mp4Muxer==='undefined')throw new Error('mp4-muxer が読み込まれていません');
+  const tot=Math.max(1,Math.ceil(duration*fps));
+  let audioBuf=null,ff=null,ac=null;
+  if(audioFile){
+    audioBuf=await decodeAF(audioFile);
+    if(cancelToken.cancelled)return null;
+    ff=await buildFF(audioBuf,duration,fps,p=>{if(progressCb)progressCb(p*.18);},cancelToken);
+    if(cancelToken.cancelled||!ff)return null;
+    ac=await getFAC(audioBuf);
+  }
+  const muxer=new Mp4Muxer.Muxer({
+    target:new Mp4Muxer.ArrayBufferTarget(),
+    video:{codec:'avc',width:W,height:H},
+    audio:ac?{codec:'aac',sampleRate:ac.sampleRate,numberOfChannels:ac.numberOfChannels}:undefined,
+    fastStart:'in-memory',
+    firstTimestampBehavior:'offset'
+  });
+  let vD=false;
+  const ve=new VideoEncoder({output:(c,m)=>{if(!vD)muxer.addVideoChunk(c,m);},error:e=>console.error(e)});
+  ve.configure({codec:'avc1.42001f',width:W,height:H,bitrate,bitrateMode:'variable',framerate:fps,latencyMode:'quality'});
+  if(audioBuf&&ac){
+    await encAT({audioBuf,muxer,ct:cancelToken,audioCfg:ac});
+  }
+  if(progressCb)progressCb(.30);
+  if(cancelToken.cancelled){if(ve.state==='configured')ve.close();return null;}
+  const ec=mkEC(W,H),ee=new Engine(ec);
+  cloneES(eng,ee);
+  const dt=1/fps,kfe=Math.max(1,Math.round(fps));
+  for(let fi=0;fi<tot;fi++){
+    if(cancelToken.cancelled)break;
+    const feat=ff?ff[Math.min(fi,ff.length-1)]:null;
+    if(feat){ee.fft.set(feat.fft);ee.bass=feat.bass;ee.mid=feat.mid;ee.high=feat.high;ee.energy=feat.energy;ee.beat=feat.beat;}
+    else{ee.fft.fill(0);ee.bass=ee.mid=ee.high=ee.energy=0;ee.beat=false;}
+    ee._frame(dt);
+    const frame=new VideoFrame(ec,{timestamp:Math.round(fi*1e6/fps),duration:Math.round(1e6/fps)});
+    ve.encode(frame,{keyFrame:fi%kfe===0});
+    frame.close();
+    if(progressCb&&(fi&15)===0){
+      const base=audioBuf?.30:0,span=audioBuf?.70:1;
+      progressCb(base+((fi+1)/tot)*span);
+    }
+    if(ve.encodeQueueSize>16&&(fi&15)===0)await ve.flush();
+    if((fi&31)===0)await sleep(0);
+  }
+  if(ve.state==='configured')await ve.flush();
+  vD=true;ve.close();
+  if(cancelToken.cancelled)return null;
+  muxer.finalize();
+  return new Blob([muxer.target.buffer],{type:'video/mp4'});
+}
+
+/* ── WebCodecs サポートチェック ── */
+function supportsWebCodecs(){
+  return typeof VideoEncoder!=='undefined'&&
+         typeof VideoFrame!=='undefined'&&
+         typeof OffscreenCanvas!=='undefined'&&
+         typeof Mp4Muxer!=='undefined';
+}
 
 /* ================================================================
    APP
@@ -509,46 +596,29 @@ async function fastExport({eng,audioFile,duration,fps,bitrate,W,H,progressCb,can
   let mediaRec=null,recChunks=[],recMime='video/webm';
   let micActive=false,micLvTimer=null;
   let _loadedFile=null;
+  let _exportCancel=null; // キャンセルトークン
 
-  /* ────────────────────────────────────────────────
-     MIC タブに切り替えたとき自動で環境診断を実行し、
-     問題があれば診断ボックスを表示する
-  ──────────────────────────────────────────────── */
+  /* ── 進捗UI ── */
+  function setExpProg(p){
+    // p: 0.0〜1.0
+    const pct=clamp(p*100,0,100);
+    $('exp-prog-fill').style.width=pct.toFixed(1)+'%';
+    $('exp-prog-label').textContent=pct.toFixed(0)+'%';
+  }
+  function showExpProg(show){
+    $('exp-prog-wrap').style.display=show?'block':'none';
+    if(!show)setExpProg(0);
+  }
+
+  /* ── MIC診断 ── */
   async function runDiag(){
     const diag=await diagnoseEnv();
-    const box=$('diag-box');
-    const title=$('diag-title');
-    const body=$('diag-body');
-
-    // 問題なし → 診断ボックスを隠す
-    if(diag.isSecure && diag.hasMediaDevices && diag.permState!=='denied'){
-      box.classList.remove('show');
-      return;
-    }
-
+    const box=$('diag-box'),title=$('diag-title'),body=$('diag-body');
+    if(diag.isSecure&&diag.hasMediaDevices&&diag.permState!=='denied'){box.classList.remove('show');return;}
     box.classList.add('show');
-
     if(diag.isFile){
-      // ★ 最も多いケース: file:// で開いている
       title.textContent='⛔ file:// では動作しません';
-      body.innerHTML=`
-このファイルを <code>file://</code> で直接開いているため、ブラウザのセキュリティ制限によりマイクが使用できません。<br><br>
-<strong>解決方法（どれか1つ）：</strong><br>
-<br>
-① <strong>Python がある場合</strong><br>
-このファイルのあるフォルダでコマンドプロンプトを開き：<br>
-<code>python -m http.server 8000</code><br>
-→ <code>http://localhost:8000</code> をブラウザで開く<br>
-<br>
-② <strong>Node.js がある場合</strong><br>
-<code>npx serve .</code><br>
-→ 表示された <code>http://localhost:XXXX</code> を開く<br>
-<br>
-③ <strong>VS Code がある場合</strong><br>
-拡張機能「Live Server」でファイルを右クリック →「Open with Live Server」<br>
-<br>
-④ <strong>Chrome フラグで強制許可（開発者向け）</strong><br>
-Chromeのアドレスバーに <code>chrome://flags/#unsafely-treat-insecure-origin-as-secure</code> を入力 → このファイルのURLを追加して再起動`;
+      body.innerHTML=`このファイルを <code>file://</code> で直接開いているため、ブラウザのセキュリティ制限によりマイクが使用できません。<br><br><strong>解決方法（どれか1つ）：</strong><br><br>① <strong>Python がある場合</strong><br>このファイルのあるフォルダでコマンドプロンプトを開き：<br><code>python -m http.server 8000</code><br>→ <code>http://localhost:8000</code> をブラウザで開く<br><br>② <strong>Node.js がある場合</strong><br><code>npx serve .</code><br>→ 表示された <code>http://localhost:XXXX</code> を開く<br><br>③ <strong>VS Code がある場合</strong><br>拡張機能「Live Server」でファイルを右クリック →「Open with Live Server」`;
     }else if(!diag.isSecure){
       title.textContent='⛔ HTTPS が必要です';
       body.innerHTML=`現在のURL (<code>${escH(location.origin)}</code>) はHTTPSではありません。<br>マイクを使用するにはHTTPSまたは<code>localhost</code>でアクセスしてください。`;
@@ -557,20 +627,63 @@ Chromeのアドレスバーに <code>chrome://flags/#unsafely-treat-insecure-ori
       body.innerHTML=`このブラウザは <code>navigator.mediaDevices</code> をサポートしていません。<br>Chrome / Edge の最新版をお使いください。`;
     }else if(diag.permState==='denied'){
       title.textContent='🔒 マイクがブロックされています';
-      body.innerHTML=`このサイトのマイク許可がブロックされています。<br><br>
-Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> をクリック →「マイク」→「許可」に変更 → ページを再読み込みしてください。`;
+      body.innerHTML=`このサイトのマイク許可がブロックされています。<br><br>Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> をクリック →「マイク」→「許可」に変更 → ページを再読み込みしてください。`;
     }
   }
 
   /* ── PM UI ── */
-  function buildPMUI(){for(const pn of PM_PARTS){const block=$(`pm-${pn}`);block.innerHTML='';for(const d of PM_DEFS){if(d.type==='select'){const row=document.createElement('div');row.className='pm-cr';row.innerHTML=`<label>${d.label}</label>`;const sel=document.createElement('select');sel.style.cssText='flex:1;background:#1a1a3a;color:var(--text);border:1px solid var(--border);border-radius:5px;padding:2px 4px;font-size:10px;cursor:pointer';for(const[v,l]of d.options){const op=document.createElement('option');op.value=v;op.textContent=l;if(v===d.def)op.selected=true;sel.appendChild(op);}sel.addEventListener('change',()=>{partPS[pn][d.key]=sel.value;});row.appendChild(sel);block.appendChild(row);}else{const row=document.createElement('div');row.className='pm-cr';const lbl=document.createElement('label');lbl.textContent=d.label;const sl=document.createElement('input');sl.type='range';sl.min=d.min;sl.max=d.max;sl.step=d.step;sl.value=d.def;sl.dataset.pn=pn;sl.dataset.key=d.key;const nm=document.createElement('input');nm.type='number';nm.min=d.min;nm.max=d.max;nm.step=d.step;nm.value=d.def;nm.dataset.pn=pn;nm.dataset.key=d.key;sl.addEventListener('input',()=>{const v=parseFloat(sl.value);partPS[pn][d.key]=v;nm.value=v.toFixed(d.step<.1?3:d.step<1?2:0);});nm.addEventListener('change',()=>{let v=parseFloat(nm.value);if(isNaN(v))v=d.def;v=clamp(v,d.min,d.max);partPS[pn][d.key]=v;sl.value=v;nm.value=v.toFixed(d.step<.1?3:d.step<1?2:0);});row.appendChild(lbl);row.appendChild(sl);row.appendChild(nm);block.appendChild(row);}}}};
+  function buildPMUI(){
+    for(const pn of PM_PARTS){
+      const block=$(`pm-${pn}`);block.innerHTML='';
+      for(const d of PM_DEFS){
+        if(d.type==='select'){
+          const row=document.createElement('div');row.className='pm-cr';
+          row.innerHTML=`<label>${d.label}</label>`;
+          const sel=document.createElement('select');
+          sel.style.cssText='flex:1;background:#1a1a3a;color:var(--text);border:1px solid var(--border);border-radius:5px;padding:2px 4px;font-size:10px;cursor:pointer';
+          for(const[v,l]of d.options){const op=document.createElement('option');op.value=v;op.textContent=l;if(v===d.def)op.selected=true;sel.appendChild(op);}
+          sel.addEventListener('change',()=>{partPS[pn][d.key]=sel.value;});
+          row.appendChild(sel);block.appendChild(row);
+        }else{
+          const row=document.createElement('div');row.className='pm-cr';
+          const lbl=document.createElement('label');lbl.textContent=d.label;
+          const sl=document.createElement('input');sl.type='range';sl.min=d.min;sl.max=d.max;sl.step=d.step;sl.value=d.def;sl.dataset.pn=pn;sl.dataset.key=d.key;
+          const nm=document.createElement('input');nm.type='number';nm.min=d.min;nm.max=d.max;nm.step=d.step;nm.value=d.def;nm.dataset.pn=pn;nm.dataset.key=d.key;
+          sl.addEventListener('input',()=>{const v=parseFloat(sl.value);partPS[pn][d.key]=v;nm.value=v.toFixed(d.step<.1?3:d.step<1?2:0);});
+          nm.addEventListener('change',()=>{let v=parseFloat(nm.value);if(isNaN(v))v=d.def;v=clamp(v,d.min,d.max);partPS[pn][d.key]=v;sl.value=v;nm.value=v.toFixed(d.step<.1?3:d.step<1?2:0);});
+          row.appendChild(lbl);row.appendChild(sl);row.appendChild(nm);block.appendChild(row);
+        }
+      }
+    }
+  }
   buildPMUI();
-  document.querySelectorAll('.pm-tab').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.pm-tab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.pm-block').forEach(b=>b.classList.remove('show'));$(`pm-${btn.dataset.pt}`).classList.add('show');});});
+  document.querySelectorAll('.pm-tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.pm-tab').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      document.querySelectorAll('.pm-block').forEach(b=>b.classList.remove('show'));
+      $(`pm-${btn.dataset.pt}`).classList.add('show');
+    });
+  });
 
   let randOn=false,randTID=null;
   const RAND_T=PM_DEFS.filter(d=>!d.spd&&d.type!=='select');
-  function randStep(){if(!randOn)return;for(const pn of PM_PARTS)for(const d of RAND_T){const nv=clamp(partPS[pn][d.key]+(Math.random()-.5)*1,d.min,d.max);partPS[pn][d.key]=nv;const sl=document.querySelector(`#pm-${pn} input[type=range][data-key="${d.key}"]`);const nm=document.querySelector(`#pm-${pn} input[type=number][data-key="${d.key}"]`);if(sl)sl.value=nv;if(nm)nm.value=nv.toFixed(d.step<.1?3:d.step<1?2:0);}randTID=setTimeout(randStep,rand(500,1000));}
-  $('btn-rand').addEventListener('click',()=>{randOn=!randOn;const b=$('btn-rand');if(randOn){b.textContent='🎲 ランダマイズ ON';b.classList.add('rand-on');randTID=setTimeout(randStep,rand(500,1000));}else{b.textContent='🎲 ランダマイズ OFF';b.classList.remove('rand-on');if(randTID)clearTimeout(randTID);}});
+  function randStep(){
+    if(!randOn)return;
+    for(const pn of PM_PARTS)for(const d of RAND_T){
+      const nv=clamp(partPS[pn][d.key]+(Math.random()-.5)*1,d.min,d.max);
+      partPS[pn][d.key]=nv;
+      const sl=document.querySelector(`#pm-${pn} input[type=range][data-key="${d.key}"]`);
+      const nm=document.querySelector(`#pm-${pn} input[type=number][data-key="${d.key}"]`);
+      if(sl)sl.value=nv;if(nm)nm.value=nv.toFixed(d.step<.1?3:d.step<1?2:0);
+    }
+    randTID=setTimeout(randStep,rand(500,1000));
+  }
+  $('btn-rand').addEventListener('click',()=>{
+    randOn=!randOn;const b=$('btn-rand');
+    if(randOn){b.textContent='🎲 ランダマイズ ON';b.classList.add('rand-on');randTID=setTimeout(randStep,rand(500,1000));}
+    else{b.textContent='🎲 ランダマイズ OFF';b.classList.remove('rand-on');if(randTID)clearTimeout(randTID);}
+  });
 
   $('ptoggle').addEventListener('click',()=>$('panel').classList.toggle('hide'));
   cw.addEventListener('click',()=>{if(window.innerWidth<=680&&!$('panel').classList.contains('hide'))$('panel').classList.add('hide');});
@@ -579,8 +692,7 @@ Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> �
     b.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
       b.classList.add('on');mode=b.dataset.mode;uiSync();
-      // MIC タブを開いたときに診断を実行
-      if(mode==='mic') runDiag();
+      if(mode==='mic')runDiag();
     });
   });
   function uiSync(){$('s-file').style.display=mode==='file'?'':'none';$('s-mic').style.display=mode==='mic'?'':'none';}
@@ -598,22 +710,186 @@ Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> �
   const _audEl=$('aud');
   const _fHist=new Float32Array(30);let _fHi=0;
   async function _fInit(){if(!_fActx)_fActx=new(window.AudioContext||window.webkitAudioContext)();if(_fActx.state==='suspended')await _fActx.resume();}
-  function _fLink(){if(_fAna){try{_fAna.disconnect();}catch(_){}}  _fAna=_fActx.createAnalyser();_fAna.fftSize=256;_fAna.smoothingTimeConstant=.78;if(!_fMedSrc)_fMedSrc=_fActx.createMediaElementSource(_audEl);_fMedSrc.connect(_fAna);_fAna.connect(_fActx.destination);if(_fDest)try{_fAna.connect(_fDest);}catch(_){}  _fArr=new Uint8Array(_fAna.frequencyBinCount);if(!_fPoll)_fStartPoll();}
-  function _fStartPoll(){_fPoll=true;const run=()=>{if(!_fPoll)return;if(_fAna&&_fArr){_fAna.getByteFrequencyData(_fArr);const n=_fArr.length,be=Math.max(1,n*.12|0),me=Math.max(2,n*.45|0);let bs=0,ms=0,hs=0,rms=0;for(let i=0;i<n;i++){const v=_fArr[i]/255;if(i<be)bs+=v;else if(i<me)ms+=v;else hs+=v;rms+=v*v;}const bass=bs/be,mid=ms/(me-be),high=hs/(n-me),energy=Math.sqrt(rms/n);_fHist[_fHi++%30]=energy;const avg=_fHist.reduce((a,b)=>a+b)/30;const beat=energy>avg*1.55&&energy>.038;if(!eng.fft||eng.fft.length!==n)eng.fft=new Uint8Array(n);eng.fft.set(_fArr);Object.assign(eng,{bass,mid,high,energy,beat});}requestAnimationFrame(run);};requestAnimationFrame(run);}
-  function _fRecDest(){if(!_fActx)return null;if(!_fDest){_fDest=_fActx.createMediaStreamDestination();if(_fAna)try{_fAna.connect(_fDest);}catch(_){}}return _fDest;}
+  function _fLink(){
+    if(_fAna){try{_fAna.disconnect();}catch(_){}}
+    _fAna=_fActx.createAnalyser();_fAna.fftSize=256;_fAna.smoothingTimeConstant=.78;
+    if(!_fMedSrc)_fMedSrc=_fActx.createMediaElementSource(_audEl);
+    _fMedSrc.connect(_fAna);_fAna.connect(_fActx.destination);
+    if(_fDest)try{_fAna.connect(_fDest);}catch(_){}
+    _fArr=new Uint8Array(_fAna.frequencyBinCount);
+    if(!_fPoll)_fStartPoll();
+  }
+  function _fStartPoll(){
+    _fPoll=true;
+    const run=()=>{
+      if(!_fPoll)return;
+      if(_fAna&&_fArr){
+        _fAna.getByteFrequencyData(_fArr);
+        const n=_fArr.length,be=Math.max(1,n*.12|0),me=Math.max(2,n*.45|0);
+        let bs=0,ms=0,hs=0,rms=0;
+        for(let i=0;i<n;i++){const v=_fArr[i]/255;if(i<be)bs+=v;else if(i<me)ms+=v;else hs+=v;rms+=v*v;}
+        const bass=bs/be,mid=ms/(me-be),high=hs/(n-me),energy=Math.sqrt(rms/n);
+        _fHist[_fHi++%30]=energy;const avg=_fHist.reduce((a,b)=>a+b)/30;const beat=energy>avg*1.55&&energy>.038;
+        if(!eng.fft||eng.fft.length!==n)eng.fft=new Uint8Array(n);
+        eng.fft.set(_fArr);Object.assign(eng,{bass,mid,high,energy,beat});
+      }
+      requestAnimationFrame(run);
+    };
+    requestAnimationFrame(run);
+  }
+  function _fRecDest(){
+    if(!_fActx)return null;
+    if(!_fDest){_fDest=_fActx.createMediaStreamDestination();if(_fAna)try{_fAna.connect(_fDest);}catch(_){}}
+    return _fDest;
+  }
 
-  async function loadF(file){const ext=(file.name.split('.').pop()||'').toLowerCase();if(!['wav','mp3','m4a','ogg','flac','aac'].includes(ext)){setSt('⚠ 未対応フォーマット','err','file');return;}setSt('⏳ 読み込み中...','warn','file');if(playing){_audEl.pause();playing=false;$('btn-play').textContent='▶ 再生';clearInterval(_pbTimer);}try{_loadedFile=file;if(_fURL){URL.revokeObjectURL(_fURL);_fURL=null;}_audEl.src='';_fURL=URL.createObjectURL(file);_audEl.src=_fURL;dur=await new Promise((res,rej)=>{_audEl.addEventListener('loadedmetadata',()=>res(_audEl.duration||0),{once:true});_audEl.addEventListener('error',()=>rej(new Error('再生できません')),{once:true});_audEl.load();});fileLoaded=true;$('fname').textContent='✅ '+file.name;setSt(`✅ 読込完了 ${fmt(dur)}`,'ok','file');$('btn-play').disabled=false;$('btn-stop').disabled=false;$('btn-rs').disabled=false;setP(0);setPT(0,dur);}catch(e){setSt('❌ '+e.message,'err','file');}}
-  $('btn-play').addEventListener('click',async()=>{if(!fileLoaded)return;if(playing){startOff=_audEl.currentTime;_audEl.pause();playing=false;$('btn-play').textContent='▶ 再生';clearInterval(_pbTimer);}else{await _fInit();_fLink();_audEl.currentTime=clamp(startOff,0,dur);try{await _audEl.play();}catch(e){console.warn(e);}playing=true;$('btn-play').textContent='⏸ 一時停止';_audEl.addEventListener('ended',()=>{if(playing){playing=false;startOff=0;$('btn-play').textContent='▶ 再生';setP(100);setPT(dur,dur);clearInterval(_pbTimer);}},{once:true});clearInterval(_pbTimer);_pbTimer=setInterval(()=>{const el=Math.min(_audEl.currentTime,dur);setP(dur>0?el/dur*100:0);setPT(el,dur);},200);}});
-  $('btn-stop').addEventListener('click',()=>{_audEl.pause();_audEl.currentTime=0;playing=false;startOff=0;$('btn-play').textContent='▶ 再生';setP(0);setPT(0,dur);clearInterval(_pbTimer);});
+  async function loadF(file){
+    const ext=(file.name.split('.').pop()||'').toLowerCase();
+    if(!['wav','mp3','m4a','ogg','flac','aac'].includes(ext)){setSt('⚠ 未対応フォーマット','err','file');return;}
+    setSt('⏳ 読み込み中...','warn','file');
+    if(playing){_audEl.pause();playing=false;$('btn-play').textContent='▶ 再生';clearInterval(_pbTimer);}
+    try{
+      _loadedFile=file;
+      if(_fURL){URL.revokeObjectURL(_fURL);_fURL=null;}
+      _audEl.src='';_fURL=URL.createObjectURL(file);_audEl.src=_fURL;
+      dur=await new Promise((res,rej)=>{
+        _audEl.addEventListener('loadedmetadata',()=>res(_audEl.duration||0),{once:true});
+        _audEl.addEventListener('error',()=>rej(new Error('再生できません')),{once:true});
+        _audEl.load();
+      });
+      fileLoaded=true;
+      $('fname').textContent='✅ '+file.name;
+      setSt(`✅ 読込完了 ${fmt(dur)}`,'ok','file');
+      $('btn-play').disabled=false;$('btn-stop').disabled=false;$('btn-rs').disabled=false;
+      // 高速書き出しボタンはWebCodecs対応時のみ有効化
+      $('btn-fast').disabled=!supportsWebCodecs();
+      if(!supportsWebCodecs())setSt('⚠ このブラウザはWebCodecs非対応です。\nリアルタイム録画をご利用ください。','warn','rec');
+      else setSt('⚡ 高速書き出し または ⏺ リアルタイム録画が使えます','ok','rec');
+      setP(0);setPT(0,dur);
+    }catch(e){setSt('❌ '+e.message,'err','file');}
+  }
 
-  async function startRec(bitrate,forMic=false){const destObj=forMic?mixer.getRecDest():_fRecDest();const cStr=cv.captureStream(60);const tracks=[...cStr.getVideoTracks(),...(destObj?destObj.stream.getAudioTracks():[])];const combined=new MediaStream(tracks);const mp4T=['video/mp4;codecs=avc1,mp4a.40.2','video/mp4;codecs=h264,aac','video/mp4'];const webmT=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];const mp4M=mp4T.find(m=>MediaRecorder.isTypeSupported(m));recMime=mp4M||(webmT.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm');recChunks=[];mediaRec=new MediaRecorder(combined,{mimeType:recMime,videoBitsPerSecond:bitrate});mediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)recChunks.push(e.data);};mediaRec.start(100);$('ri').style.display='flex';return recMime.startsWith('video/mp4')?'mp4':'webm';}
-  async function stopRec(){return new Promise(r=>{if(!mediaRec||mediaRec.state==='inactive'){r();return;}mediaRec.onstop=r;mediaRec.stop();});}
-  $('btn-rs').addEventListener('click',async()=>{if(!fileLoaded)return;const ext=await startRec(parseInt($('ctl-quality').value),false);await _fInit();_fLink();_audEl.currentTime=0;try{await _audEl.play();}catch(e){console.warn(e);}playing=true;$('btn-play').textContent='⏸ 一時停止';startOff=0;_audEl.addEventListener('ended',()=>{playing=false;$('btn-play').textContent='▶ 再生';},{once:true});clearInterval(_pbTimer);_pbTimer=setInterval(()=>{const el=Math.min(_audEl.currentTime,dur);setP(dur>0?el/dur*100:0);setPT(el,dur);},200);$('btn-rs').style.display='none';$('btn-rstop').style.display='';setSt(`⏺ 録画中 (${ext.toUpperCase()})...`,'warn','rec');});
-  $('btn-rstop').addEventListener('click',async()=>{_audEl.pause();playing=false;clearInterval(_pbTimer);$('btn-play').textContent='▶ 再生';$('btn-rs').style.display='';$('btn-rstop').style.display='none';setSt('💾 保存中...','warn','rec');await stopRec();$('ri').style.display='none';const ext=recMime.startsWith('video/mp4')?'mp4':'webm';await saveBlob(new Blob(recChunks,{type:recMime}),`viz_${ts()}.${ext}`);setSt(`✅ 保存完了 (${ext.toUpperCase()})`,'ok','rec');});
+  $('btn-play').addEventListener('click',async()=>{
+    if(!fileLoaded)return;
+    if(playing){
+      startOff=_audEl.currentTime;_audEl.pause();playing=false;$('btn-play').textContent='▶ 再生';clearInterval(_pbTimer);
+    }else{
+      await _fInit();_fLink();_audEl.currentTime=clamp(startOff,0,dur);
+      try{await _audEl.play();}catch(e){console.warn(e);}
+      playing=true;$('btn-play').textContent='⏸ 一時停止';
+      _audEl.addEventListener('ended',()=>{if(playing){playing=false;startOff=0;$('btn-play').textContent='▶ 再生';setP(100);setPT(dur,dur);clearInterval(_pbTimer);}},{once:true});
+      clearInterval(_pbTimer);
+      _pbTimer=setInterval(()=>{const el=Math.min(_audEl.currentTime,dur);setP(dur>0?el/dur*100:0);setPT(el,dur);},200);
+    }
+  });
+  $('btn-stop').addEventListener('click',()=>{
+    _audEl.pause();_audEl.currentTime=0;playing=false;startOff=0;
+    $('btn-play').textContent='▶ 再生';setP(0);setPT(0,dur);clearInterval(_pbTimer);
+  });
+
+  /* ── 高速書き出し ── */
+  $('btn-fast').addEventListener('click',async()=>{
+    if(!fileLoaded||!_loadedFile)return;
+    if(!supportsWebCodecs()){
+      setSt('❌ WebCodecs非対応ブラウザです（Chrome/Edge推奨）','err','rec');return;
+    }
+    const bitrate=parseInt($('ctl-quality').value);
+    const fps=parseInt($('ctl-fps').value)||60;
+    const W=cv.width,H=cv.height;
+    _exportCancel={cancelled:false};
+
+    $('btn-fast').disabled=true;
+    $('btn-fast-cancel').style.display='';
+    $('btn-rs').disabled=true;
+    showExpProg(true);
+    setSt(`⏳ 高速書き出し中... (${fps}fps / ${W}×${H})`, 'warn','rec');
+
+    try{
+      const blob=await fastExport({
+        eng,
+        audioFile:_loadedFile,
+        duration:dur,
+        fps,
+        bitrate,
+        W,H,
+        progressCb:p=>{
+          setExpProg(p);
+          setSt(`⏳ ${(p*100).toFixed(0)}% 書き出し中...`,'warn','rec');
+        },
+        cancelToken:_exportCancel,
+      });
+      if(blob){
+        setExpProg(1);
+        setSt('💾 保存中...','warn','rec');
+        await saveBlob(blob,`viz_fast_${ts()}.mp4`);
+        setSt('✅ 高速書き出し完了！','ok','rec');
+      }else{
+        setSt('⚠ キャンセルされました','warn','rec');
+      }
+    }catch(e){
+      console.error(e);
+      setSt('❌ 書き出しエラー: '+e.message,'err','rec');
+    }finally{
+      _exportCancel=null;
+      $('btn-fast').disabled=false;
+      $('btn-fast-cancel').style.display='none';
+      $('btn-rs').disabled=false;
+      showExpProg(false);
+    }
+  });
+
+  $('btn-fast-cancel').addEventListener('click',()=>{
+    if(_exportCancel)_exportCancel.cancelled=true;
+    setSt('⚠ キャンセル中...','warn','rec');
+    $('btn-fast-cancel').disabled=true;
+  });
+
+  /* ── リアルタイム録画（フォールバック） ── */
+  async function startRec(bitrate,forMic=false){
+    const destObj=forMic?mixer.getRecDest():_fRecDest();
+    const cStr=cv.captureStream(60);
+    const tracks=[...cStr.getVideoTracks(),...(destObj?destObj.stream.getAudioTracks():[])];
+    const combined=new MediaStream(tracks);
+    const mp4T=['video/mp4;codecs=avc1,mp4a.40.2','video/mp4;codecs=h264,aac','video/mp4'];
+    const webmT=['video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'];
+    const mp4M=mp4T.find(m=>MediaRecorder.isTypeSupported(m));
+    recMime=mp4M||(webmT.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm');
+    recChunks=[];
+    mediaRec=new MediaRecorder(combined,{mimeType:recMime,videoBitsPerSecond:bitrate});
+    mediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)recChunks.push(e.data);};
+    mediaRec.start(100);
+    $('ri').style.display='flex';
+    return recMime.startsWith('video/mp4')?'mp4':'webm';
+  }
+  async function stopRec(){
+    return new Promise(r=>{if(!mediaRec||mediaRec.state==='inactive'){r();return;}mediaRec.onstop=r;mediaRec.stop();});
+  }
+
+  $('btn-rs').addEventListener('click',async()=>{
+    if(!fileLoaded)return;
+    const ext=await startRec(parseInt($('ctl-quality').value),false);
+    await _fInit();_fLink();
+    _audEl.currentTime=0;
+    try{await _audEl.play();}catch(e){console.warn(e);}
+    playing=true;$('btn-play').textContent='⏸ 一時停止';startOff=0;
+    _audEl.addEventListener('ended',()=>{playing=false;$('btn-play').textContent='▶ 再生';},{once:true});
+    clearInterval(_pbTimer);
+    _pbTimer=setInterval(()=>{const el=Math.min(_audEl.currentTime,dur);setP(dur>0?el/dur*100:0);setPT(el,dur);},200);
+    $('btn-rs').style.display='none';$('btn-rstop').style.display='';$('btn-fast').disabled=true;
+    setSt(`⏺ リアルタイム録画中 (${ext.toUpperCase()})...`,'warn','rec');
+  });
+  $('btn-rstop').addEventListener('click',async()=>{
+    _audEl.pause();playing=false;clearInterval(_pbTimer);$('btn-play').textContent='▶ 再生';
+    $('btn-rs').style.display='';$('btn-rstop').style.display='none';$('btn-fast').disabled=!supportsWebCodecs();
+    setSt('💾 保存中...','warn','rec');
+    await stopRec();$('ri').style.display='none';
+    const ext=recMime.startsWith('video/mp4')?'mp4':'webm';
+    await saveBlob(new Blob(recChunks,{type:recMime}),`viz_${ts()}.${ext}`);
+    setSt(`✅ 保存完了 (${ext.toUpperCase()})`,'ok','rec');
+  });
 
   /* ── MIC UI ── */
   const micListEl=$('mic-list');
-
   function renderDevList(devs,activeIds=[]){
     const activeSet=new Set(activeIds);
     const prev=new Map();
@@ -629,10 +905,10 @@ Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> �
       const checked=p?p.checked:(d.isDefault||i===0);
       const gain=p?p.gain:1.0;
       let badges='';
-      if(live)       badges+='<span class="chip chip-live">▶ LIVE</span>';
-      if(d.isVirt)   badges+='<span class="chip chip-virt">🔀 仮想</span>';
+      if(live)badges+='<span class="chip chip-live">▶ LIVE</span>';
+      if(d.isVirt)badges+='<span class="chip chip-virt">🔀 仮想</span>';
       if(d.isDefault)badges+='<span class="chip chip-def">★ default</span>';
-      if(d.isComm)   badges+='<span class="chip chip-def">📞 comm</span>';
+      if(d.isComm)badges+='<span class="chip chip-def">📞 comm</span>';
       const card=document.createElement('div');
       card.className='mic-item'+(checked?' sel':'')+(live?' live':'');
       card.dataset.deviceId=d.deviceId;
@@ -656,50 +932,39 @@ Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> �
       micListEl.appendChild(card);
     });
   }
-
-  function collectSel(){return[...micListEl.querySelectorAll('.mic-item')].flatMap(c=>{const cb=c.querySelector('.mic-cb'),g=c.querySelector('.mic-gain'),n=c.querySelector('.mic-name');if(!cb||!cb.checked)return[];return[{deviceId:c.dataset.deviceId,label:n?n.textContent:'マイク',gain:parseFloat(g&&g.value)||1}];});}
+  function collectSel(){
+    return[...micListEl.querySelectorAll('.mic-item')].flatMap(c=>{
+      const cb=c.querySelector('.mic-cb'),g=c.querySelector('.mic-gain'),n=c.querySelector('.mic-name');
+      if(!cb||!cb.checked)return[];
+      return[{deviceId:c.dataset.deviceId,label:n?n.textContent:'マイク',gain:parseFloat(g&&g.value)||1}];
+    });
+  }
 
   $('btn-scan').addEventListener('click',async()=>{
-    // スキャン前にも診断を実行して問題があれば即表示
     await runDiag();
     const diag=await diagnoseEnv();
-    // セキュアでない / API がない場合はスキャンしない
     if(!diag.isSecure||!diag.hasMediaDevices){return;}
     if(diag.permState==='denied'){setSt('🔒 マイクがブロックされています。アドレスバーの🔒から許可してください。','err','mic');return;}
-
-    $('btn-scan').disabled=true;
-    setSt('🔍 デバイスをスキャン中...','warn','mic');
+    $('btn-scan').disabled=true;setSt('🔍 デバイスをスキャン中...','warn','mic');
     try{
       const devs=await scanner.scan();
       renderDevList(devs,mixer.activeIds);
       const virt=devs.filter(d=>d.isVirt).length;
-      setSt(
-        `✅ ${devs.length} 件を検出${virt?` (仮想 ${virt} 件含む)`:''}\nチェックして「開始」を押してください`,
-        'ok','mic'
-      );
-      $('btn-ms').disabled=false;
-      // スキャン成功 → 診断ボックスを消す
-      $('diag-box').classList.remove('show');
+      setSt(`✅ ${devs.length} 件を検出${virt?` (仮想 ${virt} 件含む)`:''}\nチェックして「開始」を押してください`,'ok','mic');
+      $('btn-ms').disabled=false;$('diag-box').classList.remove('show');
     }catch(e){
-      // エラーメッセージからユーザー向け案内を生成
       const msg=e.message||String(e);
       let hint='';
-      if(msg.includes('Permission denied')||msg.includes('NotAllowedError')){
-        hint='\n\nアドレスバーの🔒をクリック → マイク → 「許可」に変更 → ページを再読み込み';
-      }else if(msg.includes('NotFoundError')||msg.includes('Requested device not found')){
-        hint='\n\nマイクデバイスが見つかりません。デバイスが接続されているか確認してください。';
-      }
+      if(msg.includes('Permission denied')||msg.includes('NotAllowedError'))hint='\n\nアドレスバーの🔒をクリック → マイク → 「許可」に変更 → ページを再読み込み';
+      else if(msg.includes('NotFoundError')||msg.includes('Requested device not found'))hint='\n\nマイクデバイスが見つかりません。デバイスが接続されているか確認してください。';
       setSt(`❌ ${msg}${hint}`,'err','mic');
-    }finally{
-      $('btn-scan').disabled=false;
-    }
+    }finally{$('btn-scan').disabled=false;}
   });
 
   $('btn-ms').addEventListener('click',async()=>{
     const sel=collectSel();
     if(!sel.length){setSt('⚠ 1つ以上チェックしてください','warn','mic');return;}
-    $('btn-ms').disabled=true;
-    setSt('🎚 接続中...','warn','mic');
+    $('btn-ms').disabled=true;setSt('🎚 接続中...','warn','mic');
     try{
       const mg=clamp(parseFloat($('mic-master').value)||1,0,3);
       const res=await mixer.start(sel,mg,scanner);
@@ -719,37 +984,47 @@ Chromeの場合：アドレスバー左の <strong>🔒 鍵マーク</strong> �
     clearInterval(micLvTimer);$('mlf').style.width='0%';
     renderDevList(scanner.devices,[]);setSt('⏹ 停止しました','ok','mic');
   });
-
   $('mic-master').addEventListener('input',()=>{const v=clamp(parseFloat($('mic-master').value)||1,0,3);$('v-mmaster').textContent=fmtG(v);mixer.setMasterGain(v);});
-
   if(navigator.mediaDevices?.addEventListener){
-    navigator.mediaDevices.addEventListener('devicechange',async()=>{
-      try{await scanner.refresh();renderDevList(scanner.devices,mixer.activeIds);}catch(_){}
-    });
+    navigator.mediaDevices.addEventListener('devicechange',async()=>{try{await scanner.refresh();renderDevList(scanner.devices,mixer.activeIds);}catch(_){}});
   }
+  $('btn-mrs').addEventListener('click',async()=>{
+    if(!micActive)return;
+    const ext=await startRec(parseInt($('ctl-mq').value),true);
+    $('btn-mrs').style.display='none';$('btn-mrstop').style.display='';
+    setSt(`⏺ 録画中 (${ext.toUpperCase()})...`,'warn','mrec');
+  });
+  $('btn-mrstop').addEventListener('click',async()=>{
+    $('btn-mrs').style.display='';$('btn-mrstop').style.display='none';
+    setSt('💾 保存中...','warn','mrec');
+    await stopRec();$('ri').style.display='none';
+    const ext=recMime.startsWith('video/mp4')?'mp4':'webm';
+    await saveBlob(new Blob(recChunks,{type:recMime}),`viz_mic_${ts()}.${ext}`);
+    setSt(`✅ 保存完了 (${ext.toUpperCase()})`,'ok','mrec');
+  });
 
-  $('btn-mrs').addEventListener('click',async()=>{if(!micActive)return;const ext=await startRec(parseInt($('ctl-mq').value),true);$('btn-mrs').style.display='none';$('btn-mrstop').style.display='';setSt(`⏺ 録画中 (${ext.toUpperCase()})...`,'warn','mrec');});
-  $('btn-mrstop').addEventListener('click',async()=>{$('btn-mrs').style.display='';$('btn-mrstop').style.display='none';setSt('💾 保存中...','warn','mrec');await stopRec();$('ri').style.display='none';const ext=recMime.startsWith('video/mp4')?'mp4':'webm';await saveBlob(new Blob(recChunks,{type:recMime}),`viz_mic_${ts()}.${ext}`);setSt(`✅ 保存完了 (${ext.toUpperCase()})`,'ok','mrec');});
-
-  /* 共通バインド */
+  /* ── 共通バインド ── */
   $('ctl-ratio').addEventListener('change',e=>{ratio=e.target.value;doResize();});
-
-  // HUD: デフォルト OFF → チェックなし。クラスで制御
   $('chk-hud').addEventListener('change',e=>$('hud').classList.toggle('show',e.target.checked));
-
   function bR(id,key,vid,dec=2){const el=$(id),vl=$(vid);el.addEventListener('input',()=>{const v=parseFloat(el.value);vl.textContent=v.toFixed(dec);eng.set({[key]:v});});}
   function bS(id,key){$(id).addEventListener('change',e=>eng.set({[key]:e.target.value}));}
   function bC(id,key){$(id).addEventListener('change',e=>eng.set({[key]:e.target.checked}));}
   bS('ctl-cmode','cmode');bR('ctl-h1','h1','v-h1');bR('ctl-h2','h2','v-h2');bR('ctl-hspd','hspd','v-hspd',3);bR('ctl-sat','sat','v-sat');bR('ctl-bri','bri','v-bri');bR('ctl-sens','sens','v-sens',1);bR('ctl-trail','trail','v-trail');bR('ctl-bn','bn','v-bn',0);bR('ctl-wn','wn','v-wn',0);bR('ctl-pn','pn','v-pn',0);
   bC('chk-blobs','showBlobs');bC('chk-waves','showWaves');bC('chk-particles','showParticles');bC('chk-radial','showRadial');bC('chk-bars','showBars');bC('chk-tunnel','showTunnel');
 
-  setInterval(()=>{const e=eng;$('hud').innerHTML=`MODE:${mode.toUpperCase()}<br>BASS:${(e.bass*100).toFixed(0).padStart(3)}% MID:${(e.mid*100).toFixed(0).padStart(3)}% HIGH:${(e.high*100).toFixed(0).padStart(3)}%<br>ENERGY:${(e.energy*100).toFixed(0).padStart(3)}% ${e.beat?'💥 BEAT':''}`;},100);
+  setInterval(()=>{
+    const e=eng;
+    $('hud').innerHTML=`MODE:${mode.toUpperCase()}<br>BASS:${(e.bass*100).toFixed(0).padStart(3)}% MID:${(e.mid*100).toFixed(0).padStart(3)}% HIGH:${(e.high*100).toFixed(0).padStart(3)}%<br>ENERGY:${(e.energy*100).toFixed(0).padStart(3)}% ${e.beat?'💥 BEAT':''}`;
+  },100);
 
   function setP(p){$('pb').style.width=clamp(p,0,100)+'%';}
   function setPT(c,t){$('pt').textContent=`${fmt(c)} / ${fmt(t)}`;}
   function fmt(s){const m=s/60|0,ss=(s%60|0).toString().padStart(2,'0');return`${m}:${ss}`;}
   function ts(){return new Date().toISOString().slice(0,19).replace(/[T:]/g,'-');}
-  function setSt(msg,cls='ok',tgt='file'){const map={file:'st-file',rec:'st-rec',mic:'st-mic',mrec:'st-mrec'};const el=$(map[tgt]);if(el){el.textContent=msg;el.className='sb '+cls;}}
+  function setSt(msg,cls='ok',tgt='file'){
+    const map={file:'st-file',rec:'st-rec',mic:'st-mic',mrec:'st-mrec'};
+    const el=$(map[tgt]);if(el){el.textContent=msg;el.className='sb '+cls;}
+  }
 })();
 </script>
 </body>
