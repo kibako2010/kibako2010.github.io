@@ -96,7 +96,6 @@ header{display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(
 .pm-cr input[type=range]{flex:1;accent-color:var(--accent2);cursor:pointer;min-width:0}
 .pm-cr input[type=number]{width:50px;background:#1a1a3a;color:var(--text);border:1px solid var(--border);border-radius:5px;padding:2px 3px;font-size:10px;text-align:right;-moz-appearance:textfield}
 .pm-cr input[type=number]::-webkit-inner-spin-button,.pm-cr input[type=number]::-webkit-outer-spin-button{opacity:.5}
-/* 進捗バー（書き出し用） */
 #exp-prog-wrap{margin-top:6px;display:none}
 #exp-prog-bg{background:rgba(255,255,255,.07);border-radius:5px;height:7px;overflow:hidden}
 #exp-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));width:0%;border-radius:5px;transition:width .12s}
@@ -167,15 +166,12 @@ canvas{display:block;max-width:100%;max-height:100%}
           <option value="2000000">軽量 2Mbps</option>
         </select>
       </div>
-      <!-- 高速書き出しボタン -->
       <button class="btn bg" id="btn-fast" disabled>⚡ 高速書き出し (MP4)</button>
       <button class="btn bd" id="btn-fast-cancel" style="display:none">✕ キャンセル</button>
-      <!-- 進捗 -->
       <div id="exp-prog-wrap">
         <div id="exp-prog-bg"><div id="exp-prog-fill"></div></div>
         <div id="exp-prog-label">0%</div>
       </div>
-      <!-- リアルタイム録画（フォールバック） -->
       <div style="margin-top:10px">
         <div class="divider">リアルタイム録画（フォールバック）</div>
         <button class="btn bp" id="btn-rs" disabled>⏺ 録画開始</button>
@@ -200,9 +196,7 @@ canvas{display:block;max-width:100%;max-height:100%}
         <span class="v" id="v-mmaster">1.00</span>
       </div>
       <div id="mic-list" class="mic-list">
-        <div class="sb" style="margin-top:0;color:var(--dim);font-size:11px">
-          「デバイスをスキャン」を押してください
-        </div>
+        <div class="sb" style="margin-top:0;color:var(--dim);font-size:11px">「デバイスをスキャン」を押してください</div>
       </div>
       <div style="display:flex;gap:5px;margin-top:8px">
         <button class="btn bp" id="btn-ms" style="flex:1;margin-top:0" disabled>▶ 選択デバイスで開始</button>
@@ -314,13 +308,39 @@ function hsvToRgb(h,s,v){h=((h%1)+1)%1;const i=h*6|0,f=h*6-i,p=v*(1-s),q=v*(1-f*
 const hsvStr=(h,s,v,a=1)=>{const[r,g,b]=hsvToRgb(h,s,v);return`rgba(${r},${g},${b},${+a.toFixed(3)})`;};
 function resolveHue(base,idx,total,S){const{cmode,h1,h2}=S,t=Math.max(total,1);switch(cmode){case'rainbow':return(base+idx/t)%1;case'fixed':return h1;case'dual':return idx%2===0?h1:h2;case'mono':return h1;case'warm':return(h1+idx/t*.22)%1;case'cool':return(.55+h2*.28+idx/t*.18)%1;case'neon':return(h1+idx/t*.5)%1;case'earth':return(.05+h1*.12+idx/t*.14)%1;default:return(base+idx/t)%1;}}
 function resolveSat(S,boost=0){let s=S.sat;if(S.cmode==='mono')s=Math.min(s*.2,.12);if(S.cmode==='neon')s=Math.min(1,s*1.18+boost*.18);return clamp(s,0,1);}
-class VN{constructor(seed=0){this._t=new Float32Array(512);let s=(seed^0xdeadbeef)>>>0;for(let i=0;i<512;i++){s^=s<<13;s^=s>>17;s^=s<<5;this._t[i]=(s>>>0)/4294967296;}}_s(t){return t*t*(3-2*t)}n1(x){const xi=x|0,xf=x-xi,t=this._t;return lerp(t[xi&511],t[(xi+1)&511],this._s(xf))}n2(x,y){const xi=x|0,yi=y|0,xf=x-xi,yf=y-yi,t=this._t;return lerp(lerp(t[(xi+yi*57)&511],t[((xi+1)+yi*57)&511],this._s(xf)),lerp(t[(xi+(yi+1)*57)&511],t[((xi+1)+(yi+1)*57)&511],this._s(xf)),this._s(yf));}}
+
+class VN{
+  constructor(seed=0){
+    this._t=new Float32Array(512);
+    let s=(seed^0xdeadbeef)>>>0;
+    for(let i=0;i<512;i++){s^=s<<13;s^=s>>17;s^=s<<5;this._t[i]=(s>>>0)/4294967296;}
+  }
+  _s(t){return t*t*(3-2*t)}
+  n1(x){const xi=x|0,xf=x-xi,t=this._t;return lerp(t[xi&511],t[(xi+1)&511],this._s(xf));}
+  n2(x,y){const xi=x|0,yi=y|0,xf=x-xi,yf=y-yi,t=this._t;return lerp(lerp(t[(xi+yi*57)&511],t[((xi+1)+yi*57)&511],this._s(xf)),lerp(t[(xi+(yi+1)*57)&511],t[((xi+1)+(yi+1)*57)&511],this._s(xf)),this._s(yf));}
+}
 
 /* ── PM ── */
-const PM_DEFS=[{key:'spin',label:'自転速度',min:-3,max:3,step:.05,def:0,spd:true},{key:'spindir',label:'自転方向',type:'select',options:[['1','右回り'],['-1','左回り'],['beat','ビート反転']],def:'1'},{key:'orbit',label:'公転速度',min:-2,max:2,step:.02,def:0,spd:true},{key:'orbitr',label:'公転半径',min:0,max:400,step:5,def:0,spd:false},{key:'swx',label:'揺れX',min:0,max:300,step:2,def:0,spd:false},{key:'swy',label:'揺れY',min:0,max:300,step:2,def:0,spd:false},{key:'zpulse',label:'ズームP',min:0,max:1,step:.02,def:0,spd:false},{key:'twist',label:'ねじれ',min:0,max:3,step:.05,def:0,spd:false}];
+const PM_DEFS=[
+  {key:'spin',label:'自転速度',min:-3,max:3,step:.05,def:0,spd:true},
+  {key:'spindir',label:'自転方向',type:'select',options:[['1','右回り'],['-1','左回り'],['beat','ビート反転']],def:'1'},
+  {key:'orbit',label:'公転速度',min:-2,max:2,step:.02,def:0,spd:true},
+  {key:'orbitr',label:'公転半径',min:0,max:400,step:5,def:0,spd:false},
+  {key:'swx',label:'揺れX',min:0,max:300,step:2,def:0,spd:false},
+  {key:'swy',label:'揺れY',min:0,max:300,step:2,def:0,spd:false},
+  {key:'zpulse',label:'ズームP',min:0,max:1,step:.02,def:0,spd:false},
+  {key:'twist',label:'ねじれ',min:0,max:3,step:.05,def:0,spd:false}
+];
 const PM_PARTS=['blob','wave','particle','radial','tunnel'];
-const partPS={};for(const p of PM_PARTS){partPS[p]={};for(const d of PM_DEFS)partPS[p][d.key]=d.def;}
-class PM{constructor(pn,idx,total,W,H){this.pn=pn;this.idx=idx;this.total=total;this.W=W;this.H=H;this.selfA=rand(0,TAU);this.orbitA=TAU*idx/Math.max(total,1)+rand(0,.8);this.swOffX=rand(0,100);this.swOffY=rand(0,100);this.zs=0;}get PS(){return partPS[this.pn];}update(dt,beat){const PS=this.PS,sd=PS.spindir==='beat'?(beat?1:-1):(+PS.spindir);this.selfA+=PS.spin*sd*dt*60*.04;this.orbitA+=PS.orbit*dt*60*.018;this.zs=lerp(this.zs,beat?PS.zpulse*.18:0,.12);}tf(T){const PS=this.PS,ox=this.W/2+PS.orbitr*Math.cos(this.orbitA),oy=this.H/2+PS.orbitr*Math.sin(this.orbitA);return{ox:ox+PS.swx*Math.sin(T*1.07+this.swOffX),oy:oy+PS.swy*Math.cos(T*.93+this.swOffY),rot:this.selfA,sc:1+this.zs};}}
+const partPS={};
+for(const p of PM_PARTS){partPS[p]={};for(const d of PM_DEFS)partPS[p][d.key]=d.def;}
+
+class PM{
+  constructor(pn,idx,total,W,H){this.pn=pn;this.idx=idx;this.total=total;this.W=W;this.H=H;this.selfA=rand(0,TAU);this.orbitA=TAU*idx/Math.max(total,1)+rand(0,.8);this.swOffX=rand(0,100);this.swOffY=rand(0,100);this.zs=0;}
+  get PS(){return partPS[this.pn];}
+  update(dt,beat){const PS=this.PS,sd=PS.spindir==='beat'?(beat?1:-1):(+PS.spindir);this.selfA+=PS.spin*sd*dt*60*.04;this.orbitA+=PS.orbit*dt*60*.018;this.zs=lerp(this.zs,beat?PS.zpulse*.18:0,.12);}
+  tf(T){const PS=this.PS,ox=this.W/2+PS.orbitr*Math.cos(this.orbitA),oy=this.H/2+PS.orbitr*Math.sin(this.orbitA);return{ox:ox+PS.swx*Math.sin(T*1.07+this.swOffX),oy:oy+PS.swy*Math.cos(T*.93+this.swOffY),rot:this.selfA,sc:1+this.zs};}
+}
 
 /* ── Scene elements ── */
 class Blob{constructor(W,H,idx,total){this.W=W;this.H=H;this.idx=idx;this.total=total;this.na=new VN(idx*7+3);this.nb=new VN(idx*13+9);this.bx=rand(W*.15,W*.85);this.by=rand(H*.15,H*.85);this.r=rand(45,155);this.np=(Math.random()*6|0)+7;this.bp=rand(0,TAU);this.bspd=rand(.0018,.009);this.vx=rand(-.25,.25);this.vy=rand(-.25,.25);this.hue=Math.random();this.hs=rand(.0004,.0016);this.al=rand(.13,.42);this.nt=rand(0,100);this.ns=rand(.005,.017);this.es=0;this.pm=new PM('blob',idx,total,W,H);}update(dt,bass,mid,high,beat,S,T){this.bp+=this.bspd*dt*60;this.nt+=this.ns*dt*60;this.hue=(this.hue+this.hs*dt*60)%1;this.es=lerp(this.es,(bass*1.3+mid*.5+high*.2)*S.sens,.12);if(beat){this.vx+=rand(-1.8,1.8);this.vy+=rand(-1.8,1.8);}this.vx*=.97;this.vy*=.97;this.vx+=(this.nb.n2(this.nt*.3,0)*2-1)*.06;this.vy+=(this.nb.n2(0,this.nt*.3)*2-1)*.06;this.bx+=this.vx*dt*60;this.by+=this.vy*dt*60;const mg=110;if(this.bx<-mg)this.bx=this.W+mg;else if(this.bx>this.W+mg)this.bx=-mg;if(this.by<-mg)this.by=this.H+mg;else if(this.by>this.H+mg)this.by=-mg;this.pm.update(dt,beat);}draw(ctx,S,gH,T){const tr=this.pm.tf(T),dx=this.bx+(tr.ox-this.W/2),dy=this.by+(tr.oy-this.H/2);const rB=this.r*(1+this.es*1.55)*tr.sc;ctx.save();ctx.translate(dx,dy);ctx.rotate(tr.rot);ctx.translate(-dx,-dy);ctx.beginPath();for(let i=0;i<=this.np;i++){const k=i%this.np,a=TAU*k/this.np+this.bp,nv=this.na.n1(this.nt+k*2.4)*.6+.4,rr=rB*(.6+.65*nv);i===0?ctx.moveTo(dx+rr*Math.cos(a),dy+rr*Math.sin(a)):ctx.lineTo(dx+rr*Math.cos(a),dy+rr*Math.sin(a));}ctx.closePath();const h=resolveHue(gH,this.idx,this.total,S),sat=resolveSat(S,this.es),bri=S.bri;const g=ctx.createRadialGradient(dx,dy,0,dx,dy,rB*1.2);g.addColorStop(0,hsvStr(h,sat,bri,this.al*1.35));g.addColorStop(1,hsvStr(h+.07,sat,bri*.55,this.al*.25));ctx.fillStyle=g;ctx.fill();ctx.restore();}}
@@ -331,21 +351,54 @@ class Tunnel{constructor(W,H){this.W=W;this.H=H;this.rings=22;this.phase=0;this.
 class Bars{constructor(W,H){this.W=W;this.H=H;}draw(ctx,fft,S,gH){const n=fft.length,bw=this.W/n;ctx.globalCompositeOperation='lighter';for(let i=0;i<n;i++){const v=fft[i]/255,h2=v*this.H*.27,h=resolveHue(gH,i,n,S),sat=resolveSat(S),bri=S.bri;const g=ctx.createLinearGradient(0,this.H-h2,0,this.H);g.addColorStop(0,hsvStr(h,sat,bri,.52));g.addColorStop(1,hsvStr(h,sat,bri,.04));ctx.fillStyle=g;ctx.fillRect(i*bw,this.H-h2,bw-1,h2);ctx.fillStyle=hsvStr(h,sat,bri,.05);ctx.fillRect(i*bw,0,bw-1,h2*.16);}ctx.globalCompositeOperation='source-over';}}
 
 /* ── Engine ── */
-class Engine{constructor(cv){this.cv=cv;this.ctx=cv.getContext('2d',{alpha:false,desynchronized:true});this.W=cv.width;this.H=cv.height;this.blobs=[];this.waves=[];this.particles=[];this.radial=this.tunnel=this.bars=null;this.T=0;this.hs=0;this.fft=new Uint8Array(128).fill(0);this.bass=this.mid=this.high=this.energy=0;this.beat=false;this.S={sens:2,trail:.18,bn:16,wn:6,pn:120,sat:.8,bri:.85,cmode:'rainbow',h1:0,h2:.5,hspd:.018,showBlobs:true,showWaves:true,showParticles:true,showRadial:true,showBars:true,showTunnel:true};this._raf=null;this._rebuild();}resize(W,H){this.W=W;this.H=H;this.cv.width=W;this.cv.height=H;this._rebuild();}_rebuild(){const{bn,wn,pn}=this.S;this.blobs=Array.from({length:bn},(_,i)=>new Blob(this.W,this.H,i,bn));this.waves=Array.from({length:wn},(_,i)=>new Wave(this.W,this.H,i,wn));this.particles=Array.from({length:pn},(_,i)=>new Particle(this.W,this.H,i,pn));this.radial=new Radial(this.W,this.H);this.tunnel=new Tunnel(this.W,this.H);this.bars=new Bars(this.W,this.H);}set(s){const p={...this.S};Object.assign(this.S,s);if(s.bn!==p.bn||s.wn!==p.wn||s.pn!==p.pn)this._rebuild();}start(){if(this._raf)return;this._last=performance.now();const loop=now=>{this._raf=requestAnimationFrame(loop);const dt=Math.min((now-this._last)/1000,.05);this._last=now;this._frame(dt);};this._raf=requestAnimationFrame(loop);}stop(){if(this._raf){cancelAnimationFrame(this._raf);this._raf=null;}}_frame(dt){this.T+=dt;this.hs=(this.hs+this.S.hspd*dt*60)%1;const S=this.S,{bass,mid,high,energy,beat,fft}=this;if(S.showBlobs)this.blobs.forEach(b=>b.update(dt,bass,mid,high,beat,S,this.T));if(S.showWaves)this.waves.forEach(w=>w.update(dt,bass,mid,beat,S,this.T));if(S.showParticles)this.particles.forEach(p=>p.update(dt,energy,beat,S,this.T));if(S.showRadial)this.radial.update(dt,beat);if(S.showTunnel)this.tunnel.update(dt,energy,beat,S);this._draw();}_draw(){const ctx=this.ctx,S=this.S,{fft,energy,beat}=this,W=this.W,H=this.H;ctx.globalAlpha=S.trail;ctx.fillStyle=`hsl(${this.hs*360|0},50%,4%)`;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;{const br=energy*S.sens,g=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.62);g.addColorStop(0,hsvStr(this.hs,resolveSat(S)*.55,.06+br*.07,1));g.addColorStop(1,hsvStr(this.hs+.33,resolveSat(S)*.75,.02,1));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}if(S.showTunnel)this.tunnel.draw(ctx,fft,energy,S,this.hs,this.T);if(S.showWaves)this.waves.forEach(w=>w.draw(ctx,fft,S,this.hs,this.T));if(S.showBlobs){ctx.globalCompositeOperation='screen';this.blobs.forEach(b=>b.draw(ctx,S,this.hs,this.T));ctx.globalCompositeOperation='source-over';}if(S.showRadial)this.radial.draw(ctx,fft,energy,beat,S,this.hs,this.T);if(S.showParticles){ctx.globalCompositeOperation='lighter';this.particles.forEach(p=>p.draw(ctx,S,this.hs,this.T));ctx.globalCompositeOperation='source-over';}if(S.showBars)this.bars.draw(ctx,fft,S,this.hs);}}
+class Engine{
+  constructor(cv){
+    this.cv=cv;this.ctx=cv.getContext('2d',{alpha:false,desynchronized:true});
+    this.W=cv.width;this.H=cv.height;
+    this.blobs=[];this.waves=[];this.particles=[];this.radial=this.tunnel=this.bars=null;
+    this.T=0;this.hs=0;this.fft=new Uint8Array(128).fill(0);
+    this.bass=this.mid=this.high=this.energy=0;this.beat=false;
+    this.S={sens:2,trail:.18,bn:16,wn:6,pn:120,sat:.8,bri:.85,cmode:'rainbow',h1:0,h2:.5,hspd:.018,showBlobs:true,showWaves:true,showParticles:true,showRadial:true,showBars:true,showTunnel:true};
+    this._raf=null;this._rebuild();
+  }
+  resize(W,H){this.W=W;this.H=H;this.cv.width=W;this.cv.height=H;this._rebuild();}
+  _rebuild(){
+    const{bn,wn,pn}=this.S;
+    this.blobs=Array.from({length:bn},(_,i)=>new Blob(this.W,this.H,i,bn));
+    this.waves=Array.from({length:wn},(_,i)=>new Wave(this.W,this.H,i,wn));
+    this.particles=Array.from({length:pn},(_,i)=>new Particle(this.W,this.H,i,pn));
+    this.radial=new Radial(this.W,this.H);this.tunnel=new Tunnel(this.W,this.H);this.bars=new Bars(this.W,this.H);
+  }
+  set(s){const p={...this.S};Object.assign(this.S,s);if(s.bn!==p.bn||s.wn!==p.wn||s.pn!==p.pn)this._rebuild();}
+  start(){if(this._raf)return;this._last=performance.now();const loop=now=>{this._raf=requestAnimationFrame(loop);const dt=Math.min((now-this._last)/1000,.05);this._last=now;this._frame(dt);};this._raf=requestAnimationFrame(loop);}
+  stop(){if(this._raf){cancelAnimationFrame(this._raf);this._raf=null;}}
+  _frame(dt){
+    this.T+=dt;this.hs=(this.hs+this.S.hspd*dt*60)%1;
+    const S=this.S,{bass,mid,high,energy,beat,fft}=this;
+    if(S.showBlobs)this.blobs.forEach(b=>b.update(dt,bass,mid,high,beat,S,this.T));
+    if(S.showWaves)this.waves.forEach(w=>w.update(dt,bass,mid,beat,S,this.T));
+    if(S.showParticles)this.particles.forEach(p=>p.update(dt,energy,beat,S,this.T));
+    if(S.showRadial)this.radial.update(dt,beat);
+    if(S.showTunnel)this.tunnel.update(dt,energy,beat,S);
+    this._draw();
+  }
+  _draw(){
+    const ctx=this.ctx,S=this.S,{fft,energy,beat}=this,W=this.W,H=this.H;
+    ctx.globalAlpha=S.trail;ctx.fillStyle=`hsl(${this.hs*360|0},50%,4%)`;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    {const br=energy*S.sens,g=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.62);g.addColorStop(0,hsvStr(this.hs,resolveSat(S)*.55,.06+br*.07,1));g.addColorStop(1,hsvStr(this.hs+.33,resolveSat(S)*.75,.02,1));ctx.fillStyle=g;ctx.fillRect(0,0,W,H);}
+    if(S.showTunnel)this.tunnel.draw(ctx,fft,energy,S,this.hs,this.T);
+    if(S.showWaves)this.waves.forEach(w=>w.draw(ctx,fft,S,this.hs,this.T));
+    if(S.showBlobs){ctx.globalCompositeOperation='screen';this.blobs.forEach(b=>b.draw(ctx,S,this.hs,this.T));ctx.globalCompositeOperation='source-over';}
+    if(S.showRadial)this.radial.draw(ctx,fft,energy,beat,S,this.hs,this.T);
+    if(S.showParticles){ctx.globalCompositeOperation='lighter';this.particles.forEach(p=>p.draw(ctx,S,this.hs,this.T));ctx.globalCompositeOperation='source-over';}
+    if(S.showBars)this.bars.draw(ctx,fft,S,this.hs);
+  }
+}
 
 /* ── 環境診断 ── */
 async function diagnoseEnv(){
-  const result={
-    isSecure:window.isSecureContext,
-    protocol:location.protocol,
-    isFile:location.protocol==='file:',
-    isLocalhost:['localhost','127.0.0.1','[::1]'].includes(location.hostname),
-    hasMediaDevices:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),
-    permState:'unknown',
-  };
-  if(navigator.permissions){
-    try{const ps=await navigator.permissions.query({name:'microphone'});result.permState=ps.state;}catch(_){}
-  }
+  const result={isSecure:window.isSecureContext,protocol:location.protocol,isFile:location.protocol==='file:',isLocalhost:['localhost','127.0.0.1','[::1]'].includes(location.hostname),hasMediaDevices:!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),permState:'unknown'};
+  if(navigator.permissions){try{const ps=await navigator.permissions.query({name:'microphone'});result.permState=ps.state;}catch(_){}}
   return result;
 }
 
@@ -356,18 +409,13 @@ class DeviceScanner{
   get permOk(){return this._permOk;}
   async scan(){
     let permStream=null;
-    const attempts=[
-      {audio:true,video:false},
-      {audio:{echoCancellation:true},video:false},
-      {audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false},
-    ];
+    const attempts=[{audio:true,video:false},{audio:{echoCancellation:true},video:false},{audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false}];
     let lastErr=null;
     for(const c of attempts){try{permStream=await navigator.mediaDevices.getUserMedia(c);break;}catch(e){lastErr=e;}}
     if(!permStream)throw lastErr||new Error('マイクの許可が得られませんでした');
     this._permOk=true;
     let raw=[];
-    try{raw=await navigator.mediaDevices.enumerateDevices();}
-    finally{permStream.getTracks().forEach(t=>t.stop());}
+    try{raw=await navigator.mediaDevices.enumerateDevices();}finally{permStream.getTracks().forEach(t=>t.stop());}
     return this._buildList(raw);
   }
   async refresh(){const raw=await navigator.mediaDevices.enumerateDevices();return this._buildList(raw,true);}
@@ -376,8 +424,7 @@ class DeviceScanner{
     const isVirt=l=>{const ll=(l||'').toLowerCase();return VIRT.some(k=>ll.includes(k));};
     const prevMap=new Map(this._devices.map(d=>[d.deviceId,d]));
     const seen=new Set();
-    const inputs=raw.filter(d=>d.kind==='audioinput');
-    this._devices=inputs.filter(d=>{if(!d.deviceId)return false;if(seen.has(d.deviceId))return false;seen.add(d.deviceId);return true;}).map(d=>{
+    this._devices=raw.filter(d=>d.kind==='audioinput').filter(d=>{if(!d.deviceId||seen.has(d.deviceId))return false;seen.add(d.deviceId);return true;}).map(d=>{
       const prev=prevMap.get(d.deviceId);
       const label=d.label||(preserveLabels&&prev&&prev.label)||`入力デバイス (${d.deviceId.slice(0,8)})`;
       return{deviceId:d.deviceId,label,groupId:d.groupId||'',isVirt:isVirt(label),isDefault:d.deviceId==='default',isComm:d.deviceId==='communications'};
@@ -413,8 +460,7 @@ class MicMixer{
     if(!opened.length)throw new Error('選択デバイスをすべて開けませんでした: '+failed.map(f=>f.label).join(', '));
     this._entries=opened;this._master=this.actx.createGain();this._master.gain.value=clamp(parseFloat(mg)||1,0,3);
     opened.forEach(e=>{e.source.connect(e.gain);e.gain.connect(this._master);});
-    this._link(this._master);
-    return{opened,failed};
+    this._link(this._master);return{opened,failed};
   }
   stop(){this._entries.forEach(e=>{try{e.source.disconnect();}catch(_){}try{e.gain.disconnect();}catch(_){}try{e.stream.getTracks().forEach(t=>t.stop());}catch(_){}});if(this._master){try{this._master.disconnect();}catch(_){}this._master=null;}this._entries=[];this._detach();this._level=0;}
   setInputGain(id,v){const e=this._entries.find(e=>e.deviceId===id);if(e)e.gain.gain.value=clamp(+v||0,0,3);}
@@ -427,10 +473,8 @@ class MicMixer{
 async function saveBlob(blob,name){
   if(window.showSaveFilePicker){
     const ext=name.split('.').pop(),isMP4=ext==='mp4';
-    try{
-      const fh=await window.showSaveFilePicker({suggestedName:name,types:[{description:isMP4?'MP4 Video':'WebM Video',accept:isMP4?{'video/mp4':['.mp4']}:{'video/webm':['.webm']}}]});
-      const w=await fh.createWritable();await w.write(blob);await w.close();return;
-    }catch(e){if(e.name==='AbortError')return;}
+    try{const fh=await window.showSaveFilePicker({suggestedName:name,types:[{description:isMP4?'MP4 Video':'WebM Video',accept:isMP4?{'video/mp4':['.mp4']}:{'video/webm':['.webm']}}]});const w=await fh.createWritable();await w.write(blob);await w.close();return;}
+    catch(e){if(e.name==='AbortError')return;}
   }
   const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=name;document.body.appendChild(a);a.click();
@@ -439,13 +483,16 @@ async function saveBlob(blob,name){
 const RATIOS={'16:9':[16,9],'9:16':[9,16],'4:3':[4,3],'3:4':[3,4],'1:1':[1,1]};
 function applyRatio(r,wrap,cv,eng){
   const[rw,rh]=RATIOS[r]||[16,9],ww=wrap.clientWidth,wh=wrap.clientHeight;
-  let W,H;
-  if(ww/wh>rw/rh){H=wh;W=H*rw/rh;}else{W=ww;H=W*rh/rw;}
+  let W,H;if(ww/wh>rw/rh){H=wh;W=H*rw/rh;}else{W=ww;H=W*rh/rw;}
   W=Math.round(W);H=Math.round(H);
   cv.style.width=W+'px';cv.style.height=H+'px';cv.width=W;cv.height=H;eng.resize(W,H);
 }
 
-/* ── 高速書き出しユーティリティ ── */
+/* ================================================================
+   高速書き出しユーティリティ
+   ★ 修正版: VideoEncoder / AudioEncoder を完全に独立させ、
+     音声エンコードエラーが映像エンコーダを汚染しないよう分離
+================================================================ */
 const EFS=256,EFB=EFS>>1;
 const EFW=new Float32Array(EFS);
 for(let i=0;i<EFS;i++)EFW[i]=.5-.5*Math.cos(TAU*i/(EFS-1));
@@ -456,15 +503,48 @@ const EFFP=(()=>{
   for(let i=0;i<n>>1;i++){const a=TAU*i/n;cs[i]=Math.cos(a);ss[i]=Math.sin(a);}
   return{n,br,cs,ss};
 })();
-function mkEC(W,H){if(typeof OffscreenCanvas!=='undefined')return new OffscreenCanvas(W,H);const c=document.createElement('canvas');c.width=W;c.height=H;return c;}
+
+function mkEC(W,H){
+  if(typeof OffscreenCanvas!=='undefined')return new OffscreenCanvas(W,H);
+  const c=document.createElement('canvas');c.width=W;c.height=H;return c;
+}
+
+/* AudioEncoder の設定候補を優先順で試す */
 async function getFAC(ab){
   if(!ab||typeof AudioEncoder==='undefined')return null;
-  const cfg={codec:'mp4a.40.2',sampleRate:ab.sampleRate,numberOfChannels:Math.min(2,Math.max(1,ab.numberOfChannels)),bitrate:128000};
-  if(typeof AudioEncoder.isConfigSupported!=='function')return cfg;
-  try{const r=await AudioEncoder.isConfigSupported(cfg);return r&&r.supported?cfg:null;}catch(_){return null;}
+  const sr=ab.sampleRate,ch=Math.min(2,Math.max(1,ab.numberOfChannels));
+  const candidates=[
+    {codec:'mp4a.40.2',sampleRate:sr,numberOfChannels:ch,bitrate:128000},
+    {codec:'mp4a.40.2',sampleRate:44100,numberOfChannels:ch,bitrate:128000},
+    {codec:'mp4a.40.2',sampleRate:48000,numberOfChannels:ch,bitrate:128000},
+    {codec:'mp4a.40.2',sampleRate:sr,numberOfChannels:1,bitrate:96000},
+  ];
+  if(typeof AudioEncoder.isConfigSupported!=='function'){
+    return candidates[0]; // フォールバック: チェックなしで返す
+  }
+  for(const cfg of candidates){
+    try{
+      const r=await AudioEncoder.isConfigSupported(cfg);
+      if(r&&r.supported)return cfg;
+    }catch(_){}
+  }
+  return null; // 音声なしで映像だけ書き出す
 }
-function cloneES(src,dst){dst.set({...src.S});dst.T=0;dst.hs=0;dst.bass=dst.mid=dst.high=dst.energy=0;dst.beat=false;dst.fft=new Uint8Array(src.fft&&src.fft.length?src.fft.length:EFB);}
-function mix2mono(ab){const n=ab.length,ch=Math.max(1,ab.numberOfChannels);if(ch===1)return new Float32Array(ab.getChannelData(0));const m=new Float32Array(n);for(let c=0;c<ch;c++){const d=ab.getChannelData(c);for(let i=0;i<n;i++)m[i]+=d[i];}const g=1/ch;for(let i=0;i<n;i++)m[i]*=g;return m;}
+
+function cloneES(src,dst){
+  dst.set({...src.S});dst.T=0;dst.hs=0;dst.bass=dst.mid=dst.high=dst.energy=0;dst.beat=false;
+  dst.fft=new Uint8Array(src.fft&&src.fft.length?src.fft.length:EFB);
+}
+
+function mix2mono(ab){
+  const n=ab.length,ch=Math.max(1,ab.numberOfChannels);
+  if(ch===1)return new Float32Array(ab.getChannelData(0));
+  const m=new Float32Array(n);
+  for(let c=0;c<ch;c++){const d=ab.getChannelData(c);for(let i=0;i<n;i++)m[i]+=d[i];}
+  const g=1/ch;for(let i=0;i<n;i++)m[i]*=g;
+  return m;
+}
+
 function fftMag(mono,si,out,re,im){
   const{n,br,cs,ss}=EFFP,half=n>>1,start=(si-half)|0;
   for(let i=0;i<n;i++){const s=start+i;re[i]=(s>=0&&s<mono.length?mono[s]:0)*EFW[i];im[i]=0;}
@@ -473,6 +553,7 @@ function fftMag(mono,si,out,re,im){
   const fl=-72,cl=0;
   for(let i=0;i<out.length;i++){const rr=re[i],ii=im[i],mag=Math.sqrt(rr*rr+ii*ii)+1e-8,db=20*Math.log10(mag);out[i]=clamp((db-fl)/(cl-fl)*255,0,255)|0;}
 }
+
 async function buildFF(ab,dur,fps,cb,ct){
   const mono=mix2mono(ab),sr=ab.sampleRate,tot=Math.max(1,Math.ceil(dur*fps));
   const frames=new Array(tot),fft=new Uint8Array(EFB),sm=new Float32Array(EFB),re=new Float32Array(EFS),im=new Float32Array(EFS),hist=new Float32Array(30);
@@ -492,82 +573,264 @@ async function buildFF(ab,dur,fps,cb,ct){
   }
   return frames;
 }
+
 async function decodeAF(file){
-  const ab=await file.arrayBuffer(),tc=new OfflineAudioContext(1,1,44100),buf=await tc.decodeAudioData(ab.slice(0));
+  const ab=await file.arrayBuffer();
+  // OfflineAudioContext はデコードのみに使用
+  const tc=new OfflineAudioContext(2,1,44100);
+  const buf=await tc.decodeAudioData(ab.slice(0));
   try{await tc.close();}catch(_){}
   return buf;
 }
-async function encAT({audioBuf,muxer,ct,audioCfg}){
-  if(!audioBuf||!audioCfg)return false;
-  let done=false;
-  const enc=new AudioEncoder({output:(c,m)=>{if(!done)muxer.addAudioChunk(c,m);},error:e=>console.error(e)});
-  enc.configure(audioCfg);
-  const sr=audioCfg.sampleRate,ch=audioCfg.numberOfChannels,sL=audioBuf.getChannelData(0),sR=ch>1?audioBuf.getChannelData(1):sL;
-  const cs=8192;let off=0;
-  while(off<audioBuf.length){
-    if(ct.cancelled)break;
-    const len=Math.min(cs,audioBuf.length-off),pl=new Float32Array(len*ch);
-    pl.set(sL.subarray(off,off+len),0);
-    if(ch>1)pl.set(sR.subarray(off,off+len),len);
-    const ad=new AudioData({format:'f32-planar',sampleRate:sr,numberOfFrames:len,numberOfChannels:ch,timestamp:Math.round(off/sr*1e6),data:pl});
-    if(enc.state==='configured')enc.encode(ad);
-    ad.close();off+=len;
-    if(enc.encodeQueueSize>8&&(off&32767)===0)await enc.flush();
-    if((off/cs&15)===0)await sleep(0);
-  }
-  if(enc.state==='configured')await enc.flush();
-  done=true;enc.close();
-  return!ct.cancelled;
+
+/* ================================================================
+   ★ 修正核心: encodeAudio
+   - VideoEncoder とは完全に独立したスコープで実行
+   - エラーを Promise で捕捉し、上位に伝播させずに警告だけ出す
+   - muxer への addAudioChunk は try/catch で保護
+================================================================ */
+async function encodeAudio(audioBuf, muxer, audioCfg, cancelToken){
+  return new Promise((resolve)=>{
+    if(!audioBuf||!audioCfg){resolve(false);return;}
+
+    let encDone=false;
+    let encErr=null;
+
+    const enc=new AudioEncoder({
+      output:(chunk, meta)=>{
+        if(encDone)return;
+        try{ muxer.addAudioChunk(chunk, meta); }
+        catch(e){ encErr=e; console.warn('addAudioChunk error:',e); }
+      },
+      error:(e)=>{
+        encErr=e;
+        console.warn('AudioEncoder error:',e);
+        // エラーが出ても resolve して映像エンコードを続行
+        encDone=true;
+        resolve(false);
+      }
+    });
+
+    (async()=>{
+      try{
+        enc.configure(audioCfg);
+        const sr=audioCfg.sampleRate,ch=audioCfg.numberOfChannels;
+        // チャンネルデータを audioCfg.numberOfChannels に合わせる
+        const sL=audioBuf.getChannelData(0);
+        const sR=(ch>1&&audioBuf.numberOfChannels>1)?audioBuf.getChannelData(1):sL;
+        const cs=4096; // チャンクを小さくしてキューを詰まらせない
+        let off=0;
+        while(off<audioBuf.length){
+          if(cancelToken.cancelled||encDone)break;
+          // キューが詰まっていたら待機
+          while(enc.encodeQueueSize>4&&!encDone){await sleep(5);}
+          if(encDone)break;
+          const len=Math.min(cs,audioBuf.length-off);
+          const pl=new Float32Array(len*ch);
+          pl.set(sL.subarray(off,off+len),0);
+          if(ch>1)pl.set(sR.subarray(off,off+len),len);
+          const ad=new AudioData({
+            format:'f32-planar',
+            sampleRate:sr,
+            numberOfFrames:len,
+            numberOfChannels:ch,
+            timestamp:Math.round(off/sr*1e6),
+            data:pl
+          });
+          if(enc.state==='configured'){
+            enc.encode(ad);
+          }
+          ad.close();
+          off+=len;
+          if((off/cs&7)===0)await sleep(0);
+        }
+        if(enc.state==='configured')await enc.flush();
+        encDone=true;
+        enc.close();
+        resolve(!encErr&&!cancelToken.cancelled);
+      }catch(e){
+        console.warn('encodeAudio exception:',e);
+        encDone=true;
+        try{if(enc.state==='configured')enc.close();}catch(_){}
+        resolve(false); // エラーでも resolve して映像エンコードを続行
+      }
+    })();
+  });
 }
+
+/* ================================================================
+   ★ 修正核心: fastExport
+   - VideoEncoder を最初に生成・configure し「確実に動く状態」にする
+   - 音声エンコードは VideoEncoder とは完全に分離
+   - encode前に必ず ve.state チェック
+   - エラー時も ve を安全にクローズ
+================================================================ */
 async function fastExport({eng,audioFile,duration,fps,bitrate,W,H,progressCb,cancelToken}){
   if(typeof Mp4Muxer==='undefined')throw new Error('mp4-muxer が読み込まれていません');
+
   const tot=Math.max(1,Math.ceil(duration*fps));
-  let audioBuf=null,ff=null,ac=null;
+  let audioBuf=null,ff=null,audioCfg=null;
+
+  /* ── Step1: 音声デコード & FFT フレーム生成 (0%〜18%) ── */
   if(audioFile){
-    audioBuf=await decodeAF(audioFile);
+    if(progressCb)progressCb(0);
+    try{
+      audioBuf=await decodeAF(audioFile);
+    }catch(e){
+      console.warn('音声デコード失敗、映像のみで続行:',e);
+      audioBuf=null;
+    }
     if(cancelToken.cancelled)return null;
-    ff=await buildFF(audioBuf,duration,fps,p=>{if(progressCb)progressCb(p*.18);},cancelToken);
-    if(cancelToken.cancelled||!ff)return null;
-    ac=await getFAC(audioBuf);
+
+    if(audioBuf){
+      ff=await buildFF(audioBuf,duration,fps,p=>{if(progressCb)progressCb(p*.18);},cancelToken);
+      if(cancelToken.cancelled||!ff)return null;
+      audioCfg=await getFAC(audioBuf);
+      if(!audioCfg)console.warn('AudioEncoder 非対応のため音声なしで書き出します');
+    }
   }
+  if(progressCb)progressCb(.18);
+
+  /* ── Step2: Muxer 生成 ── */
   const muxer=new Mp4Muxer.Muxer({
     target:new Mp4Muxer.ArrayBufferTarget(),
     video:{codec:'avc',width:W,height:H},
-    audio:ac?{codec:'aac',sampleRate:ac.sampleRate,numberOfChannels:ac.numberOfChannels}:undefined,
+    audio:audioCfg?{codec:'aac',sampleRate:audioCfg.sampleRate,numberOfChannels:audioCfg.numberOfChannels}:undefined,
     fastStart:'in-memory',
     firstTimestampBehavior:'offset'
   });
-  let vD=false;
-  const ve=new VideoEncoder({output:(c,m)=>{if(!vD)muxer.addVideoChunk(c,m);},error:e=>console.error(e)});
-  ve.configure({codec:'avc1.42001f',width:W,height:H,bitrate,bitrateMode:'variable',framerate:fps,latencyMode:'quality'});
-  if(audioBuf&&ac){
-    await encAT({audioBuf,muxer,ct:cancelToken,audioCfg:ac});
+
+  /* ── Step3: VideoEncoder を最初に生成・configure ── */
+  // ★ ここで一度だけ configure し、以後 state を必ず確認してから使う
+  let veError=null;
+  const ve=new VideoEncoder({
+    output:(chunk,meta)=>{
+      try{ muxer.addVideoChunk(chunk,meta); }
+      catch(e){ console.warn('addVideoChunk error:',e); }
+    },
+    error:(e)=>{
+      veError=e;
+      console.error('VideoEncoder error:',e);
+    }
+  });
+
+  try{
+    ve.configure({
+      codec:'avc1.42001f',
+      width:W,
+      height:H,
+      bitrate,
+      bitrateMode:'variable',
+      framerate:fps,
+      latencyMode:'quality'
+    });
+  }catch(e){
+    // configure 失敗 → フォールバックコーデックで再試行
+    console.warn('avc1.42001f configure 失敗、フォールバック:',e);
+    try{
+      ve.configure({
+        codec:'avc1.4d001f',
+        width:W,
+        height:H,
+        bitrate,
+        bitrateMode:'variable',
+        framerate:fps,
+        latencyMode:'quality'
+      });
+    }catch(e2){
+      try{ve.close();}catch(_){}
+      throw new Error('VideoEncoder の初期化に失敗しました: '+e2.message);
+    }
   }
-  if(progressCb)progressCb(.30);
-  if(cancelToken.cancelled){if(ve.state==='configured')ve.close();return null;}
-  const ec=mkEC(W,H),ee=new Engine(ec);
+
+  if(progressCb)progressCb(.20);
+
+  /* ── Step4: 音声エンコード (20%〜32%) ── */
+  // VideoEncoder とは完全に独立したスコープで実行
+  if(audioBuf&&audioCfg){
+    await encodeAudio(audioBuf,muxer,audioCfg,cancelToken);
+    if(cancelToken.cancelled){
+      try{if(ve.state==='configured')ve.close();}catch(_){}
+      return null;
+    }
+  }
+  if(progressCb)progressCb(.32);
+
+  /* ── Step5: 映像エンコード (32%〜100%) ── */
+  const ec=mkEC(W,H);
+  const ee=new Engine(ec);
   cloneES(eng,ee);
-  const dt=1/fps,kfe=Math.max(1,Math.round(fps));
+  const dt=1/fps;
+  const kfInterval=Math.max(1,Math.round(fps)); // 1秒ごとにキーフレーム
+
   for(let fi=0;fi<tot;fi++){
     if(cancelToken.cancelled)break;
-    const feat=ff?ff[Math.min(fi,ff.length-1)]:null;
-    if(feat){ee.fft.set(feat.fft);ee.bass=feat.bass;ee.mid=feat.mid;ee.high=feat.high;ee.energy=feat.energy;ee.beat=feat.beat;}
-    else{ee.fft.fill(0);ee.bass=ee.mid=ee.high=ee.energy=0;ee.beat=false;}
-    ee._frame(dt);
-    const frame=new VideoFrame(ec,{timestamp:Math.round(fi*1e6/fps),duration:Math.round(1e6/fps)});
-    ve.encode(frame,{keyFrame:fi%kfe===0});
-    frame.close();
-    if(progressCb&&(fi&15)===0){
-      const base=audioBuf?.30:0,span=audioBuf?.70:1;
-      progressCb(base+((fi+1)/tot)*span);
+
+    // VideoEncoder の状態を毎フレーム確認
+    if(ve.state!=='configured'){
+      console.warn(`VideoEncoder state=${ve.state} at frame ${fi}, abort`);
+      break;
     }
-    if(ve.encodeQueueSize>16&&(fi&15)===0)await ve.flush();
+    if(veError){
+      throw new Error('VideoEncoder エラー: '+veError.message);
+    }
+
+    // FFT データをセット
+    const feat=ff?ff[Math.min(fi,ff.length-1)]:null;
+    if(feat){
+      ee.fft.set(feat.fft);ee.bass=feat.bass;ee.mid=feat.mid;ee.high=feat.high;ee.energy=feat.energy;ee.beat=feat.beat;
+    }else{
+      ee.fft.fill(0);ee.bass=ee.mid=ee.high=ee.energy=0;ee.beat=false;
+    }
+    ee._frame(dt);
+
+    // VideoFrame 生成・エンコード
+    let frame=null;
+    try{
+      frame=new VideoFrame(ec,{
+        timestamp:Math.round(fi*1e6/fps),
+        duration:Math.round(1e6/fps)
+      });
+      if(ve.state==='configured'){
+        ve.encode(frame,{keyFrame:fi%kfInterval===0});
+      }
+    }catch(e){
+      console.warn(`frame ${fi} encode error:`,e);
+    }finally{
+      if(frame)frame.close();
+    }
+
+    // 進捗更新
+    if(progressCb&&(fi&15)===0){
+      progressCb(.32+((fi+1)/tot)*.68);
+    }
+
+    // キューが詰まっていたら待機（backpressure 対策）
+    if(ve.encodeQueueSize>20){
+      await ve.flush();
+    }
+    // 定期的にイベントループへ制御を返す
     if((fi&31)===0)await sleep(0);
   }
-  if(ve.state==='configured')await ve.flush();
-  vD=true;ve.close();
-  if(cancelToken.cancelled)return null;
+
+  /* ── Step6: フラッシュ & Finalize ── */
+  if(cancelToken.cancelled){
+    try{if(ve.state==='configured')ve.close();}catch(_){}
+    return null;
+  }
+
+  try{
+    if(ve.state==='configured')await ve.flush();
+  }catch(e){
+    console.warn('ve.flush error:',e);
+  }
+  try{
+    if(ve.state==='configured')ve.close();
+  }catch(_){}
+
   muxer.finalize();
+  if(progressCb)progressCb(1);
+
   return new Blob([muxer.target.buffer],{type:'video/mp4'});
 }
 
@@ -596,21 +859,17 @@ function supportsWebCodecs(){
   let mediaRec=null,recChunks=[],recMime='video/webm';
   let micActive=false,micLvTimer=null;
   let _loadedFile=null;
-  let _exportCancel=null; // キャンセルトークン
+  let _exportCancel=null;
 
   /* ── 進捗UI ── */
   function setExpProg(p){
-    // p: 0.0〜1.0
     const pct=clamp(p*100,0,100);
     $('exp-prog-fill').style.width=pct.toFixed(1)+'%';
     $('exp-prog-label').textContent=pct.toFixed(0)+'%';
   }
-  function showExpProg(show){
-    $('exp-prog-wrap').style.display=show?'block':'none';
-    if(!show)setExpProg(0);
-  }
+  function showExpProg(show){$('exp-prog-wrap').style.display=show?'block':'none';if(!show)setExpProg(0);}
 
-  /* ── MIC診断 ── */
+  /* ── 診断 ── */
   async function runDiag(){
     const diag=await diagnoseEnv();
     const box=$('diag-box'),title=$('diag-title'),body=$('diag-body');
@@ -761,7 +1020,6 @@ function supportsWebCodecs(){
       $('fname').textContent='✅ '+file.name;
       setSt(`✅ 読込完了 ${fmt(dur)}`,'ok','file');
       $('btn-play').disabled=false;$('btn-stop').disabled=false;$('btn-rs').disabled=false;
-      // 高速書き出しボタンはWebCodecs対応時のみ有効化
       $('btn-fast').disabled=!supportsWebCodecs();
       if(!supportsWebCodecs())setSt('⚠ このブラウザはWebCodecs非対応です。\nリアルタイム録画をご利用ください。','warn','rec');
       else setSt('⚡ 高速書き出し または ⏺ リアルタイム録画が使えます','ok','rec');
@@ -771,9 +1029,8 @@ function supportsWebCodecs(){
 
   $('btn-play').addEventListener('click',async()=>{
     if(!fileLoaded)return;
-    if(playing){
-      startOff=_audEl.currentTime;_audEl.pause();playing=false;$('btn-play').textContent='▶ 再生';clearInterval(_pbTimer);
-    }else{
+    if(playing){startOff=_audEl.currentTime;_audEl.pause();playing=false;$('btn-play').textContent='▶ 再生';clearInterval(_pbTimer);}
+    else{
       await _fInit();_fLink();_audEl.currentTime=clamp(startOff,0,dur);
       try{await _audEl.play();}catch(e){console.warn(e);}
       playing=true;$('btn-play').textContent='⏸ 一時停止';
@@ -790,32 +1047,20 @@ function supportsWebCodecs(){
   /* ── 高速書き出し ── */
   $('btn-fast').addEventListener('click',async()=>{
     if(!fileLoaded||!_loadedFile)return;
-    if(!supportsWebCodecs()){
-      setSt('❌ WebCodecs非対応ブラウザです（Chrome/Edge推奨）','err','rec');return;
-    }
+    if(!supportsWebCodecs()){setSt('❌ WebCodecs非対応ブラウザです（Chrome/Edge推奨）','err','rec');return;}
     const bitrate=parseInt($('ctl-quality').value);
     const fps=parseInt($('ctl-fps').value)||60;
     const W=cv.width,H=cv.height;
     _exportCancel={cancelled:false};
-
     $('btn-fast').disabled=true;
     $('btn-fast-cancel').style.display='';
     $('btn-rs').disabled=true;
     showExpProg(true);
-    setSt(`⏳ 高速書き出し中... (${fps}fps / ${W}×${H})`, 'warn','rec');
-
+    setSt(`⏳ 高速書き出し中... (${fps}fps / ${W}×${H})`,'warn','rec');
     try{
       const blob=await fastExport({
-        eng,
-        audioFile:_loadedFile,
-        duration:dur,
-        fps,
-        bitrate,
-        W,H,
-        progressCb:p=>{
-          setExpProg(p);
-          setSt(`⏳ ${(p*100).toFixed(0)}% 書き出し中...`,'warn','rec');
-        },
+        eng,audioFile:_loadedFile,duration:dur,fps,bitrate,W,H,
+        progressCb:p=>{setExpProg(p);setSt(`⏳ ${(p*100).toFixed(0)}% 書き出し中...`,'warn','rec');},
         cancelToken:_exportCancel,
       });
       if(blob){
@@ -827,12 +1072,13 @@ function supportsWebCodecs(){
         setSt('⚠ キャンセルされました','warn','rec');
       }
     }catch(e){
-      console.error(e);
+      console.error('fastExport error:',e);
       setSt('❌ 書き出しエラー: '+e.message,'err','rec');
     }finally{
       _exportCancel=null;
       $('btn-fast').disabled=false;
       $('btn-fast-cancel').style.display='none';
+      $('btn-fast-cancel').disabled=false;
       $('btn-rs').disabled=false;
       showExpProg(false);
     }
@@ -857,19 +1103,15 @@ function supportsWebCodecs(){
     recChunks=[];
     mediaRec=new MediaRecorder(combined,{mimeType:recMime,videoBitsPerSecond:bitrate});
     mediaRec.ondataavailable=e=>{if(e.data&&e.data.size>0)recChunks.push(e.data);};
-    mediaRec.start(100);
-    $('ri').style.display='flex';
+    mediaRec.start(100);$('ri').style.display='flex';
     return recMime.startsWith('video/mp4')?'mp4':'webm';
   }
-  async function stopRec(){
-    return new Promise(r=>{if(!mediaRec||mediaRec.state==='inactive'){r();return;}mediaRec.onstop=r;mediaRec.stop();});
-  }
+  async function stopRec(){return new Promise(r=>{if(!mediaRec||mediaRec.state==='inactive'){r();return;}mediaRec.onstop=r;mediaRec.stop();});}
 
   $('btn-rs').addEventListener('click',async()=>{
     if(!fileLoaded)return;
     const ext=await startRec(parseInt($('ctl-quality').value),false);
-    await _fInit();_fLink();
-    _audEl.currentTime=0;
+    await _fInit();_fLink();_audEl.currentTime=0;
     try{await _audEl.play();}catch(e){console.warn(e);}
     playing=true;$('btn-play').textContent='⏸ 一時停止';startOff=0;
     _audEl.addEventListener('ended',()=>{playing=false;$('btn-play').textContent='▶ 再生';},{once:true});
@@ -893,68 +1135,34 @@ function supportsWebCodecs(){
   function renderDevList(devs,activeIds=[]){
     const activeSet=new Set(activeIds);
     const prev=new Map();
-    micListEl.querySelectorAll('.mic-item').forEach(row=>{
-      const cb=row.querySelector('.mic-cb'),vl=row.querySelector('.mic-gain');
-      if(cb)prev.set(row.dataset.deviceId,{checked:cb.checked,gain:parseFloat(vl&&vl.value)||1});
-    });
+    micListEl.querySelectorAll('.mic-item').forEach(row=>{const cb=row.querySelector('.mic-cb'),vl=row.querySelector('.mic-gain');if(cb)prev.set(row.dataset.deviceId,{checked:cb.checked,gain:parseFloat(vl&&vl.value)||1});});
     if(!devs.length){micListEl.innerHTML='<div class="sb" style="margin-top:0;color:var(--dim)">デバイスが見つかりません</div>';return;}
     micListEl.innerHTML='';
     devs.forEach((d,i)=>{
-      const p=prev.get(d.deviceId);
-      const live=activeSet.has(d.deviceId);
-      const checked=p?p.checked:(d.isDefault||i===0);
-      const gain=p?p.gain:1.0;
-      let badges='';
-      if(live)badges+='<span class="chip chip-live">▶ LIVE</span>';
-      if(d.isVirt)badges+='<span class="chip chip-virt">🔀 仮想</span>';
-      if(d.isDefault)badges+='<span class="chip chip-def">★ default</span>';
-      if(d.isComm)badges+='<span class="chip chip-def">📞 comm</span>';
-      const card=document.createElement('div');
-      card.className='mic-item'+(checked?' sel':'')+(live?' live':'');
-      card.dataset.deviceId=d.deviceId;
-      card.innerHTML=`
-        <div class="mic-head">
-          <input class="mic-cb" type="checkbox" ${checked?'checked':''}>
-          <div class="mic-main">
-            <div class="mic-name">${escH(d.label)}</div>
-            <div class="mic-id">ID: ${escH(d.deviceId.slice(0,40))}${d.deviceId.length>40?'…':''}</div>
-            <div class="mic-badges">${badges}</div>
-          </div>
-        </div>
-        <div class="mic-vol-row">
-          <label>Vol</label>
-          <input class="mic-gain" type="range" min="0" max="3" step="0.01" value="${gain}">
-          <span class="v">${fmtG(gain)}</span>
-        </div>`;
+      const p=prev.get(d.deviceId);const live=activeSet.has(d.deviceId);const checked=p?p.checked:(d.isDefault||i===0);const gain=p?p.gain:1.0;
+      let badges='';if(live)badges+='<span class="chip chip-live">▶ LIVE</span>';if(d.isVirt)badges+='<span class="chip chip-virt">🔀 仮想</span>';if(d.isDefault)badges+='<span class="chip chip-def">★ default</span>';if(d.isComm)badges+='<span class="chip chip-def">📞 comm</span>';
+      const card=document.createElement('div');card.className='mic-item'+(checked?' sel':'')+(live?' live':'');card.dataset.deviceId=d.deviceId;
+      card.innerHTML=`<div class="mic-head"><input class="mic-cb" type="checkbox" ${checked?'checked':''}><div class="mic-main"><div class="mic-name">${escH(d.label)}</div><div class="mic-id">ID: ${escH(d.deviceId.slice(0,40))}${d.deviceId.length>40?'…':''}</div><div class="mic-badges">${badges}</div></div></div><div class="mic-vol-row"><label>Vol</label><input class="mic-gain" type="range" min="0" max="3" step="0.01" value="${gain}"><span class="v">${fmtG(gain)}</span></div>`;
       const cbEl=card.querySelector('.mic-cb'),gainEl=card.querySelector('.mic-gain'),valEl=card.querySelector('.v');
       cbEl.addEventListener('change',()=>{card.classList.toggle('sel',cbEl.checked);if(micActive)setSt('ℹ チェックを変更→「開始」で再構成','warn','mic');});
       gainEl.addEventListener('input',()=>{const v=clamp(parseFloat(gainEl.value)||0,0,3);valEl.textContent=fmtG(v);mixer.setInputGain(d.deviceId,v);});
       micListEl.appendChild(card);
     });
   }
-  function collectSel(){
-    return[...micListEl.querySelectorAll('.mic-item')].flatMap(c=>{
-      const cb=c.querySelector('.mic-cb'),g=c.querySelector('.mic-gain'),n=c.querySelector('.mic-name');
-      if(!cb||!cb.checked)return[];
-      return[{deviceId:c.dataset.deviceId,label:n?n.textContent:'マイク',gain:parseFloat(g&&g.value)||1}];
-    });
-  }
+  function collectSel(){return[...micListEl.querySelectorAll('.mic-item')].flatMap(c=>{const cb=c.querySelector('.mic-cb'),g=c.querySelector('.mic-gain'),n=c.querySelector('.mic-name');if(!cb||!cb.checked)return[];return[{deviceId:c.dataset.deviceId,label:n?n.textContent:'マイク',gain:parseFloat(g&&g.value)||1}];});}
 
   $('btn-scan').addEventListener('click',async()=>{
-    await runDiag();
-    const diag=await diagnoseEnv();
-    if(!diag.isSecure||!diag.hasMediaDevices){return;}
+    await runDiag();const diag=await diagnoseEnv();
+    if(!diag.isSecure||!diag.hasMediaDevices)return;
     if(diag.permState==='denied'){setSt('🔒 マイクがブロックされています。アドレスバーの🔒から許可してください。','err','mic');return;}
     $('btn-scan').disabled=true;setSt('🔍 デバイスをスキャン中...','warn','mic');
     try{
-      const devs=await scanner.scan();
-      renderDevList(devs,mixer.activeIds);
+      const devs=await scanner.scan();renderDevList(devs,mixer.activeIds);
       const virt=devs.filter(d=>d.isVirt).length;
       setSt(`✅ ${devs.length} 件を検出${virt?` (仮想 ${virt} 件含む)`:''}\nチェックして「開始」を押してください`,'ok','mic');
       $('btn-ms').disabled=false;$('diag-box').classList.remove('show');
     }catch(e){
-      const msg=e.message||String(e);
-      let hint='';
+      const msg=e.message||String(e);let hint='';
       if(msg.includes('Permission denied')||msg.includes('NotAllowedError'))hint='\n\nアドレスバーの🔒をクリック → マイク → 「許可」に変更 → ページを再読み込み';
       else if(msg.includes('NotFoundError')||msg.includes('Requested device not found'))hint='\n\nマイクデバイスが見つかりません。デバイスが接続されているか確認してください。';
       setSt(`❌ ${msg}${hint}`,'err','mic');
@@ -962,8 +1170,7 @@ function supportsWebCodecs(){
   });
 
   $('btn-ms').addEventListener('click',async()=>{
-    const sel=collectSel();
-    if(!sel.length){setSt('⚠ 1つ以上チェックしてください','warn','mic');return;}
+    const sel=collectSel();if(!sel.length){setSt('⚠ 1つ以上チェックしてください','warn','mic');return;}
     $('btn-ms').disabled=true;setSt('🎚 接続中...','warn','mic');
     try{
       const mg=clamp(parseFloat($('mic-master').value)||1,0,3);
@@ -971,8 +1178,7 @@ function supportsWebCodecs(){
       try{await scanner.refresh();}catch(_){}
       renderDevList(scanner.devices,mixer.activeIds);
       micActive=true;$('btn-mstop').style.display='';$('btn-mrs').disabled=false;
-      clearInterval(micLvTimer);
-      micLvTimer=setInterval(()=>{$('mlf').style.width=clamp(mixer.inputLevel*160,0,100)+'%';},50);
+      clearInterval(micLvTimer);micLvTimer=setInterval(()=>{$('mlf').style.width=clamp(mixer.inputLevel*160,0,100)+'%';},50);
       const names=res.opened.map(e=>e.label).join(' + ');
       setSt(res.failed.length?`⚠ 開始: ${names} / 失敗: ${res.failed.map(f=>f.label).join(', ')}`:`🎤 ミックス中: ${names}`,res.failed.length?'warn':'ok','mic');
     }catch(e){setSt('❌ '+e.message,'err','mic');}
@@ -981,27 +1187,13 @@ function supportsWebCodecs(){
 
   $('btn-mstop').addEventListener('click',()=>{
     mixer.stop();micActive=false;$('btn-mstop').style.display='none';$('btn-mrs').disabled=true;
-    clearInterval(micLvTimer);$('mlf').style.width='0%';
-    renderDevList(scanner.devices,[]);setSt('⏹ 停止しました','ok','mic');
+    clearInterval(micLvTimer);$('mlf').style.width='0%';renderDevList(scanner.devices,[]);setSt('⏹ 停止しました','ok','mic');
   });
   $('mic-master').addEventListener('input',()=>{const v=clamp(parseFloat($('mic-master').value)||1,0,3);$('v-mmaster').textContent=fmtG(v);mixer.setMasterGain(v);});
-  if(navigator.mediaDevices?.addEventListener){
-    navigator.mediaDevices.addEventListener('devicechange',async()=>{try{await scanner.refresh();renderDevList(scanner.devices,mixer.activeIds);}catch(_){}});
-  }
-  $('btn-mrs').addEventListener('click',async()=>{
-    if(!micActive)return;
-    const ext=await startRec(parseInt($('ctl-mq').value),true);
-    $('btn-mrs').style.display='none';$('btn-mrstop').style.display='';
-    setSt(`⏺ 録画中 (${ext.toUpperCase()})...`,'warn','mrec');
-  });
-  $('btn-mrstop').addEventListener('click',async()=>{
-    $('btn-mrs').style.display='';$('btn-mrstop').style.display='none';
-    setSt('💾 保存中...','warn','mrec');
-    await stopRec();$('ri').style.display='none';
-    const ext=recMime.startsWith('video/mp4')?'mp4':'webm';
-    await saveBlob(new Blob(recChunks,{type:recMime}),`viz_mic_${ts()}.${ext}`);
-    setSt(`✅ 保存完了 (${ext.toUpperCase()})`,'ok','mrec');
-  });
+  if(navigator.mediaDevices?.addEventListener){navigator.mediaDevices.addEventListener('devicechange',async()=>{try{await scanner.refresh();renderDevList(scanner.devices,mixer.activeIds);}catch(_){}});}
+
+  $('btn-mrs').addEventListener('click',async()=>{if(!micActive)return;const ext=await startRec(parseInt($('ctl-mq').value),true);$('btn-mrs').style.display='none';$('btn-mrstop').style.display='';setSt(`⏺ 録画中 (${ext.toUpperCase()})...`,'warn','mrec');});
+  $('btn-mrstop').addEventListener('click',async()=>{$('btn-mrs').style.display='';$('btn-mrstop').style.display='none';setSt('💾 保存中...','warn','mrec');await stopRec();$('ri').style.display='none';const ext=recMime.startsWith('video/mp4')?'mp4':'webm';await saveBlob(new Blob(recChunks,{type:recMime}),`viz_mic_${ts()}.${ext}`);setSt(`✅ 保存完了 (${ext.toUpperCase()})`,'ok','mrec');});
 
   /* ── 共通バインド ── */
   $('ctl-ratio').addEventListener('change',e=>{ratio=e.target.value;doResize();});
@@ -1012,19 +1204,13 @@ function supportsWebCodecs(){
   bS('ctl-cmode','cmode');bR('ctl-h1','h1','v-h1');bR('ctl-h2','h2','v-h2');bR('ctl-hspd','hspd','v-hspd',3);bR('ctl-sat','sat','v-sat');bR('ctl-bri','bri','v-bri');bR('ctl-sens','sens','v-sens',1);bR('ctl-trail','trail','v-trail');bR('ctl-bn','bn','v-bn',0);bR('ctl-wn','wn','v-wn',0);bR('ctl-pn','pn','v-pn',0);
   bC('chk-blobs','showBlobs');bC('chk-waves','showWaves');bC('chk-particles','showParticles');bC('chk-radial','showRadial');bC('chk-bars','showBars');bC('chk-tunnel','showTunnel');
 
-  setInterval(()=>{
-    const e=eng;
-    $('hud').innerHTML=`MODE:${mode.toUpperCase()}<br>BASS:${(e.bass*100).toFixed(0).padStart(3)}% MID:${(e.mid*100).toFixed(0).padStart(3)}% HIGH:${(e.high*100).toFixed(0).padStart(3)}%<br>ENERGY:${(e.energy*100).toFixed(0).padStart(3)}% ${e.beat?'💥 BEAT':''}`;
-  },100);
+  setInterval(()=>{const e=eng;$('hud').innerHTML=`MODE:${mode.toUpperCase()}<br>BASS:${(e.bass*100).toFixed(0).padStart(3)}% MID:${(e.mid*100).toFixed(0).padStart(3)}% HIGH:${(e.high*100).toFixed(0).padStart(3)}%<br>ENERGY:${(e.energy*100).toFixed(0).padStart(3)}% ${e.beat?'💥 BEAT':''}`;},100);
 
   function setP(p){$('pb').style.width=clamp(p,0,100)+'%';}
   function setPT(c,t){$('pt').textContent=`${fmt(c)} / ${fmt(t)}`;}
   function fmt(s){const m=s/60|0,ss=(s%60|0).toString().padStart(2,'0');return`${m}:${ss}`;}
   function ts(){return new Date().toISOString().slice(0,19).replace(/[T:]/g,'-');}
-  function setSt(msg,cls='ok',tgt='file'){
-    const map={file:'st-file',rec:'st-rec',mic:'st-mic',mrec:'st-mrec'};
-    const el=$(map[tgt]);if(el){el.textContent=msg;el.className='sb '+cls;}
-  }
+  function setSt(msg,cls='ok',tgt='file'){const map={file:'st-file',rec:'st-rec',mic:'st-mic',mrec:'st-mrec'};const el=$(map[tgt]);if(el){el.textContent=msg;el.className='sb '+cls;}}
 })();
 </script>
 </body>
