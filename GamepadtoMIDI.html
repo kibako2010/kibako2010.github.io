@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GP-MIDI — Gamepad BLE MIDI Controller</title>
+<style>
+/* ════════════════════════════════════════════
+   TOKENS
+════════════════════════════════════════════ */
+:root {
+  --bg:   #09090d;
+  --s1:   #111118;
+  --s2:   #181820;
+  --s3:   #1e1e28;
+  --s4:   #252530;
+  --bd:   #2a2a3a;
+  --bd2:  #383848;
+  --ac:   #6c63ff;
+  --ach:  #8880ff;
+  --ac2:  #3dd6c8;
+  --ac3:  #f4c25a;
+  --ac4:  #b97bfc;
+  --ok:   #3dd6c8;
+  --err:  #ff5f5f;
+  --warn: #ffa040;
+  --tx:   #ddddf0;
+  --txd:  #68688a;
+  --txm:  #363655;
+  --mono: 'Cascadia Code','Consolas',monospace;
+  --r: 8px; --rs: 5px;
+}
+
+/* ════════════════════════════════════════════
+   RESET / BASE
+════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: var(--bd2); border-radius: 2px; }
+
+/* ════════════════════════════════════════════
+   HEADER
+════════════════════════════════════════════ */
+.hdr {
+  background: var(--s1);
+  border-bottom: 1px solid var(--bd);
+  padding: 0 20px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  flex-shrink: 0;
+}
+.hdr-logo { font-size: 22px; }
+.hdr-title { font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+.hdr-sub { font-size: 10px; color: var(--txd); margin-left: 2px; }
+.sp { flex: 1; }
+.hdr-status { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* status pill */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pill-off  { background: #2a1515; color: var(--err);  border-color: #ff5f5f22; }
+.pill-off  .pill-dot { background: var(--err); }
+.pill-ok   { background: #102820; color: var(--ok);   border-color: #3dd6c822; }
+.pill-ok   .pill-dot { background: var(--ok); animation: pulse 2s infinite; }
+.pill-wait { background: #281f08; color: var(--warn); border-color: #ffa04022; }
+.pill-wait .pill-dot { background: var(--warn); animation: blink .7s infinite; }
+.pill-info { background: #14143a; color: var(--ac);   border-color: #6c63ff22; }
+.pill-info .pill-dot { background: var(--ac); }
+
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.5} }
+@keyframes blink { 0%,100%{opacity:1}50%{opacity:.15} }
+
+/* ════════════════════════════════════════════
+   MAIN LAYOUT
+════════════════════════════════════════════ */
+.main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 14px;
+  padding: 14px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+@media (max-width: 860px) {
+  .main { grid-template-columns: 1fr; }
+}
+.col-l, .col-r {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ════════════════════════════════════════════
+   CARD
+════════════════════════════════════════════ */
+.card {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.card-hd {
+  background: var(--s2);
+  padding: 8px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--txd);
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.card-hd-actions { margin-left: auto; display: flex; gap: 5px; }
+.card-body { padding: 14px; }
+
+/* ════════════════════════════════════════════
+   BUTTONS
+════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  border-radius: var(--rs);
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all .12s;
+  user-select: none;
+  white-space: nowrap;
+}
+.btn:disabled { opacity: .35; cursor: not-allowed; }
+.btn-primary { background: var(--ac); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--ach); }
+.btn-ok  { background: #102820; color: var(--ok);   border: 1px solid #3dd6c820; }
+.btn-ok:hover:not(:disabled)  { background: #143220; }
+.btn-err { background: #2a1212; color: var(--err);  border: 1px solid #ff5f5f20; }
+.btn-err:hover:not(:disabled) { background: #361818; }
+.btn-warn{ background: #28180a; color: var(--warn); border: 1px solid #ffa04020; }
+.btn-warn:hover:not(:disabled){ background: #342010; }
+.btn-ghost{ background: transparent; color: var(--txd); border: 1px solid var(--bd); }
+.btn-ghost:hover:not(:disabled){ background: var(--s2); color: var(--tx); }
+.btn-ble { background: #1c0e30; color: var(--ac4); border: 1px solid #b97bfc20; }
+.btn-ble:hover:not(:disabled) { background: #251240; }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-xs { padding: 3px 7px;  font-size: 10px; border-radius: 3px; }
+.wf { width: 100%; }
+
+/* ════════════════════════════════════════════
+   FORM
+════════════════════════════════════════════ */
+label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  color: var(--txd);
+  margin-bottom: 3px;
+  margin-top: 10px;
+}
+label:first-child { margin-top: 0; }
+select, input[type=number], input[type=text] {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  color: var(--tx);
+  padding: 6px 9px;
+  font-size: 12px;
+  outline: none;
+  transition: border-color .12s;
+}
+select:focus, input:focus { border-color: var(--ac); }
+input[type=range] { width: 100%; accent-color: var(--ac); }
+input[type=checkbox] { accent-color: var(--ac); width: 13px; height: 13px; cursor: pointer; }
+select option { background: var(--s2); }
+
+/* ════════════════════════════════════════════
+   TABS
+════════════════════════════════════════════ */
+.tabs { display: flex; border-bottom: 1px solid var(--bd); background: var(--s2); }
+.tab {
+  padding: 9px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--txd);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all .12s;
+  letter-spacing: .03em;
+}
+.tab.on { color: var(--ac); border-color: var(--ac); }
+.tab:hover:not(.on) { color: var(--tx); }
+.tc { display: none; }
+.tc.on { display: block; }
+
+/* ════════════════════════════════════════════
+   SEPARATOR
+════════════════════════════════════════════ */
+.sep { height: 1px; background: var(--bd); margin: 10px 0; }
+
+/* ════════════════════════════════════════════
+   CHANNEL CHIPS
+════════════════════════════════════════════ */
+.ch-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.ch-chip {
+  padding: 3px 8px;
+  border-radius: 99px;
+  border: 1px solid var(--bd);
+  background: var(--s2);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .1s;
+  font-weight: 700;
+}
+.ch-chip.on { background: var(--ac); border-color: var(--ac); color: #fff; }
+
+/* ════════════════════════════════════════════
+   GAMEPAD VISUAL
+════════════════════════════════════════════ */
+.gp-btn-grid { display: flex; flex-wrap: wrap; gap: 3px; }
+.gp-btn {
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  font-size: 10px;
+  color: var(--txd);
+  cursor: pointer;
+  transition: all .08s;
+  user-select: none;
+  font-family: var(--mono);
+}
+.gp-btn.pressed { background: var(--ac); border-color: var(--ac); color: #fff; box-shadow: 0 0 8px #6c63ff44; }
+.gp-btn.mapped  { border-color: var(--ac2); color: var(--ac2); }
+.gp-btn.pressed.mapped { background: var(--ac2); color: #000; border-color: var(--ac2); }
+
+.ax-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.ax-lbl { font-size: 10px; color: var(--txd); width: 44px; flex-shrink: 0; font-family: var(--mono); }
+.ax-track {
+  flex: 1; height: 6px;
+  background: var(--s2);
+  border-radius: 3px;
+  border: 1px solid var(--bd);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.ax-fill { position: absolute; top: 0; bottom: 0; background: var(--ac2); border-radius: 3px; transition: left .04s, width .04s; }
+.ax-val { font-size: 10px; color: var(--txd); width: 40px; text-align: right; font-family: var(--mono); }
+
+/* ════════════════════════════════════════════
+   MAPPING TABLE
+════════════════════════════════════════════ */
+.tbl-wrap { overflow-x: auto; }
+.mtbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 820px;
+}
+.mtbl th {
+  background: var(--s2);
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--txd);
+  border-bottom: 1px solid var(--bd);
+  white-space: nowrap;
+}
+.mtbl td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #ffffff05;
+  vertical-align: middle;
+}
+.mtbl tr:last-child td { border-bottom: none; }
+.mtbl select, .mtbl input { padding: 3px 5px; font-size: 11px; }
+
+/* note display cell */
+.ndsp {
+  font-family: var(--mono);
+  color: var(--ac2);
+  font-size: 10px;
+  min-width: 42px;
+  display: inline-block;
+  cursor: pointer;
+  border-bottom: 1px dashed var(--bd2);
+  padding-bottom: 1px;
+}
+
+/* ════════════════════════════════════════════
+   TRANSPOSE / KEY
+════════════════════════════════════════════ */
+.tp-display {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: var(--rs);
+  border: 1px solid var(--bd);
+  background: var(--s2);
+  min-width: 80px;
+  text-align: center;
+}
+.tp-pos { color: var(--ok);   border-color: #3dd6c840; }
+.tp-neg { color: var(--err);  border-color: #ff5f5f40; }
+.tp-zer { color: var(--txd); }
+
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+.key-chip {
+  padding: 5px 2px;
+  border-radius: 4px;
+  border: 1px solid var(--bd);
+  background: var(--s2);
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: all .1s;
+  line-height: 1.4;
+}
+.key-chip:hover { border-color: var(--ac); color: var(--ac); }
+.key-chip.on { background: var(--ac); border-color: var(--ac); color: #fff; }
+.key-chip .sub { font-size: 8px; color: var(--txd); display: block; font-weight: 400; }
+.key-chip.on .sub { color: #ffffffaa; }
+
+/* ════════════════════════════════════════════
+   NOTE PICKER MODAL
+════════════════════════════════════════════ */
+.modal-ov {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #00000088;
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-ov.open { display: flex; }
+.modal {
+  background: var(--s1);
+  border: 1px solid var(--bd2);
+  border-radius: var(--r);
+  width: 440px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-hd {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 14px;
+}
+.modal-bd { padding: 16px; }
+.modal-ft {
+  padding: 10px 16px;
+  border-top: 1px solid var(--bd);
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.note-preview {
+  background: var(--s2);
+  border-radius: var(--rs);
+  padding: 12px;
+  text-align: center;
+  margin-top: 10px;
+}
+.note-preview-name { font-size: 28px; font-weight: 800; color: var(--ac2); font-family: var(--mono); }
+.note-preview-num  { font-size: 14px; color: var(--txd); margin-top: 2px; }
+
+/* chord quick tags */
+.chord-tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.ctag {
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--bd);
+  background: var(--s2);
+  font-size: 10px;
+  cursor: pointer;
+  transition: all .1s;
+}
+.ctag:hover { border-color: var(--ac); color: var(--ac); }
+
+/* ════════════════════════════════════════════
+   PRESET CARDS
+════════════════════════════════════════════ */
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+}
+.pcard {
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: var(--rs);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all .12s;
+  position: relative;
+}
+.pcard:hover { border-color: var(--ac); background: var(--s3); }
+.pcard.active { border-color: var(--ac2); box-shadow: 0 0 0 1px var(--ac2)44 inset; }
+.pcard-name { font-weight: 700; font-size: 12px; margin-bottom: 3px; }
+.pcard-meta { font-size: 10px; color: var(--txd); line-height: 1.4; }
+.pcard-del {
+  position: absolute;
+  top: 5px; right: 5px;
+  background: none;
+  border: none;
+  color: var(--txd);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.pcard-del:hover { background: var(--err); color: #fff; }
+.pcard-badge {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.pcard-badge-sys  { background: #16143a; color: var(--ac);  border: 1px solid #6c63ff30; }
+.pcard-badge-user { background: #103028; color: var(--ok);  border: 1px solid #3dd6c830; }
+
+/* ════════════════════════════════════════════
+   LOG
+════════════════════════════════════════════ */
+.log {
+  background: #060608;
+  border: 1px solid var(--bd);
+  border-radius: 5px;
+  height: 160px;
+  overflow-y: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 6px 8px;
+  line-height: 1.5;
+}
+.ll { }
+.ll-ble   { color: var(--ac4); }
+.ll-midi  { color: var(--ac); }
+.ll-cc    { color: var(--ac2); }
+.ll-chord { color: var(--ac3); }
+.ll-info  { color: var(--txd); }
+.ll-warn  { color: var(--warn); }
+.ll-err   { color: var(--err); }
+
+/* ════════════════════════════════════════════
+   ACTIVITY
+════════════════════════════════════════════ */
+.act-bar { display: flex; gap: 3px; flex-wrap: wrap; }
+.acell {
+  width: 28px; height: 26px;
+  border-radius: 3px;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  color: var(--txm);
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+}
+.acell.lit { background: var(--ac); border-color: var(--ac); color: #fff; }
+.ac-fill { position: absolute; bottom: 0; left: 0; right: 0; background: var(--ac); opacity: .2; }
+.ac-lbl  { position: relative; z-index: 1; font-size: 7px; }
+
+/* ════════════════════════════════════════════
+   SAVE PRESET MODAL
+════════════════════════════════════════════ */
+#modal-save .modal { width: 360px; }
+
+/* ════════════════════════════════════════════
+   MISC UTILS
+════════════════════════════════════════════ */
+.flex { display: flex; }
+.items-c { align-items: center; }
+.jb { justify-content: space-between; }
+.gap4 { gap: 4px; }
+.gap6 { gap: 6px; }
+.gap8 { gap: 8px; }
+.mt6  { margin-top: 6px; }
+.mt8  { margin-top: 8px; }
+.mt10 { margin-top: 10px; }
+.txd  { color: var(--txd); }
+.txs  { font-size: 10px; }
+.mono { font-family: var(--mono); }
+.bold { font-weight: 700; }
+.tag {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  color: var(--txd);
+}
+.info-box {
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-left: 3px solid var(--ac);
+  border-radius: var(--rs);
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--txd);
+}
+.info-box b { color: var(--tx); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="hdr">
+  <span class="hdr-logo">🎮</span>
+  <div>
+    <div class="hdr-title">GP-MIDI</div>
+    <div class="hdr-sub">Gamepad → BLE MIDI Controller</div>
+  </div>
+  <div class="sp"></div>
+  <div class="hdr-status">
+    <div class="pill pill-off" id="pill-ble">
+      <span class="pill-dot"></span>BLE MIDI: 未接続
+    </div>
+    <div class="pill pill-off" id="pill-gp">
+      <span class="pill-dot"></span>Gamepad: 未接続
+    </div>
+    <div class="pill pill-info" id="pill-tp">
+      <span class="pill-dot"></span>移調: ±0
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div class="main">
+
+  <!-- ── 左カラム ── -->
+  <div class="col-l">
+
+    <!-- BLE MIDI接続 -->
+    <div class="card">
+      <div class="card-hd">🔵 BLE MIDI 接続</div>
+      <div class="card-body">
+        <div class="info-box" style="margin-bottom:12px;">
+          <b>このアプリの動作:</b><br>
+          ゲームパッドの入力を BLE MIDI に変換し、PC / Mac の DAW や音楽アプリに <b>BLE MIDI キーボードコントローラー</b>として認識させます。<br>
+          接続先の BLE MIDI デバイス（受信側）を選択してください。
+        </div>
+
+        <button class="btn btn-primary wf" id="btn-ble-connect">🔵 BLE MIDI デバイスに接続</button>
+        <button class="btn btn-err btn-sm wf mt6" id="btn-ble-disconnect" disabled>切断</button>
+
+        <div class="sep"></div>
+
+        <div id="ble-status-box" style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;font-size:11px;min-height:44px;">
+          <span class="txd">未接続 — 「接続」を押してBLEデバイスを選択してください</span>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="info-box" style="border-left-color:var(--ac3);">
+          <b>対応環境:</b> Chrome / Edge (デスクトップ)<br>
+          <b>BLE MIDI受信側の例:</b><br>
+          · DAW (Logic Pro / Ableton / Cubase 等)<br>
+          · iOS/Android 音楽アプリ<br>
+          · BLE MIDIドングル付きシンセ<br>
+          · MIO XM (BLE MIDIアダプター接続時)
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDI設定 -->
+    <div class="card">
+      <div class="card-hd">🎹 MIDI 設定</div>
+      <div class="card-body">
+        <label>MIDIチャンネル</label>
+        <div class="ch-row" id="ch-row"></div>
+
+        <div class="sep"></div>
+
+        <label>グローバル ベロシティ <span id="vel-v" style="color:var(--ac);font-family:var(--mono);">100</span></label>
+        <input type="range" id="rng-vel" min="1" max="127" value="100">
+
+        <label>NoteOff 遅延 (ms) <span id="noff-v" style="color:var(--ac);font-family:var(--mono);">80</span></label>
+        <input type="range" id="rng-noff" min="0" max="500" value="80">
+
+        <div class="sep"></div>
+
+        <div class="flex gap6">
+          <button class="btn btn-warn btn-sm" id="btn-panic" style="flex:1;">⚡ All Notes Off</button>
+          <button class="btn btn-ghost btn-sm" id="btn-export" style="flex:1;">💾 設定保存</button>
+          <button class="btn btn-ghost btn-sm" id="btn-import-btn" style="flex:1;">📂 設定読込</button>
+        </div>
+        <input type="file" id="inp-import" accept=".json" style="display:none">
+      </div>
+    </div>
+
+    <!-- トランスポーズ & キー -->
+    <div class="card">
+      <div class="card-hd">↕ 移調 / キー設定</div>
+      <div class="card-body">
+
+        <!-- ディスプレイ + 粗調整 -->
+        <div class="flex items-c gap8" style="margin-bottom:10px;">
+          <div class="tp-display tp-zer" id="tp-disp">0</div>
+          <div style="flex:1;">
+            <input type="range" id="rng-tp" min="-48" max="48" value="0" step="1">
+            <div class="flex jb txd txs mt6" style="padding:0 2px;">
+              <span>-4oct</span><span>-2oct</span><span>0</span><span>+2oct</span><span>+4oct</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-xs" id="btn-tp-rst" title="リセット">↺</button>
+        </div>
+
+        <!-- 半音クイック -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px;">
+          <button class="btn btn-ghost btn-xs tp-q" data-v="-12">-1 oct</button>
+          <button class="btn btn-ghost btn-xs tp-q" data-v="-1">-1 半</button>
+          <button class="btn btn-ghost btn-xs tp-q" data-v="+1">+1 半</button>
+          <button class="btn btn-ghost btn-xs tp-q" data-v="+12">+1 oct</button>
+        </div>
+
+        <div class="sep"></div>
+
+        <!-- キーで移調 -->
+        <div class="txd txs bold" style="margin-bottom:6px;letter-spacing:.05em;">キーで移調（クリックで設定）</div>
+
+        <div class="flex gap4 items-c" style="margin-bottom:8px;">
+          <select id="sel-key-mode" style="flex:1;">
+            <option value="major">メジャー</option>
+            <option value="minor">マイナー</option>
+            <option value="semi">半音のみ</option>
+          </select>
+          <div class="txd txs" style="white-space:nowrap;">現在: <span id="cur-key-label" class="mono" style="color:var(--ac2);">—</span></div>
+        </div>
+
+        <div class="key-grid" id="key-grid"></div>
+
+        <div class="sep"></div>
+        <div class="txd txs" id="tp-label" style="font-family:var(--mono);">移調: ±0半音（原音）</div>
+      </div>
+    </div>
+
+    <!-- ゲームパッド -->
+    <div class="card">
+      <div class="card-hd">🎮 ゲームパッド</div>
+      <div class="card-body">
+        <div class="txd txs" style="margin-bottom:8px;">
+          Bluetoothゲームパッドをペアリングして任意のボタンを押すと自動検出されます
+        </div>
+        <select id="sel-gp"><option value="-1">-- 接続待ち --</option></select>
+        <div id="gp-id" class="txd txs mt6"></div>
+        <div id="gp-visual" style="display:none;margin-top:10px;">
+          <div class="txd txs bold" style="margin-bottom:4px;">ボタン <span class="txd" style="font-weight:400;">(クリック → マッピング追加)</span></div>
+          <div class="gp-btn-grid" id="gp-btn-grid"></div>
+          <div class="sep"></div>
+          <div class="txd txs bold" style="margin-bottom:4px;">アナログ軸 <span class="txd" style="font-weight:400;">(クリック → マッピング追加)</span></div>
+          <div id="gp-axes"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── 右カラム ── -->
+  <div class="col-r">
+
+    <!-- メインタブ -->
+    <div class="card">
+      <div class="tabs" id="main-tabs">
+        <div class="tab on"  data-t="t-map">マッピング</div>
+        <div class="tab"     data-t="t-pre">プリセット</div>
+        <div class="tab"     data-t="t-lrn">MIDIラーン</div>
+        <div class="tab"     data-t="t-log">ログ</div>
+      </div>
+
+      <!-- ══ マッピングタブ ══ -->
+      <div id="t-map" class="tc on">
+        <div class="card-body" style="padding-bottom:6px;">
+          <div class="flex items-c jb">
+            <span class="txd txs">ゲームパッド入力 → MIDIメッセージ変換ルール</span>
+            <div class="flex gap6">
+              <button class="btn btn-ghost btn-xs" id="btn-add-map">＋ 追加</button>
+              <button class="btn btn-err btn-xs"   id="btn-clr-map">🗑 全削除</button>
+            </div>
+          </div>
+        </div>
+        <div class="tbl-wrap">
+          <table class="mtbl">
+            <thead>
+              <tr>
+                <th>ソース</th>
+                <th>タイプ</th>
+                <th>Index</th>
+                <th>方向</th>
+                <th>MIDIタイプ</th>
+                <th>ch</th>
+                <th>ノート/CC#</th>
+                <th>値/Vel</th>
+                <th>反転</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="mtbl-body"></tbody>
+          </table>
+        </div>
+        <div class="card-body" style="padding-top:6px;">
+          <div class="txd txs">
+            💡 「ノート/CC#」列の音名をクリック → 音名・コードネームで選択可能 &nbsp;|&nbsp; 軸の「値」は出力CC値の最小〜最大 &nbsp;|&nbsp; 移調は全ノートに一括適用
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ プリセットタブ ══ -->
+      <div id="t-pre" class="tc">
+        <div class="card-body">
+          <div class="flex items-c jb" style="margin-bottom:12px;">
+            <span class="txd txs">プリセットを選択してマッピングをすぐに適用、または現在のマッピングを保存</span>
+            <button class="btn btn-ok btn-sm" id="btn-save-preset">＋ 現在のマッピングを保存</button>
+          </div>
+          <div class="preset-grid" id="preset-grid"></div>
+        </div>
+      </div>
+
+      <!-- ══ MIDIラーンタブ ══ -->
+      <div id="t-lrn" class="tc">
+        <div class="card-body">
+          <div class="info-box" style="margin-bottom:12px;">
+            <b>MIDIラーン手順:</b><br>
+            ① 対象マッピング行を選択 → ② 「ラーン開始」 → ③ ゲームパッドのボタン or 軸を操作
+          </div>
+          <div class="flex gap8 items-c">
+            <select id="sel-lrn" style="flex:1;"></select>
+            <button class="btn btn-primary" id="btn-lrn-start">🎯 開始</button>
+            <button class="btn btn-err" id="btn-lrn-stop" disabled>⏹ 停止</button>
+          </div>
+          <div id="lrn-status" style="margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--rs);font-size:11px;color:var(--txd);">
+            待機中...
+          </div>
+          <div class="sep"></div>
+          <div class="bold txs" style="margin-bottom:8px;letter-spacing:.04em;">🔧 テスト送信</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <div>
+              <label>タイプ</label>
+              <select id="t-type">
+                <option value="note">NoteOn/Off</option>
+                <option value="cc">CC</option>
+                <option value="pb">PitchBend</option>
+                <option value="pc">ProgramChange</option>
+                <option value="chord">コード</option>
+              </select>
+            </div>
+            <div><label>番号/ノート</label><input type="number" id="t-num" min="0" max="127" value="60"></div>
+            <div><label>値/ベロシティ</label><input type="number" id="t-val" min="0" max="127" value="100"></div>
+          </div>
+          <div id="t-chord-row" style="display:none;margin-top:8px;">
+            <label>コードネーム（例: Cmaj7, Am7）</label>
+            <input type="text" id="t-chord" placeholder="Cmaj7" value="Cmaj7">
+          </div>
+          <button class="btn btn-ok wf mt8" id="btn-test">▶ テスト送信</button>
+        </div>
+      </div>
+
+      <!-- ══ ログタブ ══ -->
+      <div id="t-log" class="tc">
+        <div class="card-body">
+          <div class="flex items-c jb" style="margin-bottom:8px;">
+            <span class="txd txs">送受信MIDIメッセージ</span>
+            <div class="flex gap6">
+              <button class="btn btn-ghost btn-xs" id="btn-log-clr">クリア</button>
+              <button class="btn btn-ghost btn-xs" id="btn-log-pause">⏸ 一時停止</button>
+            </div>
+          </div>
+          <div class="log" id="midi-log"></div>
+          <div class="sep"></div>
+          <div class="bold txs" style="margin-bottom:6px;letter-spacing:.04em;">チャンネル別アクティビティ</div>
+          <div class="act-bar" id="act-bar"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════ NOTE PICKER MODAL ═══════════════ -->
+<div class="modal-ov" id="modal-note">
+  <div class="modal">
+    <div class="modal-hd">
+      🎵 ノート / コード選択
+      <button class="btn btn-ghost btn-xs" id="mn-close">✕</button>
+    </div>
+    <div class="modal-bd">
+      <div class="tabs" id="note-tabs" style="margin:-16px -16px 16px;">
+        <div class="tab on" data-t="nt-name">音名</div>
+        <div class="tab"    data-t="nt-chord">コード</div>
+        <div class="tab"    data-t="nt-num">番号</div>
+      </div>
+
+      <!-- 音名タブ -->
+      <div id="nt-name" class="tc on">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label>音名</label>
+            <select id="mn-notename">
+              <option value="0">C</option><option value="1">C# / D♭</option>
+              <option value="2">D</option><option value="3">D# / E♭</option>
+              <option value="4">E</option><option value="5">F</option>
+              <option value="6">F# / G♭</option><option value="7">G</option>
+              <option value="8">G# / A♭</option><option value="9">A</option>
+              <option value="10">A# / B♭</option><option value="11">B</option>
+            </select>
+          </div>
+          <div>
+            <label>オクターブ</label>
+            <select id="mn-oct">
+              <option value="-1">-1</option><option value="0">0</option>
+              <option value="1">1</option><option value="2">2</option>
+              <option value="3">3</option><option value="4" selected>4</option>
+              <option value="5">5</option><option value="6">6</option>
+              <option value="7">7</option>
+            </select>
+          </div>
+        </div>
+        <div class="note-preview mt10">
+          <div class="note-preview-name" id="np-name">C4</div>
+          <div class="note-preview-num">MIDI# <span id="np-num">60</span></div>
+        </div>
+      </div>
+
+      <!-- コードタブ -->
+      <div id="nt-chord" class="tc">
+        <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;">
+          <div>
+            <label>コードネーム</label>
+            <input type="text" id="mn-chord" placeholder="例: Cmaj7  Am  G#dim7">
+          </div>
+          <div>
+            <label>オクターブ</label>
+            <select id="mn-chord-oct">
+              <option value="2">2</option><option value="3">3</option>
+              <option value="4" selected>4</option><option value="5">5</option>
+            </select>
+          </div>
+        </div>
+        <div id="mn-chord-preview" style="margin-top:10px;background:var(--s2);border-radius:var(--rs);padding:10px;min-height:48px;font-size:11px;">
+          <span class="txd">コード名を入力...</span>
+        </div>
+        <div class="txd txs bold mt8" style="margin-bottom:4px;">クイック選択</div>
+        <div class="chord-tag-row" id="quick-chords"></div>
+      </div>
+
+      <!-- 番号タブ -->
+      <div id="nt-num" class="tc">
+        <label>MIDIノート番号 (0–127)</label>
+        <input type="number" id="mn-numval" min="0" max="127" value="60">
+        <div class="note-preview mt10">
+          <div class="note-preview-name" id="np2-name">C4</div>
+          <div class="note-preview-num">MIDI# <span id="np2-num">60</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" id="mn-cancel">キャンセル</button>
+      <button class="btn btn-primary" id="mn-ok">✓ 適用</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ SAVE PRESET MODAL ═══════════════ -->
+<div class="modal-ov" id="modal-save">
+  <div class="modal" style="width:360px;">
+    <div class="modal-hd">
+      💾 プリセットを保存
+      <button class="btn btn-ghost btn-xs" id="sp-close">✕</button>
+    </div>
+    <div class="modal-bd">
+      <label>プリセット名</label>
+      <input type="text" id="sp-name" placeholder="例: ドラムパッド、シンセ鍵盤...">
+      <label style="margin-top:10px;">メモ（任意）</label>
+      <input type="text" id="sp-memo" placeholder="例: PS4コン / Ableton用">
+      <div class="txd txs mt8">現在のマッピング <span id="sp-count" style="color:var(--ac2);">0</span> 件を保存します</div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" id="sp-cancel">キャンセル</button>
+      <button class="btn btn-primary" id="sp-ok">✓ 保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════════
+//  MUSIC THEORY
+// ══════════════════════════════════════════════════════════════
+const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NOTE_ALIASES = {Db:'C#',Eb:'D#',Fb:'E',Gb:'F#',Ab:'G#',Bb:'A#',Cb:'B'};
+
+// キー → 半音数（Cからの距離）
+const KEY_SEMITONES = {
+  C:0,'C#':1,Db:1,D:2,'D#':3,Eb:3,E:4,F:5,'F#':6,Gb:6,G:7,'G#':8,Ab:8,A:9,'A#':10,Bb:10,B:11
+};
+
+// メジャースケール: 各キーの半音オフセット（C基準）
+const MAJOR_KEY_OFFSETS = Object.fromEntries(
+  Object.entries(KEY_SEMITONES).map(([k,v]) => [k, v])
+);
+// マイナーは平行短調（Am = Cメジャーの6度）
+const MINOR_PARALLEL = {
+  Am:0,Em:4,Bm:11,F$m:6,'C#m':1,'G#m':8,'D#m':3,'A#m':10,Dm:5,Gm:7,Cm:0
+};
+
+// 12キー一覧（表示用）
+const KEYS_12 = [
+  {name:'C',  sub:''},
+  {name:'C#', sub:'Db'},
+  {name:'D',  sub:''},
+  {name:'D#', sub:'Eb'},
+  {name:'E',  sub:''},
+  {name:'F',  sub:''},
+  {name:'F#', sub:'Gb'},
+  {name:'G',  sub:''},
+  {name:'G#', sub:'Ab'},
+  {name:'A',  sub:''},
+  {name:'A#', sub:'Bb'},
+  {name:'B',  sub:''},
+];
+
+function noteNameToMidi(pc, oct) {
+  return (oct + 1) * 12 + pc;
+}
+function midiToName(n) {
+  if (n < 0 || n > 127) return '??';
+  return NOTES[n % 12] + (Math.floor(n / 12) - 1);
+}
+
+// コード定義
+const CHORD_DEFS = {
+  '':   [0,4,7], 'maj':[0,4,7],
+  'm':  [0,3,7], 'min':[0,3,7],
+  'dim':[0,3,6], 'aug':[0,4,8],
+  'sus2':[0,2,7],'sus4':[0,5,7],
+  'maj7':[0,4,7,11], '7':[0,4,7,10],
+  'm7': [0,3,7,10],  'dim7':[0,3,6,9],
+  'm7b5':[0,3,6,10], 'aug7':[0,4,8,10],
+  'mmaj7':[0,3,7,11],'6':[0,4,7,9],
+  'm6': [0,3,7,9],   'maj9':[0,4,7,11,14],
+  '9':  [0,4,7,10,14],'m9':[0,3,7,10,14],
+  'add9':[0,4,7,14], '11':[0,4,7,10,14,17],
+  '13': [0,4,7,10,14,17,21],
+};
+
+const QUICK_CHORDS = [
+  'C','Cm','Cmaj7','C7','Cm7',
+  'D','Dm','Dmaj7','D7','Dm7',
+  'E','Em','Emaj7','E7',
+  'F','Fm','Fmaj7','F7',
+  'G','Gm','Gmaj7','G7',
+  'A','Am','Amaj7','A7','Am7',
+  'B','Bm','B7',
+  'Bb','Bbm','Bb7','Eb','Ebmaj7',
+  'Ab','Abmaj7','F#m','C#m',
+  'Cdim','Cdim7','Caug','Csus4',
+];
+
+function parseChord(name) {
+  if (!name) return null;
+  name = name.trim();
+  const rootM = name.match(/^([A-G][b#]?)/);
+  if (!rootM) return null;
+  const rootStr = rootM[1];
+  const qual    = name.slice(rootStr.length);
+  const rootNorm = NOTE_ALIASES[rootStr] ?? rootStr;
+  const rootPc   = NOTES.indexOf(rootNorm);
+  if (rootPc === -1) return null;
+  const intervals = CHORD_DEFS[qual];
+  if (intervals === undefined) return null;
+  return { root: rootPc, qual, intervals, name };
+}
+
+function chordToMidi(root, intervals, oct = 4) {
+  const base = (oct + 1) * 12 + root;
+  return intervals.map(i => base + i).filter(n => n >= 0 && n <= 127);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  BLE MIDI パケット生成
+//  仕様: 先頭 Header(1B) + Timestamp(1B) + MIDIデータ
+//  Header: 0x80 | (ms >> 7) & 0x3F
+//  Timestamp: 0x80 | (ms & 0x7F)
+// ══════════════════════════════════════════════════════════════
+function bleMidiPacket(...midiBytes) {
+  const ms  = performance.now() | 0;
+  const hdr = 0x80 | ((ms >> 7) & 0x3F);
+  const ts  = 0x80 | (ms & 0x7F);
+  return new Uint8Array([hdr, ts, ...midiBytes]);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+const BLE_MIDI_SERVICE = '03b80e5a-ede8-4b33-a751-6ce34ec4c700';
+const BLE_MIDI_CHAR    = '7772e5db-3868-4112-a1a9-f2669d106bf3';
+
+const S = {
+  bleDevice: null,
+  bleChar:   null,
+  bleConnected: false,
+
+  midiChannel: 1,
+  velocity: 100,
+  noteOffDelay: 80,
+  transpose: 0,
+  selectedKey: null,   // {name, semi} or null
+
+  gamepads: {},
+  activeGP: -1,
+  prevButtons: [],
+  prevAxes: [],
+  ccCache: {},
+  pbCache: {},
+
+  mappings: [],
+  userPresets: [],   // {id, name, memo, mappings, channel, velocity, noteOffDelay, transpose}
+  systemPresets: [],
+
+  learnMode: false,
+  learnTargetId: null,
+
+  actCount: new Array(16).fill(0),
+  logPaused: false,
+};
+
+let midCnt = 0;
+const newId = () => ++midCnt;
+
+// ══════════════════════════════════════════════════════════════
+//  BLE MIDI 接続
+// ══════════════════════════════════════════════════════════════
+document.getElementById('btn-ble-connect').addEventListener('click', async () => {
+  if (!navigator.bluetooth) {
+    alert('このブラウザはWeb Bluetooth APIに対応していません。\nChrome または Edge (デスクトップ) をご使用ください。');
+    return;
+  }
+  try {
+    setBleStatus('connecting', '接続先を選択中...');
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [{ services: [BLE_MIDI_SERVICE] }],
+      optionalServices: [BLE_MIDI_SERVICE],
+    });
+    S.bleDevice = device;
+    device.addEventListener('gattserverdisconnected', onBleDisconnect);
+
+    setBleStatus('connecting', `${device.name || '不明'} に接続中...`);
+    log(`🔵 デバイス選択: ${device.name || '(不明)'}`, 'ble');
+
+    const server  = await device.gatt.connect();
+    const service = await server.getPrimaryService(BLE_MIDI_SERVICE);
+    const char    = await service.getCharacteristic(BLE_MIDI_CHAR);
+
+    S.bleChar      = char;
+    S.bleConnected = true;
+
+    setBleStatus('ok', `✅ 接続済み: ${device.name || '不明'}`);
+    setPill('pill-ble', 'pill-ok', `🔵 BLE: ${(device.name||'BLE MIDI').slice(0,16)}`);
+    document.getElementById('btn-ble-disconnect').disabled = false;
+    document.getElementById('btn-ble-connect').disabled    = true;
+
+    log(`✅ BLE MIDI 接続完了: ${device.name || '不明'}`, 'ble');
+
+    // notify があれば受信も可能（受信ログ用）
+    try {
+      await char.startNotifications();
+      char.addEventListener('characteristicvaluechanged', onBleReceive);
+    } catch (_) { /* notify未サポートデバイスは無視 */ }
+
+  } catch(e) {
+    setBleStatus('off', '接続キャンセルまたは失敗');
+    setPill('pill-ble', 'pill-off', 'BLE MIDI: 未接続');
+    if (!e.message.includes('cancelled')) {
+      log(`❌ BLE 接続失敗: ${e.message}`, 'err');
+    }
+  }
+});
+
+document.getElementById('btn-ble-disconnect').addEventListener('click', () => {
+  if (S.bleDevice?.gatt?.connected) S.bleDevice.gatt.disconnect();
+  onBleDisconnect();
+});
+
+function onBleDisconnect() {
+  S.bleConnected = false;
+  S.bleChar = null;
+  setBleStatus('off', '切断されました');
+  setPill('pill-ble', 'pill-off', 'BLE MIDI: 未接続');
+  document.getElementById('btn-ble-disconnect').disabled = true;
+  document.getElementById('btn-ble-connect').disabled    = false;
+  log('🔴 BLE MIDI 切断', 'ble');
+}
+
+function onBleReceive(e) {
+  const data = new Uint8Array(e.target.value.buffer);
+  // BLEパケットをデコード（ログ用）
+  let i = 2; // skip header + first timestamp
+  while (i < data.length) {
+    if (data[i] & 0x80) { i++; continue; } // timestamp byte
+    const status = data[i];
+    const type   = status >> 4;
+    const ch     = (status & 0x0F) + 1;
+    if (type === 0x9 && i+2 < data.length) {
+      log(`← NoteOn  ch${ch} ${midiToName(data[i+1])}(${data[i+1]}) vel=${data[i+2]}`, 'midi');
+      i += 3;
+    } else if (type === 0x8 && i+2 < data.length) {
+      log(`← NoteOff ch${ch} ${midiToName(data[i+1])}`, 'midi');
+      i += 3;
+    } else if (type === 0xB && i+2 < data.length) {
+      log(`← CC      ch${ch} #${data[i+1]}=${data[i+2]}`, 'cc');
+      i += 3;
+    } else { i++; }
+  }
+}
+
+function setBleStatus(state, msg) {
+  const box = document.getElementById('ble-status-box');
+  const colors = { ok:'var(--ok)', connecting:'var(--warn)', off:'var(--txd)' };
+  box.innerHTML = `<span style="color:${colors[state]||'var(--txd)'};">${msg}</span>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MIDI 送信 (BLE)
+// ══════════════════════════════════════════════════════════════
+async function bleSend(bytes) {
+  if (!S.bleConnected || !S.bleChar) return false;
+  try {
+    await S.bleChar.writeValueWithoutResponse(bleMidiPacket(...bytes));
+    return true;
+  } catch(e) {
+    log(`❌ BLE送信エラー: ${e.message}`, 'err');
+    return false;
+  }
+}
+
+async function midiNoteOn(ch, note, vel) {
+  note = clamp(note, 0, 127);
+  vel  = clamp(vel,  1, 127);
+  if (await bleSend([0x90 | ch, note, vel])) {
+    log(`🎵 NoteOn  ch${ch+1} ${midiToName(note)}(${note}) vel=${vel}`, 'midi');
+    bump(ch);
+  }
+}
+async function midiNoteOff(ch, note) {
+  note = clamp(note, 0, 127);
+  if (await bleSend([0x80 | ch, note, 0])) {
+    log(`🎵 NoteOff ch${ch+1} ${midiToName(note)}(${note})`, 'midi');
+  }
+}
+async function midiCC(ch, num, val) {
+  num = clamp(num, 0, 127);
+  val = clamp(val, 0, 127);
+  if (await bleSend([0xB0 | ch, num, val])) {
+    log(`🎚 CC      ch${ch+1} #${num}=${val}`, 'cc');
+    bump(ch);
+  }
+}
+async function midiPB(ch, val14) {
+  val14 = clamp(val14, -8192, 8191);
+  const v = val14 + 8192;
+  if (await bleSend([0xE0 | ch, v & 0x7F, (v >> 7) & 0x7F])) {
+    log(`〰 PB      ch${ch+1} =${val14}`, 'cc');
+    bump(ch);
+  }
+}
+async function midiPC(ch, num) {
+  num = clamp(num, 0, 127);
+  if (await bleSend([0xC0 | ch, num])) {
+    log(`🎛 PC      ch${ch+1} #${num}`, 'midi');
+    bump(ch);
+  }
+}
+async function midiAllNotesOff() {
+  for (let ch = 0; ch < 16; ch++) await midiCC(ch, 123, 0);
+}
+
+function applyTP(note) { return clamp(note + S.transpose, 0, 127); }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+document.getElementById('btn-panic').addEventListener('click', async () => {
+  await midiAllNotesOff();
+  log('⚡ All Notes Off (全16ch)', 'warn');
+});
+
+// ══════════════════════════════════════════════════════════════
+//  MIDI CHANNEL CHIPS
+// ══════════════════════════════════════════════════════════════
+(function() {
+  const row = document.getElementById('ch-row');
+  for (let i = 1; i <= 16; i++) {
+    const c = document.createElement('div');
+    c.className = 'ch-chip' + (i === 1 ? ' on' : '');
+    c.textContent = i;
+    c.dataset.ch = i;
+    c.addEventListener('click', () => {
+      S.midiChannel = i;
+      document.querySelectorAll('.ch-chip').forEach(x => x.classList.toggle('on', +x.dataset.ch === i));
+    });
+    row.appendChild(c);
+  }
+})();
+
+// ══════════════════════════════════════════════════════════════
+//  VELOCITY / NOTE-OFF SLIDERS
+// ══════════════════════════════════════════════════════════════
+document.getElementById('rng-vel').addEventListener('input', function() {
+  S.velocity = +this.value;
+  document.getElementById('vel-v').textContent = this.value;
+});
+document.getElementById('rng-noff').addEventListener('input', function() {
+  S.noteOffDelay = +this.value;
+  document.getElementById('noff-v').textContent = this.value;
+});
+
+// ══════════════════════════════════════════════════════════════
+//  TRANSPOSE & KEY
+// ══════════════════════════════════════════════════════════════
+function setTP(v) {
+  v = clamp(v, -48, 48);
+  S.transpose = v;
+  document.getElementById('rng-tp').value = v;
+  const disp = document.getElementById('tp-disp');
+  disp.textContent = (v > 0 ? '+' : '') + v;
+  disp.className = 'tp-display ' + (v > 0 ? 'tp-pos' : v < 0 ? 'tp-neg' : 'tp-zer');
+  setPill('pill-tp', 'pill-info', `↕ 移調: ${v > 0 ? '+' : ''}${v}`);
+  // ラベル
+  const oct = Math.floor(Math.abs(v) / 12);
+  const semi = Math.abs(v) % 12;
+  const parts = [];
+  if (oct)  parts.push(`${oct}oct`);
+  if (semi) parts.push(`${semi}半音`);
+  const sign = v > 0 ? '+' : v < 0 ? '-' : '±';
+  document.getElementById('tp-label').textContent =
+    `移調: ${sign}${parts.join(' ') || '0'}（${v === 0 ? '原音' : v > 0 ? 'Up' : 'Down'}）`;
+}
+
+document.getElementById('rng-tp').addEventListener('input', function() { setTP(+this.value); updateKeyChips(); });
+document.getElementById('btn-tp-rst').addEventListener('click', () => { setTP(0); S.selectedKey = null; updateKeyChips(); });
+document.querySelectorAll('.tp-q').forEach(b => b.addEventListener('click', () => { setTP(S.transpose + +b.dataset.v); S.selectedKey = null; updateKeyChips(); }));
+
+// キーグリッド構築
+(function buildKeyGrid() {
+  const grid = document.getElementById('key-grid');
+  KEYS_12.forEach(k => {
+    const chip = document.createElement('div');
+    chip.className = 'key-chip';
+    chip.dataset.key = k.name;
+    chip.innerHTML = `${k.name}${k.sub ? `<span class="sub">${k.sub}</span>` : ''}`;
+    chip.addEventListener('click', () => applyKeyTranspose(k.name));
+    grid.appendChild(chip);
+  });
+})();
+
+function applyKeyTranspose(keyName) {
+  const mode = document.getElementById('sel-key-mode').value;
+  const targetSemi = KEY_SEMITONES[keyName] ?? 0;
+
+  if (mode === 'semi') {
+    // 単純に半音値をトランスポーズとして設定
+    setTP(targetSemi);
+  } else {
+    // 現在のキー(C基準)との差分を計算
+    const currentOrigin = 0; // C基準
+    let diff = targetSemi - currentOrigin;
+    if (diff > 6)  diff -= 12;
+    if (diff < -6) diff += 12;
+    setTP(diff);
+  }
+
+  S.selectedKey = { name: keyName, semi: targetSemi };
+  document.getElementById('cur-key-label').textContent =
+    `${keyName}${mode === 'major' ? ' maj' : mode === 'minor' ? ' min' : ''}`;
+  updateKeyChips();
+}
+
+function updateKeyChips() {
+  document.querySelectorAll('.key-chip').forEach(c => {
+    c.classList.toggle('on', S.selectedKey?.name === c.dataset.key);
+  });
+}
+
+document.getElementById('sel-key-mode').addEventListener('change', () => {
+  if (S.selectedKey) applyKeyTranspose(S.selectedKey.name);
+});
+
+// ══════════════════════════════════════════════════════════════
+//  GAMEPAD
+// ══════════════════════════════════════════════════════════════
+const BTN_LABELS  = ['A/×','B/○','X/□','Y/△','LB','RB','LT','RT','Sel','Start','L3','R3','↑','↓','←','→','Home'];
+const AXIS_LABELS = ['LX','LY','RX','RY','LT_ax','RT_ax','HX','HY'];
+
+window.addEventListener('gamepadconnected', e => {
+  S.gamepads[e.gamepad.index] = e.gamepad;
+  refreshGpSelect();
+  if (S.activeGP === -1) activateGP(e.gamepad.index);
+  log(`🎮 接続: [${e.gamepad.index}] ${e.gamepad.id}`, 'info');
+});
+window.addEventListener('gamepaddisconnected', e => {
+  delete S.gamepads[e.gamepad.index];
+  refreshGpSelect();
+  if (S.activeGP === e.gamepad.index) {
+    S.activeGP = -1;
+    document.getElementById('gp-visual').style.display = 'none';
+    setPill('pill-gp', 'pill-off', 'Gamepad: 未接続');
+  }
+  log(`🎮 切断: ${e.gamepad.id}`, 'warn');
+});
+
+function refreshGpSelect() {
+  const sel = document.getElementById('sel-gp');
+  sel.innerHTML = '';
+  const keys = Object.keys(S.gamepads);
+  if (!keys.length) { sel.innerHTML = '<option value="-1">-- 接続待ち --</option>'; return; }
+  keys.forEach(idx => {
+    const gp = S.gamepads[idx];
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = `[${idx}] ${gp.id.slice(0, 44)}`;
+    if (+idx === S.activeGP) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+document.getElementById('sel-gp').addEventListener('change', function() { activateGP(+this.value); });
+
+function activateGP(idx) {
+  S.activeGP = idx;
+  const gp = navigator.getGamepads()[idx];
+  if (!gp) return;
+  setPill('pill-gp', 'pill-ok', `🎮 ${gp.id.split('(')[0].trim().slice(0, 18)}`);
+  document.getElementById('gp-id').textContent = gp.id;
+  document.getElementById('gp-visual').style.display = '';
+  buildGpVisual(gp);
+  S.prevButtons = new Array(gp.buttons.length).fill(false);
+  S.prevAxes    = new Array(gp.axes.length).fill(0);
+}
+
+function buildGpVisual(gp) {
+  const grid = document.getElementById('gp-btn-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < gp.buttons.length; i++) {
+    const c = document.createElement('div');
+    c.className = 'gp-btn';
+    c.textContent = BTN_LABELS[i] ?? `B${i}`;
+    c.dataset.bi = i;
+    c.title = `ボタン${i} — クリックでマッピング追加`;
+    c.addEventListener('click', () => addMap({ srcType: 'button', srcIndex: i, number: 60 + i }));
+    grid.appendChild(c);
+  }
+  const axEl = document.getElementById('gp-axes');
+  axEl.innerHTML = '';
+  for (let i = 0; i < gp.axes.length; i++) {
+    const row = document.createElement('div');
+    row.className = 'ax-row';
+    row.innerHTML = `
+      <span class="ax-lbl">${AXIS_LABELS[i] ?? 'Ax'+i}</span>
+      <div class="ax-track" title="軸${i} クリックでCC追加">
+        <div class="ax-fill" id="axf-${i}" style="left:50%;width:0%"></div>
+      </div>
+      <span class="ax-val" id="axv-${i}">0.000</span>`;
+    row.querySelector('.ax-track').addEventListener('click',
+      () => addMap({ srcType: 'axis', srcIndex: i, midiType: 'cc', number: i, valueMin: 0, valueMax: 127 }));
+    axEl.appendChild(row);
+  }
+}
+
+function updateGpVisual(gp) {
+  for (let i = 0; i < gp.buttons.length; i++) {
+    const c = document.querySelector(`.gp-btn[data-bi="${i}"]`);
+    if (!c) continue;
+    const mapped = S.mappings.some(m => m.srcType === 'button' && m.srcIndex === i);
+    c.classList.toggle('pressed', gp.buttons[i].pressed);
+    c.classList.toggle('mapped', mapped && !gp.buttons[i].pressed);
+  }
+  for (let i = 0; i < gp.axes.length; i++) {
+    const fill = document.getElementById('axf-' + i);
+    const val  = document.getElementById('axv-' + i);
+    if (!fill || !val) continue;
+    const v = gp.axes[i];
+    const pct = (v + 1) / 2 * 100;
+    if (v >= 0) { fill.style.left = '50%'; fill.style.width = (pct - 50) + '%'; }
+    else         { fill.style.left = pct + '%'; fill.style.width = (50 - pct) + '%'; }
+    val.textContent = v.toFixed(3);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MAPPING
+// ══════════════════════════════════════════════════════════════
+function defMap(o = {}) {
+  return Object.assign({
+    id: newId(),
+    srcType: 'button', srcIndex: 0,
+    axisDir: 'both', threshold: 0.5,
+    midiType: 'note', channel: 0,
+    number: 60,
+    chordName: '', chordNotes: [],
+    valueMin: 0, valueMax: 127,
+    velocity: 0,
+    invert: false,
+  }, o);
+}
+
+function addMap(o) { S.mappings.push(defMap(o)); renderTable(); refreshLearnSel(); }
+function getMap(id) { return S.mappings.find(m => m.id === id); }
+
+document.getElementById('btn-add-map').addEventListener('click', () => addMap({}));
+document.getElementById('btn-clr-map').addEventListener('click', () => {
+  if (confirm('全マッピングを削除しますか？')) { S.mappings = []; renderTable(); refreshLearnSel(); }
+});
+
+function renderTable() {
+  const tbody = document.getElementById('mtbl-body');
+  tbody.innerHTML = '';
+
+  S.mappings.forEach(m => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = m.id;
+
+    const srcLbl = m.srcType === 'button'
+      ? (BTN_LABELS[m.srcIndex] ?? 'B' + m.srcIndex)
+      : (AXIS_LABELS[m.srcIndex] ?? 'Ax' + m.srcIndex);
+
+    const noteDisp = m.midiType === 'chord'
+      ? `<span style="color:var(--ac3)">♟${m.chordName || '?'}</span>`
+      : (m.midiType === 'note' ? midiToName(m.number) : m.number);
+
+    tr.innerHTML = `
+      <td style="font-family:var(--mono);color:var(--ac2);font-size:10px;">${srcLbl}</td>
+      <td>
+        <select class="m-srctype" data-id="${m.id}" style="width:58px;">
+          <option value="button" ${m.srcType==='button'?'selected':''}>Btn</option>
+          <option value="axis"   ${m.srcType==='axis'  ?'selected':''}>Axis</option>
+        </select>
+      </td>
+      <td>
+        <input type="number" class="m-srcidx" data-id="${m.id}" value="${m.srcIndex}" min="0" max="31" style="width:40px;">
+      </td>
+      <td>
+        ${m.srcType==='axis' ? `
+          <select class="m-axdir" data-id="${m.id}" style="width:44px;">
+            <option value="both" ${m.axisDir==='both'?'selected':''}>±</option>
+            <option value="pos"  ${m.axisDir==='pos' ?'selected':''}>+</option>
+            <option value="neg"  ${m.axisDir==='neg' ?'selected':''}>-</option>
+          </select>` : '<span class="txd txs">—</span>'}
+      </td>
+      <td>
+        <select class="m-mtype" data-id="${m.id}" style="width:84px;">
+          <option value="note"  ${m.midiType==='note' ?'selected':''}>Note</option>
+          <option value="chord" ${m.midiType==='chord'?'selected':''}>Chord</option>
+          <option value="cc"    ${m.midiType==='cc'   ?'selected':''}>CC</option>
+          <option value="pb"    ${m.midiType==='pb'   ?'selected':''}>PitchBend</option>
+          <option value="pc"    ${m.midiType==='pc'   ?'selected':''}>ProgChg</option>
+        </select>
+      </td>
+      <td>
+        <select class="m-ch" data-id="${m.id}" style="width:50px;">
+          <option value="0" ${m.channel===0?'selected':''}>G</option>
+          ${Array.from({length:16},(_,i)=>`<option value="${i+1}" ${m.channel===i+1?'selected':''}>${i+1}</option>`).join('')}
+        </select>
+      </td>
+      <td>
+        <div class="flex items-c gap4">
+          <span class="ndsp" data-id="${m.id}" title="クリックして音名/コード選択">${noteDisp}</span>
+          ${(m.midiType==='note'||m.midiType==='cc'||m.midiType==='pc')
+            ? `<input type="number" class="m-num" data-id="${m.id}" value="${m.number}" min="0" max="127" style="width:42px;">`
+            : ''}
+        </div>
+      </td>
+      <td>
+        ${m.srcType==='axis'
+          ? `<div class="flex gap4"><input type="number" class="m-vmin" data-id="${m.id}" value="${m.valueMin}" min="0" max="127" style="width:36px;" title="min"><span class="txd">-</span><input type="number" class="m-vmax" data-id="${m.id}" value="${m.valueMax}" min="0" max="127" style="width:36px;" title="max"></div>`
+          : `<input type="number" class="m-vel" data-id="${m.id}" value="${m.velocity}" min="0" max="127" style="width:40px;" title="0=グローバル">`}
+      </td>
+      <td style="text-align:center;">
+        <input type="checkbox" class="m-inv" data-id="${m.id}" ${m.invert?'checked':''}>
+      </td>
+      <td>
+        <button class="btn btn-err btn-xs m-del" data-id="${m.id}">✕</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // イベント一括バインド
+  const on = (cls, fn) => tbody.querySelectorAll(cls).forEach(el => el.addEventListener('change', fn));
+  const onInput = (cls, fn) => tbody.querySelectorAll(cls).forEach(el => el.addEventListener('input', fn));
+
+  on('.m-srctype', function() {
+    const m = getMap(+this.dataset.id); if (!m) return;
+    m.srcType = this.value; renderTable();
+  });
+  on('.m-mtype', function() {
+    const m = getMap(+this.dataset.id); if (!m) return;
+    m.midiType = this.value; renderTable();
+  });
+  on('.m-srcidx', function() { const m=getMap(+this.dataset.id); if(m) m.srcIndex=+this.value; });
+  on('.m-axdir',  function() { const m=getMap(+this.dataset.id); if(m) m.axisDir=this.value; });
+  on('.m-ch',     function() { const m=getMap(+this.dataset.id); if(m) m.channel=+this.value; });
+  on('.m-inv',    function() { const m=getMap(+this.dataset.id); if(m) m.invert=this.checked; });
+  onInput('.m-num', function() {
+    const m=getMap(+this.dataset.id); if(!m) return;
+    m.number=clamp(+this.value,0,127); m.chordName=''; m.chordNotes=[];
+    const nd=tbody.querySelector(`.ndsp[data-id="${m.id}"]`);
+    if(nd) nd.innerHTML = midiToName(m.number);
+  });
+  onInput('.m-vmin', function() { const m=getMap(+this.dataset.id); if(m) m.valueMin=+this.value; });
+  onInput('.m-vmax', function() { const m=getMap(+this.dataset.id); if(m) m.valueMax=+this.value; });
+  onInput('.m-vel',  function() { const m=getMap(+this.dataset.id); if(m) m.velocity=+this.value; });
+  tbody.querySelectorAll('.m-del').forEach(el => el.addEventListener('click', function() {
+    S.mappings = S.mappings.filter(m => m.id !== +this.dataset.id);
+    renderTable(); refreshLearnSel();
+  }));
+  // 音名クリック → モーダル
+  tbody.querySelectorAll('.ndsp').forEach(el => el.addEventListener('click', function() {
+    const m = getMap(+this.dataset.id); if (!m) return;
+    if (m.midiType !== 'note' && m.midiType !== 'chord') return;
+    openNoteModal(m.id);
+  }));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MAIN GAME LOOP
+// ══════════════════════════════════════════════════════════════
+function loop() {
+  requestAnimationFrame(loop);
+  if (S.activeGP < 0) return;
+  const gp = navigator.getGamepads()[S.activeGP];
+  if (!gp) return;
+  S.gamepads[S.activeGP] = gp;
+  updateGpVisual(gp);
+
+  // ラーンモード
+  if (S.learnMode && S.learnTargetId !== null) {
+    for (let i = 0; i < gp.buttons.length; i++) {
+      if (gp.buttons[i].pressed && !S.prevButtons[i]) { doLearn('button', i); break; }
+    }
+    for (let i = 0; i < gp.axes.length; i++) {
+      if (Math.abs(gp.axes[i]) > 0.5 && Math.abs(S.prevAxes[i] ?? 0) <= 0.5) { doLearn('axis', i); break; }
+    }
+  }
+
+  S.mappings.forEach(m => processMap(m, gp));
+
+  S.prevButtons = gp.buttons.map(b => b.pressed);
+  S.prevAxes    = [...gp.axes];
+}
+loop();
+
+function processMap(m, gp) {
+  const ch = (m.channel > 0 ? m.channel : S.midiChannel) - 1;
+
+  if (m.srcType === 'button') {
+    const btn  = gp.buttons[m.srcIndex]; if (!btn) return;
+    const now  = btn.pressed;
+    const prev = S.prevButtons[m.srcIndex] ?? false;
+    if (now && !prev) onBtnDown(m, ch);
+    if (!now && prev) onBtnUp(m, ch);
+
+  } else {
+    const raw = gp.axes[m.srcIndex]; if (raw === undefined) return;
+    const v   = m.invert ? -raw : raw;
+    if (m.midiType === 'cc')   processAxisCC(m, ch, v);
+    else if (m.midiType === 'pb') processAxisPB(m, ch, v);
+    else if (m.midiType === 'note') {
+      const active    = Math.abs(v) > (m.threshold ?? 0.5);
+      const prevRaw   = S.prevAxes[m.srcIndex] ?? 0;
+      const prevActive = Math.abs(m.invert ? -prevRaw : prevRaw) > (m.threshold ?? 0.5);
+      if (active && !prevActive) midiNoteOn(ch, applyTP(m.number), m.velocity || S.velocity);
+      if (!active && prevActive) midiNoteOff(ch, applyTP(m.number));
+    }
+  }
+}
+
+function onBtnDown(m, ch) {
+  const vel = m.velocity > 0 ? m.velocity : S.velocity;
+  if (m.midiType === 'note') {
+    midiNoteOn(ch, applyTP(m.number), vel);
+  } else if (m.midiType === 'chord') {
+    const notes = resolveChordNotes(m);
+    notes.forEach(n => midiNoteOn(ch, applyTP(n), vel));
+    if (notes.length > 1) log(`♟ Chord: ${m.chordName} [${notes.map(n=>midiToName(applyTP(n))).join(' ')}]`, 'chord');
+  } else if (m.midiType === 'cc') {
+    midiCC(ch, m.number, m.invert ? m.valueMin : m.valueMax);
+  } else if (m.midiType === 'pb') {
+    midiPB(ch, m.invert ? -8192 : 8191);
+  } else if (m.midiType === 'pc') {
+    midiPC(ch, m.number);
+  }
+}
+
+function onBtnUp(m, ch) {
+  const delay = S.noteOffDelay;
+  if (m.midiType === 'note') {
+    const fn = () => midiNoteOff(ch, applyTP(m.number));
+    delay > 0 ? setTimeout(fn, delay) : fn();
+  } else if (m.midiType === 'chord') {
+    const notes = resolveChordNotes(m);
+    const fn = () => notes.forEach(n => midiNoteOff(ch, applyTP(n)));
+    delay > 0 ? setTimeout(fn, delay) : fn();
+  } else if (m.midiType === 'cc') {
+    midiCC(ch, m.number, m.invert ? m.valueMax : m.valueMin);
+  } else if (m.midiType === 'pb') {
+    midiPB(ch, 0);
+  }
+}
+
+function resolveChordNotes(m) {
+  if (m.chordNotes?.length) return m.chordNotes;
+  const p = parseChord(m.chordName);
+  if (!p) return [m.number];
+  return chordToMidi(p.root, p.intervals, 4);
+}
+
+function processAxisCC(m, ch, v) {
+  let norm;
+  if (m.axisDir === 'pos') norm = Math.max(0, v);
+  else if (m.axisDir === 'neg') norm = Math.max(0, -v);
+  else norm = (v + 1) / 2;
+  const val = clamp(Math.round(m.valueMin + norm * (m.valueMax - m.valueMin)), 0, 127);
+  const key = `cc-${ch}-${m.number}-${m.id}`;
+  if (S.ccCache[key] === val) return;
+  S.ccCache[key] = val;
+  midiCC(ch, m.number, val);
+}
+
+function processAxisPB(m, ch, v) {
+  let norm;
+  if (m.axisDir === 'pos') norm = Math.max(0, v);
+  else if (m.axisDir === 'neg') norm = Math.max(0, -v);
+  else norm = v;
+  const val = clamp(Math.round(norm * 8191), -8192, 8191);
+  const key = `pb-${ch}-${m.id}`;
+  if (S.pbCache[key] === val) return;
+  S.pbCache[key] = val;
+  midiPB(ch, val);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NOTE PICKER MODAL
+// ══════════════════════════════════════════════════════════════
+let modalTargetId = null;
+
+function openNoteModal(mappingId) {
+  modalTargetId = mappingId;
+  const m = getMap(mappingId);
+  if (!m) return;
+
+  // 音名タブ初期値
+  const pc  = m.number % 12;
+  const oct = Math.floor(m.number / 12) - 1;
+  document.getElementById('mn-notename').value = pc;
+  document.getElementById('mn-oct').value = oct;
+  updateNotePreview();
+
+  // コードタブ
+  if (m.chordName) document.getElementById('mn-chord').value = m.chordName;
+  updateChordPreview();
+
+  // 番号タブ
+  document.getElementById('mn-numval').value = m.number;
+  updateNumPreview();
+
+  // 初期タブ
+  activateNoteTab(m.midiType === 'chord' ? 'nt-chord' : 'nt-name');
+
+  document.getElementById('modal-note').classList.add('open');
+}
+
+function closeNoteModal() {
+  document.getElementById('modal-note').classList.remove('open');
+  modalTargetId = null;
+}
+
+['mn-close','mn-cancel'].forEach(id =>
+  document.getElementById(id).addEventListener('click', closeNoteModal));
+
+document.getElementById('mn-ok').addEventListener('click', () => {
+  const m = getMap(modalTargetId); if (!m) { closeNoteModal(); return; }
+  const activeTab = document.querySelector('#note-tabs .tab.on')?.dataset.t;
+
+  if (activeTab === 'nt-name') {
+    const pc  = +document.getElementById('mn-notename').value;
+    const oct = +document.getElementById('mn-oct').value;
+    m.number = noteNameToMidi(pc, oct);
+    m.chordName = ''; m.chordNotes = [];
+    m.midiType = 'note';
+  } else if (activeTab === 'nt-chord') {
+    const raw = document.getElementById('mn-chord').value.trim();
+    const oct = +document.getElementById('mn-chord-oct').value;
+    const p   = parseChord(raw);
+    if (!p) { alert(`コード名を認識できませんでした: "${raw}"`); return; }
+    m.chordName  = raw;
+    m.chordNotes = chordToMidi(p.root, p.intervals, oct);
+    m.number     = m.chordNotes[0] ?? 60;
+    m.midiType   = 'chord';
+  } else {
+    m.number = clamp(+document.getElementById('mn-numval').value, 0, 127);
+    m.chordName = ''; m.chordNotes = [];
+    m.midiType = 'note';
+  }
+  renderTable();
+  closeNoteModal();
+});
+
+// 音名プレビュー
+function updateNotePreview() {
+  const pc  = +document.getElementById('mn-notename').value;
+  const oct = +document.getElementById('mn-oct').value;
+  const mid = noteNameToMidi(pc, oct);
+  document.getElementById('np-name').textContent = NOTES[pc] + oct;
+  document.getElementById('np-num').textContent  = mid;
+}
+document.getElementById('mn-notename').addEventListener('change', updateNotePreview);
+document.getElementById('mn-oct').addEventListener('change', updateNotePreview);
+
+// コードプレビュー
+function updateChordPreview() {
+  const raw = document.getElementById('mn-chord').value.trim();
+  const oct = +document.getElementById('mn-chord-oct').value;
+  const el  = document.getElementById('mn-chord-preview');
+  if (!raw) { el.innerHTML = '<span class="txd">コード名を入力...</span>'; return; }
+  const p = parseChord(raw);
+  if (!p) { el.innerHTML = `<span style="color:var(--err)">❌ "${raw}" は認識できません</span>`; return; }
+  const notes = chordToMidi(p.root, p.intervals, oct);
+  el.innerHTML = `<span style="color:var(--ac3);font-weight:700;">♟ ${raw}</span>
+    &ensp;→&ensp; ${notes.map(n => `<span class="mono" style="color:var(--ac2)">${midiToName(n)}</span><span class="txd txs">(${n})</span>`).join('  ')}
+    <br><span class="txd txs">構成音: ${p.intervals.length}音 | ルート: ${NOTES[p.root]}${oct}</span>`;
+}
+document.getElementById('mn-chord').addEventListener('input', updateChordPreview);
+document.getElementById('mn-chord-oct').addEventListener('change', updateChordPreview);
+
+// 番号プレビュー
+function updateNumPreview() {
+  const n = clamp(+document.getElementById('mn-numval').value, 0, 127);
+  document.getElementById('np2-name').textContent = midiToName(n);
+  document.getElementById('np2-num').textContent  = n;
+}
+document.getElementById('mn-numval').addEventListener('input', updateNumPreview);
+
+// クイックコード
+(function buildQuickChords() {
+  const el = document.getElementById('quick-chords');
+  QUICK_CHORDS.forEach(name => {
+    const tag = document.createElement('span');
+    tag.className = 'ctag';
+    tag.textContent = name;
+    tag.addEventListener('click', () => {
+      document.getElementById('mn-chord').value = name;
+      updateChordPreview();
+      activateNoteTab('nt-chord');
+    });
+    el.appendChild(tag);
+  });
+})();
+
+// ノートモーダルのタブ切替
+document.getElementById('note-tabs').addEventListener('click', e => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  activateNoteTab(t.dataset.t);
+});
+function activateNoteTab(id) {
+  document.querySelectorAll('#note-tabs .tab').forEach(t => t.classList.toggle('on', t.dataset.t === id));
+  ['nt-name','nt-chord','nt-num'].forEach(tid =>
+    document.getElementById(tid).classList.toggle('on', tid === id));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PRESETS
+// ══════════════════════════════════════════════════════════════
+// システムプリセット定義
+S.systemPresets = [
+  {
+    id: 'sys-drums',
+    name: '🥁 ドラムパッド',
+    memo: 'GM ドラムノート / PS4配置',
+    mappings: [
+      {srcType:'button',srcIndex:0, midiType:'note',number:36},  // Kick
+      {srcType:'button',srcIndex:1, midiType:'note',number:38},  // Snare
+      {srcType:'button',srcIndex:2, midiType:'note',number:42},  // HH Closed
+      {srcType:'button',srcIndex:3, midiType:'note',number:46},  // HH Open
+      {srcType:'button',srcIndex:4, midiType:'note',number:49},  // Crash
+      {srcType:'button',srcIndex:5, midiType:'note',number:51},  // Ride
+      {srcType:'button',srcIndex:12,midiType:'note',number:50},  // Hi Tom
+      {srcType:'button',srcIndex:13,midiType:'note',number:47},  // Mid Tom
+      {srcType:'button',srcIndex:14,midiType:'note',number:45},  // Lo Tom
+      {srcType:'button',srcIndex:15,midiType:'note',number:43},  // Floor Tom
+    ],
+    channel:10, velocity:100, noteOffDelay:20, transpose:0,
+  },
+  {
+    id: 'sys-synth',
+    name: '🎹 シンセ鍵盤 (Cメジャー)',
+    memo: 'C4〜C5 / Xbox配置',
+    mappings: [
+      {srcType:'button',srcIndex:0, midiType:'note',number:60},  // C4
+      {srcType:'button',srcIndex:1, midiType:'note',number:62},  // D4
+      {srcType:'button',srcIndex:2, midiType:'note',number:64},  // E4
+      {srcType:'button',srcIndex:3, midiType:'note',number:65},  // F4
+      {srcType:'button',srcIndex:4, midiType:'note',number:67},  // G4
+      {srcType:'button',srcIndex:5, midiType:'note',number:69},  // A4
+      {srcType:'button',srcIndex:6, midiType:'note',number:71},  // B4
+      {srcType:'button',srcIndex:7, midiType:'note',number:72},  // C5
+      {srcType:'button',srcIndex:12,midiType:'note',number:55},  // G3
+      {srcType:'button',srcIndex:13,midiType:'note',number:57},  // A3
+      {srcType:'button',srcIndex:14,midiType:'note',number:58},  // Bb3
+      {srcType:'button',srcIndex:15,midiType:'note',number:59},  // B3
+    ],
+    channel:1, velocity:100, noteOffDelay:80, transpose:0,
+  },
+  {
+    id: 'sys-chords',
+    name: '🎼 コード進行 (C-Am-F-G)',
+    memo: '十字キー → コード発音',
+    mappings: [
+      {srcType:'button',srcIndex:12,midiType:'chord',number:60,chordName:'Cmaj7',
+        chordNotes:[60,64,67,71]},
+      {srcType:'button',srcIndex:13,midiType:'chord',number:57,chordName:'Am7',
+        chordNotes:[57,60,64,67]},
+      {srcType:'button',srcIndex:14,midiType:'chord',number:65,chordName:'Fmaj7',
+        chordNotes:[65,69,72,76]},
+      {srcType:'button',srcIndex:15,midiType:'chord',number:67,chordName:'G7',
+        chordNotes:[67,71,74,77]},
+    ],
+    channel:1, velocity:90, noteOffDelay:100, transpose:0,
+  },
+  {
+    id: 'sys-cc',
+    name: '🎚 全軸→CC',
+    memo: 'LX→CC1 LY→CC2 RX→CC11 RY→CC74',
+    mappings: [
+      {srcType:'axis',srcIndex:0,midiType:'cc',number:1, valueMin:0,valueMax:127,axisDir:'both'},
+      {srcType:'axis',srcIndex:1,midiType:'cc',number:2, valueMin:0,valueMax:127,axisDir:'both'},
+      {srcType:'axis',srcIndex:2,midiType:'cc',number:11,valueMin:0,valueMax:127,axisDir:'both'},
+      {srcType:'axis',srcIndex:3,midiType:'cc',number:74,valueMin:0,valueMax:127,axisDir:'both'},
+    ],
+    channel:1, velocity:100, noteOffDelay:0, transpose:0,
+  },
+  {
+    id: 'sys-pb',
+    name: '〰 PitchBend + Mod',
+    memo: 'LX→PB LY→CC1(Mod) RX→CC74',
+    mappings: [
+      {srcType:'axis',srcIndex:0,midiType:'pb',axisDir:'both'},
+      {srcType:'axis',srcIndex:1,midiType:'cc',number:1, valueMin:0,valueMax:127,axisDir:'neg'},
+      {srcType:'axis',srcIndex:2,midiType:'cc',number:74,valueMin:0,valueMax:127,axisDir:'both'},
+      {srcType:'button',srcIndex:4,midiType:'pc',number:0},
+      {srcType:'button',srcIndex:5,midiType:'pc',number:1},
+    ],
+    channel:1, velocity:100, noteOffDelay:80, transpose:0,
+  },
+];
+
+function applyPreset(preset) {
+  if (!confirm(`「${preset.name}」を適用しますか？\n現在のマッピングは上書きされます。`)) return;
+  S.mappings = preset.mappings.map(m => defMap(m));
+  midCnt = Math.max(midCnt, ...S.mappings.map(m => m.id ?? 0));
+  S.midiChannel = preset.channel ?? 1;
+  S.velocity    = preset.velocity ?? 100;
+  S.noteOffDelay= preset.noteOffDelay ?? 80;
+  document.getElementById('rng-vel').value  = S.velocity;
+  document.getElementById('vel-v').textContent = S.velocity;
+  document.getElementById('rng-noff').value = S.noteOffDelay;
+  document.getElementById('noff-v').textContent = S.noteOffDelay;
+  document.querySelectorAll('.ch-chip').forEach(c => c.classList.toggle('on', +c.dataset.ch === S.midiChannel));
+  if (preset.transpose !== undefined) { setTP(preset.transpose); S.selectedKey = null; updateKeyChips(); }
+  renderTable(); refreshLearnSel(); renderPresets();
+  log(`🎛 プリセット適用: ${preset.name}`, 'info');
+}
+
+function renderPresets() {
+  const grid = document.getElementById('preset-grid');
+  grid.innerHTML = '';
+  const all = [
+    ...S.systemPresets,
+    ...S.userPresets,
+  ];
+  all.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pcard';
+    card.innerHTML = `
+      <div class="pcard-name">${p.name}</div>
+      <div class="pcard-meta">${p.memo || ''}</div>
+      <div class="pcard-badge ${p.id.startsWith('sys-') ? 'pcard-badge-sys' : 'pcard-badge-user'}">
+        ${p.id.startsWith('sys-') ? 'システム' : 'ユーザー'}
+      </div>
+      <div class="pcard-meta" style="margin-top:4px;">マッピング: ${p.mappings.length}件</div>
+    `;
+    if (!p.id.startsWith('sys-')) {
+      const delBtn = document.createElement('button');
+      delBtn.className = 'pcard-del';
+      delBtn.textContent = '✕';
+      delBtn.title = 'このプリセットを削除';
+      delBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        if (confirm(`「${p.name}」を削除しますか？`)) {
+          S.userPresets = S.userPresets.filter(x => x.id !== p.id);
+          saveUserPresets();
+          renderPresets();
+        }
+      });
+      card.appendChild(delBtn);
+    }
+    card.addEventListener('click', () => applyPreset(p));
+    grid.appendChild(card);
+  });
+}
+
+// プリセット保存モーダル
+document.getElementById('btn-save-preset').addEventListener('click', () => {
+  document.getElementById('sp-name').value  = '';
+  document.getElementById('sp-memo').value  = '';
+  document.getElementById('sp-count').textContent = S.mappings.length;
+  document.getElementById('modal-save').classList.add('open');
+});
+['sp-close','sp-cancel'].forEach(id =>
+  document.getElementById(id).addEventListener('click', () =>
+    document.getElementById('modal-save').classList.remove('open')));
+
+document.getElementById('sp-ok').addEventListener('click', () => {
+  const name = document.getElementById('sp-name').value.trim();
+  if (!name) { alert('プリセット名を入力してください'); return; }
+  const preset = {
+    id: 'user-' + Date.now(),
+    name,
+    memo: document.getElementById('sp-memo').value.trim(),
+    mappings: JSON.parse(JSON.stringify(S.mappings)),
+    channel: S.midiChannel,
+    velocity: S.velocity,
+    noteOffDelay: S.noteOffDelay,
+    transpose: S.transpose,
+  };
+  S.userPresets.push(preset);
+  saveUserPresets();
+  renderPresets();
+  document.getElementById('modal-save').classList.remove('open');
+  log(`💾 プリセット保存: ${name}`, 'info');
+  // プリセットタブへ
+  activateMainTab('t-pre');
+});
+
+function saveUserPresets() {
+  try { localStorage.setItem('gp-midi-presets', JSON.stringify(S.userPresets)); } catch(_) {}
+}
+function loadUserPresets() {
+  try {
+    const raw = localStorage.getItem('gp-midi-presets');
+    if (raw) S.userPresets = JSON.parse(raw);
+  } catch(_) { S.userPresets = []; }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  MIDI LEARN
+// ══════════════════════════════════════════════════════════════
+function refreshLearnSel() {
+  const sel = document.getElementById('sel-lrn');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">-- マッピング行を選択 --</option>';
+  S.mappings.forEach(m => {
+    const lbl = `[${m.id}] ${m.srcType==='button'?'Btn':'Ax'}${m.srcIndex} → ${m.midiType.toUpperCase()}`;
+    const opt = document.createElement('option');
+    opt.value = m.id; opt.textContent = lbl;
+    if (String(m.id) === prev) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+document.getElementById('btn-lrn-start').addEventListener('click', () => {
+  const val = document.getElementById('sel-lrn').value;
+  if (!val) { alert('マッピング行を選択してください'); return; }
+  S.learnTargetId = +val;
+  S.learnMode = true;
+  document.getElementById('btn-lrn-start').disabled = true;
+  document.getElementById('btn-lrn-stop').disabled  = false;
+  setLearnStatus('🎯 ラーン中... ゲームパッドのボタンまたは軸を操作してください', 'var(--ac)');
+});
+
+document.getElementById('btn-lrn-stop').addEventListener('click', stopLearn);
+function stopLearn() {
+  S.learnMode = false; S.learnTargetId = null;
+  document.getElementById('btn-lrn-start').disabled = false;
+  document.getElementById('btn-lrn-stop').disabled  = true;
+  setLearnStatus('待機中...', '');
+}
+function setLearnStatus(txt, color) {
+  const el = document.getElementById('lrn-status');
+  el.textContent = txt; el.style.color = color;
+}
+
+function doLearn(type, index) {
+  const m = getMap(S.learnTargetId); if (!m) { stopLearn(); return; }
+  m.srcType = type; m.srcIndex = index;
+  renderTable(); refreshLearnSel();
+  const lbl = type === 'button' ? (BTN_LABELS[index] ?? 'B'+index) : (AXIS_LABELS[index] ?? 'Ax'+index);
+  setLearnStatus(`✅ ${type==='button'?'ボタン':'軸'}${index} (${lbl}) を割り当てました`, 'var(--ok)');
+  log(`🎯 ラーン: ${type}[${index}] (${lbl}) → マッピング[${m.id}]`, 'info');
+  stopLearn();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TEST SEND
+// ══════════════════════════════════════════════════════════════
+document.getElementById('t-type').addEventListener('change', function() {
+  document.getElementById('t-chord-row').style.display = this.value === 'chord' ? 'block' : 'none';
+});
+
+document.getElementById('btn-test').addEventListener('click', async () => {
+  if (!S.bleConnected) { alert('BLE MIDIデバイスに接続してください'); return; }
+  const type = document.getElementById('t-type').value;
+  const num  = +document.getElementById('t-num').value;
+  const val  = +document.getElementById('t-val').value;
+  const ch   = S.midiChannel - 1;
+  if (type === 'note') {
+    await midiNoteOn(ch, applyTP(num), val);
+    setTimeout(() => midiNoteOff(ch, applyTP(num)), 600);
+  } else if (type === 'cc') {
+    await midiCC(ch, num, val);
+  } else if (type === 'pb') {
+    await midiPB(ch, Math.round((val / 127) * 16383) - 8192);
+  } else if (type === 'pc') {
+    await midiPC(ch, num);
+  } else if (type === 'chord') {
+    const raw = document.getElementById('t-chord').value.trim();
+    const p   = parseChord(raw);
+    if (!p) { alert('コード名を認識できませんでした: ' + raw); return; }
+    const notes = chordToMidi(p.root, p.intervals, 4);
+    for (const n of notes) await midiNoteOn(ch, applyTP(n), val);
+    log(`♟ テスト: ${raw} [${notes.map(n=>midiToName(applyTP(n))).join(' ')}]`, 'chord');
+    setTimeout(async () => { for (const n of notes) await midiNoteOff(ch, applyTP(n)); }, 1200);
+  }
+});
+
+// ══════════════════════════════════════════════════════════════
+//  SAVE / LOAD 全設定
+// ══════════════════════════════════════════════════════════════
+document.getElementById('btn-export').addEventListener('click', () => {
+  const data = {
+    version: 3,
+    midiChannel: S.midiChannel,
+    velocity: S.velocity,
+    noteOffDelay: S.noteOffDelay,
+    transpose: S.transpose,
+    selectedKey: S.selectedKey,
+    mappings: S.mappings,
+    userPresets: S.userPresets,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(blob),
+    download: `gp-midi-${Date.now()}.json`,
+  });
+  a.click(); URL.revokeObjectURL(a.href);
+  log('💾 全設定を保存しました', 'info');
+});
+
+document.getElementById('btn-import-btn').addEventListener('click', () =>
+  document.getElementById('inp-import').click());
+
+document.getElementById('inp-import').addEventListener('change', function() {
+  const file = this.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.mappings)     { S.mappings = d.mappings; midCnt = Math.max(midCnt, ...S.mappings.map(m => m.id ?? 0)); }
+      if (d.userPresets)  { S.userPresets = d.userPresets; saveUserPresets(); }
+      if (d.midiChannel)  {
+        S.midiChannel = d.midiChannel;
+        document.querySelectorAll('.ch-chip').forEach(c => c.classList.toggle('on', +c.dataset.ch === S.midiChannel));
+      }
+      if (d.velocity != null)     { S.velocity = d.velocity; document.getElementById('rng-vel').value = d.velocity; document.getElementById('vel-v').textContent = d.velocity; }
+      if (d.noteOffDelay != null) { S.noteOffDelay = d.noteOffDelay; document.getElementById('rng-noff').value = d.noteOffDelay; document.getElementById('noff-v').textContent = d.noteOffDelay; }
+      if (d.transpose != null)    { setTP(d.transpose); S.selectedKey = d.selectedKey ?? null; updateKeyChips(); }
+      renderTable(); refreshLearnSel(); renderPresets();
+      log(`📂 設定読込完了 (マッピング:${S.mappings.length}件, プリセット:${S.userPresets.length}件)`, 'info');
+    } catch(err) { alert('読込失敗: ' + err.message); }
+  };
+  reader.readAsText(file);
+  this.value = '';
+});
+
+// ══════════════════════════════════════════════════════════════
+//  LOG
+// ══════════════════════════════════════════════════════════════
+let logCount = 0;
+function log(msg, cls = 'info') {
+  if (S.logPaused) return;
+  const el = document.getElementById('midi-log');
+  const line = document.createElement('div');
+  line.className = 'll ll-' + cls;
+  const ts = new Date().toLocaleTimeString('ja-JP', {
+    hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit', fractionalSecondDigits: 2
+  });
+  line.textContent = `[${ts}] ${msg}`;
+  el.appendChild(line);
+  if (++logCount > 300) { el.removeChild(el.firstChild); logCount--; }
+  el.scrollTop = el.scrollHeight;
+}
+document.getElementById('btn-log-clr').addEventListener('click', () => {
+  document.getElementById('midi-log').innerHTML = ''; logCount = 0;
+});
+document.getElementById('btn-log-pause').addEventListener('click', function() {
+  S.logPaused = !S.logPaused;
+  this.textContent = S.logPaused ? '▶ 再開' : '⏸ 一時停止';
+  this.className = S.logPaused ? 'btn btn-warn btn-xs' : 'btn btn-ghost btn-xs';
+});
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIVITY BAR
+// ══════════════════════════════════════════════════════════════
+(function() {
+  const bar = document.getElementById('act-bar');
+  for (let i = 0; i < 16; i++) {
+    const c = document.createElement('div');
+    c.className = 'acell'; c.id = 'ac-' + i;
+    c.innerHTML = `<div class="ac-fill" id="acf-${i}" style="height:0%"></div><span class="ac-lbl">ch${i+1}</span>`;
+    bar.appendChild(c);
+  }
+})();
+
+function bump(ch) {
+  S.actCount[ch]++;
+  const cell = document.getElementById('ac-' + ch);
+  if (cell) { cell.classList.add('lit'); setTimeout(() => cell.classList.remove('lit'), 200); }
+  const mx = Math.max(...S.actCount, 1);
+  for (let i = 0; i < 16; i++) {
+    const f = document.getElementById('acf-' + i);
+    if (f) f.style.height = (S.actCount[i] / mx * 100) + '%';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TABS (メイン)
+// ══════════════════════════════════════════════════════════════
+document.getElementById('main-tabs').addEventListener('click', e => {
+  const t = e.target.closest('.tab'); if (!t) return;
+  activateMainTab(t.dataset.t);
+});
+function activateMainTab(id) {
+  document.querySelectorAll('#main-tabs .tab').forEach(t => t.classList.toggle('on', t.dataset.t === id));
+  document.querySelectorAll('#main-tabs ~ .tc').forEach(c => c.classList.toggle('on', c.id === id));
+}
+
+// ══════════════════════════════════════════════════════════════
+//  HEADER PILL HELPER
+// ══════════════════════════════════════════════════════════════
+function setPill(id, cls, text) {
+  const el = document.getElementById(id); if (!el) return;
+  el.className = 'pill ' + cls;
+  // ドットを保持しながらテキスト更新
+  const dot = el.querySelector('.pill-dot');
+  el.textContent = text;
+  if (dot) el.prepend(dot);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════
+loadUserPresets();
+renderPresets();
+renderTable();
+
+log('🚀 GP-MIDI 起動 — Gamepad BLE MIDI Controller', 'info');
+log('① 「BLE MIDI デバイスに接続」→ DAW側でBLE MIDIを有効化', 'info');
+log('② ゲームパッドをBluetooth接続してボタンを押す', 'info');
+log('③ マッピングを設定、またはプリセットを選択', 'info');
+</script>
+</body>
+</html>
