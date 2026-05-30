@@ -5,292 +5,281 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>FreePad</title>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: #1c1c1e; color: #fff;
-    overflow: hidden; height: 100dvh; width: 100dvw;
-    touch-action: none; user-select: none;
-  }
-  .screen { position: fixed; inset: 0; display: flex; flex-direction: column; }
-  .screen.hidden { display: none; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  background:#1c1c1e;color:#fff;
+  overflow:hidden;height:100dvh;width:100dvw;
+  touch-action:none;user-select:none;
+}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column}
+.screen.hidden{display:none}
 
-  /* ===== SETUP SCREEN ===== */
-  #setupScreen {
-    background: #1c1c1e;
-    align-items: center; justify-content: center;
-  }
-  .setup-card {
-    background: #2c2c2e;
-    border-radius: 20px;
-    padding: 36px 32px;
-    width: min(440px, 92vw);
-    display: flex; flex-direction: column; gap: 18px;
-  }
-  .setup-card h2 { font-size: 24px; font-weight: 700;
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .setup-card p { font-size: 13px; color: #8e8e93; line-height: 1.6; }
-  .setup-card label { font-size: 13px; color: #aeaeb2; font-weight: 600; }
-  .setup-input {
-    width: 100%; padding: 11px 14px;
-    background: #1c1c1e; border: 1.5px solid #3a3a3c;
-    border-radius: 10px; color: #fff; font-size: 15px; outline: none;
-    transition: border-color .2s;
-  }
-  .setup-input:focus { border-color: #7c3aed; }
-  .setup-input::placeholder { color: #636366; }
-  .btn-primary {
-    background: linear-gradient(135deg, #7c3aed, #2563eb);
-    color: #fff; border: none; border-radius: 12px;
-    padding: 13px; font-size: 16px; font-weight: 700;
-    cursor: pointer; transition: opacity .15s;
-  }
-  .btn-primary:hover { opacity: .88; }
-  .setup-error { color: #ff453a; font-size: 13px; display: none; }
+/* SETUP */
+#setupScreen{background:#1c1c1e;align-items:center;justify-content:center}
+.setup-card{
+  background:#2c2c2e;border-radius:20px;padding:36px 32px;
+  width:min(440px,92vw);display:flex;flex-direction:column;gap:18px
+}
+.setup-card h2{
+  font-size:24px;font-weight:700;
+  background:linear-gradient(135deg,#a78bfa,#60a5fa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.setup-card p{font-size:13px;color:#8e8e93;line-height:1.6}
+.setup-card label{font-size:13px;color:#aeaeb2;font-weight:600}
+.setup-input{
+  width:100%;padding:11px 14px;
+  background:#1c1c1e;border:1.5px solid #3a3a3c;
+  border-radius:10px;color:#fff;font-size:15px;outline:none;
+  transition:border-color .2s
+}
+.setup-input:focus{border-color:#7c3aed}
+.setup-input::placeholder{color:#636366}
+.btn-primary{
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;border:none;border-radius:12px;
+  padding:13px;font-size:16px;font-weight:700;cursor:pointer
+}
+.setup-error{color:#ff453a;font-size:13px;display:none}
 
-  /* ===== HOME SCREEN ===== */
-  .home-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 20px 12px;
-    background: #2c2c2e; border-bottom: 1px solid #3a3a3c;
-  }
-  .home-header h1 {
-    font-size: 26px; font-weight: 700;
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .header-actions { display: flex; gap: 8px; align-items: center; }
-  .btn-new {
-    display: flex; align-items: center; gap: 6px;
-    background: linear-gradient(135deg, #7c3aed, #2563eb);
-    color: #fff; border: none; border-radius: 20px;
-    padding: 9px 16px; font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: transform .15s, opacity .15s;
-  }
-  .btn-new:active { transform: scale(.95); }
-  .btn-settings {
-    background: #3a3a3c; border: none; border-radius: 50%;
-    width: 36px; height: 36px; cursor: pointer; color: #fff; font-size: 16px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .boards-grid {
-    flex: 1; overflow-y: auto; padding: 16px;
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 14px; align-content: start;
-  }
-  .board-card {
-    background: #2c2c2e; border-radius: 16px; overflow: hidden;
-    cursor: pointer; transition: transform .2s, box-shadow .2s;
-    border: 2px solid transparent; position: relative;
-  }
-  .board-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(124,58,237,.35); border-color: #7c3aed; }
-  .board-thumb { width: 100%; aspect-ratio: 4/3; background: #f5f4ef; display: block; }
-  .board-info { padding: 10px 12px; }
-  .board-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f2f2f7; }
-  .board-date { font-size: 11px; color: #8e8e93; margin-top: 2px; }
-  .board-del {
-    position: absolute; top: 6px; right: 6px;
-    background: rgba(255,59,48,.85); border: none; border-radius: 50%;
-    width: 24px; height: 24px; color: #fff; font-size: 13px;
-    cursor: pointer; display: none; align-items: center; justify-content: center;
-  }
-  .board-card:hover .board-del { display: flex; }
-  .sync-status {
-    font-size: 12px; color: #8e8e93;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #34c759; }
-  .sync-dot.loading { background: #ff9500; animation: pulse 1s infinite; }
-  .sync-dot.error { background: #ff453a; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-  .empty-state {
-    grid-column: 1 / -1; text-align: center;
-    padding: 60px 20px; color: #8e8e93;
-  }
+/* HOME */
+.home-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c
+}
+.home-header h1{
+  font-size:26px;font-weight:700;
+  background:linear-gradient(135deg,#a78bfa,#60a5fa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.header-actions{display:flex;gap:8px;align-items:center}
+.btn-new{
+  display:flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#7c3aed,#2563eb);
+  color:#fff;border:none;border-radius:20px;
+  padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer
+}
+.btn-settings{
+  background:#3a3a3c;border:none;border-radius:50%;
+  width:36px;height:36px;cursor:pointer;color:#fff;font-size:16px;
+  display:flex;align-items:center;justify-content:center
+}
+.boards-grid{
+  flex:1;overflow-y:auto;padding:16px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:14px;align-content:start
+}
+.board-card{
+  background:#2c2c2e;border-radius:16px;overflow:hidden;
+  cursor:pointer;transition:transform .2s,box-shadow .2s;
+  border:2px solid transparent;position:relative
+}
+.board-card:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(124,58,237,.35);border-color:#7c3aed}
+.board-thumb{width:100%;aspect-ratio:4/3;background:#f5f4ef;display:block}
+.board-info{padding:10px 12px}
+.board-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f2f2f7}
+.board-date{font-size:11px;color:#8e8e93;margin-top:2px}
+.board-del{
+  position:absolute;top:6px;right:6px;
+  background:rgba(255,59,48,.85);border:none;border-radius:50%;
+  width:24px;height:24px;color:#fff;font-size:13px;
+  cursor:pointer;display:none;align-items:center;justify-content:center
+}
+.board-card:hover .board-del{display:flex}
+.sync-status{font-size:12px;color:#8e8e93;display:flex;align-items:center;gap:5px}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#34c759}
+.sync-dot.loading{background:#ff9500;animation:pulse 1s infinite}
+.sync-dot.error{background:#ff453a}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:#8e8e93}
 
-  /* ===== EDITOR SCREEN ===== */
-  #editorScreen { background: #f5f4ef; }
-  .toolbar {
-    display: flex; align-items: center; gap: 4px;
-    padding: 8px 10px;
-    background: rgba(255,255,255,.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid #e0e0e0;
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
-    z-index: 100; flex-shrink: 0;
-  }
-  .toolbar::-webkit-scrollbar { display: none; }
-  .tb-group { display: flex; gap: 2px; align-items: center; flex-shrink: 0; }
-  .tb-sep { width: 1px; height: 28px; background: #d1d1d6; margin: 0 4px; flex-shrink: 0; }
-  .tb-btn {
-    border: none; background: transparent; border-radius: 10px;
-    width: 38px; height: 38px;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 18px; transition: background .12s;
-    flex-shrink: 0;
-  }
-  .tb-btn:hover { background: #f0f0f0; }
-  .tb-btn.active { background: #ede9fe; }
-  .tb-back {
-    font-size: 13px; font-weight: 600; color: #7c3aed;
-    background: none; border: none; cursor: pointer;
-    padding: 6px 10px; border-radius: 8px; white-space: nowrap; flex-shrink: 0;
-  }
-  .tb-back:hover { background: #ede9fe; }
-  .board-title-input {
-    flex: 1; min-width: 80px; border: none; background: transparent;
-    font-size: 16px; font-weight: 600; color: #1c1c1e;
-    text-align: center; outline: none;
-  }
-  .color-dots { display: flex; gap: 5px; align-items: center; }
-  .color-dot {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 3px solid transparent; cursor: pointer;
-    transition: transform .12s; flex-shrink: 0;
-  }
-  .color-dot:hover, .color-dot.active { transform: scale(1.2); border-color: #333; }
-  .stroke-slider { width: 70px; accent-color: #7c3aed; flex-shrink: 0; }
-  .canvas-wrap {
-    flex: 1; position: relative; overflow: hidden; cursor: crosshair;
-  }
-  #mainCanvas { position: absolute; top: 0; left: 0; touch-action: none; transform-origin: 0 0; }
-  .text-el {
-    position: absolute; min-width: 80px; min-height: 30px;
-    background: rgba(255,255,255,.9); border: 2px solid #7c3aed;
-    border-radius: 8px; padding: 6px 10px;
-    font-size: 16px; outline: none; cursor: text;
-    resize: both; overflow: auto; z-index: 10;
-    box-shadow: 0 2px 12px rgba(0,0,0,.1);
-    white-space: pre-wrap; word-break: break-word;
-    color: #1c1c1e; line-height: 1.5;
-  }
-  .shape-popup {
-    position: absolute; top: 54px; left: 50%; transform: translateX(-50%);
-    background: #fff; border-radius: 14px;
-    box-shadow: 0 8px 32px rgba(0,0,0,.2);
-    padding: 10px; display: flex; gap: 8px; z-index: 200;
-    border: 1px solid #e0e0e0;
-  }
-  .shape-popup.hidden { display: none; }
-  .shape-opt {
-    width: 44px; height: 44px; border: 2px solid #e0e0e0;
-    border-radius: 10px; background: #f9f9f9; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; font-size: 22px;
-    transition: background .12s, border-color .12s;
-  }
-  .shape-opt:hover { background: #ede9fe; border-color: #7c3aed; }
-  .mode-badge {
-    position: absolute; bottom: 14px; right: 14px;
-    background: rgba(0,0,0,.55); color: #fff;
-    padding: 5px 12px; border-radius: 12px;
-    font-size: 12px; font-weight: 600;
-    pointer-events: none; z-index: 50;
-  }
+/* EDITOR */
+#editorScreen{background:#f5f4ef}
+.toolbar{
+  display:flex;align-items:center;gap:4px;padding:8px 10px;
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+  border-bottom:1px solid #e0e0e0;
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+  z-index:100;flex-shrink:0
+}
+.toolbar::-webkit-scrollbar{display:none}
+.tb-group{display:flex;gap:2px;align-items:center;flex-shrink:0}
+.tb-sep{width:1px;height:28px;background:#d1d1d6;margin:0 4px;flex-shrink:0}
+.tb-btn{
+  border:none;background:transparent;border-radius:10px;
+  width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;transition:background .12s;flex-shrink:0
+}
+.tb-btn:hover{background:#f0f0f0}
+.tb-btn.active{background:#ede9fe}
+.tb-back{
+  font-size:13px;font-weight:600;color:#7c3aed;
+  background:none;border:none;cursor:pointer;
+  padding:6px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0
+}
+.tb-back:hover{background:#ede9fe}
+.board-title-input{
+  flex:1;min-width:80px;border:none;background:transparent;
+  font-size:16px;font-weight:600;color:#1c1c1e;text-align:center;outline:none
+}
+.color-dots{display:flex;gap:5px;align-items:center}
+.color-dot{
+  width:22px;height:22px;border-radius:50%;
+  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0
+}
+.color-dot:hover,.color-dot.active{transform:scale(1.2);border-color:#333}
+.stroke-slider{width:70px;accent-color:#7c3aed;flex-shrink:0}
 
-  /* Toast */
-  .toast {
-    position: fixed; bottom: 20px; left: 50%;
-    transform: translateX(-50%) translateY(70px);
-    padding: 10px 24px; border-radius: 20px;
-    font-size: 14px; font-weight: 600;
-    transition: transform .3s ease; z-index: 999;
-    pointer-events: none; white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .toast.success { background: rgba(52,199,89,.95); color: #fff; }
-  .toast.error   { background: rgba(255,69,58,.95);  color: #fff; }
-  .toast.info    { background: rgba(0,122,255,.95);  color: #fff; }
+/* CANVAS WRAP */
+.canvas-wrap{flex:1;position:relative;overflow:hidden;cursor:crosshair}
+#mainCanvas{position:absolute;top:0;left:0;touch-action:none}
 
-  /* Loading overlay */
-  .loading-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.5);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9999; backdrop-filter: blur(4px);
-  }
-  .loading-overlay.hidden { display: none; }
-  .loading-spinner {
-    width: 48px; height: 48px; border: 4px solid rgba(255,255,255,.2);
-    border-top-color: #a78bfa; border-radius: 50%;
-    animation: spin .8s linear infinite;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* SHAPE POPUP */
+.shape-popup{
+  position:absolute;top:54px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:14px;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+  padding:10px;display:flex;gap:8px;z-index:200;border:1px solid #e0e0e0
+}
+.shape-popup.hidden{display:none}
+.shape-opt{
+  width:44px;height:44px;border:2px solid #e0e0e0;
+  border-radius:10px;background:#f9f9f9;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  transition:background .12s,border-color .12s
+}
+.shape-opt:hover{background:#ede9fe;border-color:#7c3aed}
+
+/* TEXT STYLE PANEL */
+.text-style-panel{
+  position:absolute;top:54px;left:50%;transform:translateX(-50%);
+  background:#fff;border-radius:14px;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+  padding:14px 16px;z-index:200;border:1px solid #e0e0e0;
+  display:flex;flex-direction:column;gap:12px;min-width:260px
+}
+.text-style-panel.hidden{display:none}
+.tsp-row{display:flex;align-items:center;gap:10px}
+.tsp-label{font-size:12px;color:#636366;width:60px;flex-shrink:0}
+.tsp-colors{display:flex;gap:4px;flex-wrap:wrap}
+.tsp-dot{
+  width:22px;height:22px;border-radius:50%;
+  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0
+}
+.tsp-dot:hover,.tsp-dot.active{transform:scale(1.2);border-color:#333}
+.tsp-slider{flex:1;accent-color:#7c3aed}
+.tsp-close{
+  align-self:flex-end;background:none;border:none;
+  color:#7c3aed;font-size:13px;font-weight:600;cursor:pointer;padding:2px 6px
+}
+
+/* SELECTION BOX (overlaid on canvas) */
+.sel-box{
+  position:absolute;pointer-events:none;z-index:20;
+  border:2px solid #2563eb;border-radius:3px;
+}
+.sel-handle{
+  position:absolute;width:14px;height:14px;
+  background:#fff;border:2px solid #2563eb;border-radius:3px;
+  pointer-events:all;cursor:pointer;z-index:21;
+  transform:translate(-50%,-50%);
+  touch-action:none;
+}
+
+.mode-badge{
+  position:absolute;bottom:14px;right:14px;
+  background:rgba(0,0,0,.55);color:#fff;
+  padding:5px 12px;border-radius:12px;
+  font-size:12px;font-weight:600;pointer-events:none;z-index:50
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:20px;left:50%;
+  transform:translateX(-50%) translateY(70px);
+  padding:10px 24px;border-radius:20px;
+  font-size:14px;font-weight:600;
+  transition:transform .3s ease;z-index:999;pointer-events:none;white-space:nowrap
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:rgba(52,199,89,.95);color:#fff}
+.toast.error{background:rgba(255,69,58,.95);color:#fff}
+
+/* LOADING */
+.loading-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  z-index:9999;backdrop-filter:blur(4px)
+}
+.loading-overlay.hidden{display:none}
+.loading-spinner{
+  width:48px;height:48px;border:4px solid rgba(255,255,255,.2);
+  border-top-color:#a78bfa;border-radius:50%;
+  animation:spin .8s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ===== SETUP SCREEN ===== -->
+<!-- SETUP -->
 <div id="setupScreen" class="screen">
   <div class="setup-card">
     <h2>✦ FreePad 初期設定</h2>
-    <p>GitHub PagesとGitHub APIを使ってデータを保存します。<br>最初に一度だけ設定してください。設定はブラウザに保存されます。</p>
-    <div>
-      <label>GitHubユーザー名</label>
-      <input class="setup-input" id="cfgOwner" placeholder="例: your-username" autocomplete="off">
-    </div>
-    <div>
-      <label>リポジトリ名</label>
-      <input class="setup-input" id="cfgRepo" placeholder="例: freepad-data" autocomplete="off">
-    </div>
-    <div>
-      <label>Personal Access Token（Contents: Read & Write）</label>
-      <input class="setup-input" id="cfgToken" type="password" placeholder="github_pat_..." autocomplete="off">
-    </div>
-    <p>🔒 トークンはこのブラウザのLocalStorageにのみ保存されます。</p>
+    <p>GitHub PagesとGitHub APIを使ってデータを保存します。最初に一度だけ設定してください。</p>
+    <div><label>GitHubユーザー名</label><input class="setup-input" id="cfgOwner" placeholder="例: your-username" autocomplete="off"></div>
+    <div><label>データ用リポジトリ名</label><input class="setup-input" id="cfgRepo" placeholder="例: freepad-data" autocomplete="off"></div>
+    <div><label>Personal Access Token（Contents: Read &amp; Write）</label><input class="setup-input" id="cfgToken" type="password" placeholder="github_pat_..." autocomplete="off"></div>
+    <p>🔒 トークンはこのブラウザのIndexedDBにのみ保存されます。</p>
     <div class="setup-error" id="setupError"></div>
     <button class="btn-primary" onclick="setupSave()">接続して開始</button>
   </div>
 </div>
 
-<!-- ===== HOME SCREEN ===== -->
+<!-- HOME -->
 <div id="homeScreen" class="screen hidden">
   <div class="home-header">
     <h1>✦ FreePad</h1>
     <div class="header-actions">
-      <div class="sync-status">
-        <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">同期済み</span>
-      </div>
-      <button class="btn-settings" onclick="showSetup()" title="設定">⚙️</button>
+      <div class="sync-status"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">同期済み</span></div>
+      <button class="btn-settings" onclick="showSetup()">⚙️</button>
       <button class="btn-new" onclick="newBoard()">＋ 新しいボード</button>
     </div>
   </div>
   <div class="boards-grid" id="boardsGrid"></div>
 </div>
 
-<!-- ===== EDITOR SCREEN ===== -->
+<!-- EDITOR -->
 <div id="editorScreen" class="screen hidden">
   <div class="toolbar">
     <button class="tb-back" onclick="goHome()">← 戻る</button>
-    <input class="board-title-input" id="boardTitle" placeholder="ボード名" value="新しいボード">
+    <input class="board-title-input" id="boardTitle" placeholder="ボード名">
     <div class="tb-sep"></div>
     <div class="tb-group">
-      <button class="tb-btn active" id="toolPen"    onclick="setTool('pen')">
+      <button class="tb-btn active" id="toolPen" onclick="setTool('pen')" title="ペン">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </button>
-      <button class="tb-btn" id="toolEraser" onclick="setTool('eraser')">
+      <button class="tb-btn" id="toolEraser" onclick="setTool('eraser')" title="消しゴム">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l11-11 6 6-1.5 1.5"/><path d="M6 11l7 7"/></svg>
       </button>
-      <button class="tb-btn" id="toolText"   onclick="setTool('text')">
+      <button class="tb-btn" id="toolText" onclick="setTool('text')" title="テキスト（ダブルタップ）">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
       </button>
-      <button class="tb-btn" id="toolShape"  onclick="toggleShapePopup()">
+      <button class="tb-btn" id="toolShape" onclick="toggleShapePopup()" title="図形">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
       </button>
-      <button class="tb-btn" id="toolSelect" onclick="setTool('select')">
+      <button class="tb-btn" id="toolSelect" onclick="setTool('select')" title="選択・移動">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-7 1-3 7z"/></svg>
       </button>
     </div>
     <div class="tb-sep"></div>
     <div class="tb-group color-dots" id="colorPicker"></div>
     <div class="tb-sep"></div>
-    <input type="range" class="stroke-slider" id="strokeSize" min="1" max="30" value="4">
+    <input type="range" class="stroke-slider" id="strokeSize" min="1" max="30" value="4" title="線の太さ">
     <div class="tb-sep"></div>
     <div class="tb-group">
+      <button class="tb-btn" title="テキストスタイル" id="btnTextStyle" onclick="toggleTextStylePanel()">🎨</button>
       <button class="tb-btn" title="元に戻す" onclick="undo()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13C4.3 7.2 9.7 3 16 3a9 9 0 110 18 9.3 9.3 0 01-7.5-3.8"/></svg>
       </button>
@@ -306,6 +295,7 @@
     </div>
   </div>
 
+  <!-- Shape popup -->
   <div class="shape-popup hidden" id="shapePopup">
     <div class="shape-opt" onclick="selectShape('rect')">▭</div>
     <div class="shape-opt" onclick="selectShape('circle')">○</div>
@@ -314,56 +304,98 @@
     <div class="shape-opt" onclick="selectShape('triangle')">△</div>
   </div>
 
+  <!-- Text style panel -->
+  <div class="text-style-panel hidden" id="textStylePanel">
+    <div class="tsp-row">
+      <span class="tsp-label">文字色</span>
+      <div class="tsp-colors" id="tspTextColor"></div>
+    </div>
+    <div class="tsp-row">
+      <span class="tsp-label">枠の色</span>
+      <div class="tsp-colors" id="tspBorderColor"></div>
+    </div>
+    <div class="tsp-row">
+      <span class="tsp-label">背景色</span>
+      <div class="tsp-colors" id="tspBgColor"></div>
+    </div>
+    <div class="tsp-row">
+      <span class="tsp-label">背景透明度</span>
+      <input type="range" class="tsp-slider" id="tspBgOpacity" min="0" max="100" value="90">
+      <span id="tspBgOpacityVal" style="font-size:12px;color:#636366;width:32px">90%</span>
+    </div>
+    <div class="tsp-row">
+      <span class="tsp-label">枠の太さ</span>
+      <input type="range" class="tsp-slider" id="tspBorderWidth" min="0" max="8" value="2">
+      <span id="tspBorderWidthVal" style="font-size:12px;color:#636366;width:32px">2px</span>
+    </div>
+    <button class="tsp-close" onclick="closeTextStylePanel()">閉じる</button>
+  </div>
+
   <div class="canvas-wrap" id="canvasWrap">
     <canvas id="mainCanvas"></canvas>
+    <!-- selection overlay elements injected here -->
     <div class="mode-badge" id="modeBadge">ペン</div>
   </div>
 </div>
 
-<!-- Loading -->
-<div class="loading-overlay hidden" id="loadingOverlay">
-  <div class="loading-spinner"></div>
-</div>
-
-<!-- Toast -->
+<div class="loading-overlay hidden" id="loadingOverlay"><div class="loading-spinner"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 /* =====================================================
-   FreePad — GitHub Pages + GitHub Contents API版
-   サーバーレス・Node.jsなし・HTMLのみ
+   FreePad v2 — iPad対応・オブジェクト選択・テキストスタイル
    ===================================================== */
 
-// ===== CONFIG (LocalStorageで管理) =====
-const CFG_KEY = 'freepad_config';
-let cfg = {};  // { owner, repo, token }
+// ===== INDEXEDDB CONFIG STORE =====
+const DB_NAME = 'freepad_db', DB_VER = 1, STORE = 'config';
+let db = null;
 
-function loadConfig() {
-  try { cfg = JSON.parse(localStorage.getItem(CFG_KEY)) || {}; } catch { cfg = {}; }
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(STORE);
+    req.onsuccess = e => { db = e.target.result; res(db); };
+    req.onerror = e => rej(e);
+  });
 }
-function saveConfig() { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
-function hasConfig() { return cfg.owner && cfg.repo && cfg.token; }
+function dbGet(key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).get(key);
+    req.onsuccess = () => res(req.result);
+    req.onerror = rej;
+  });
+}
+function dbSet(key, val) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    const req = tx.objectStore(STORE).put(val, key);
+    req.onsuccess = res; req.onerror = rej;
+  });
+}
 
 // ===== GITHUB API =====
 const GITHUB_API = 'https://api.github.com';
 const DATA_PATH  = 'data/boards.json';
-
-// fileSHAは更新時に必要（GETで取得したSHAを保持）
+let cfg = {};
 let fileSHA = null;
+
+async function loadConfig() {
+  await openDB();
+  const saved = await dbGet('cfg');
+  if (saved) cfg = saved;
+}
+async function saveConfig() { await dbSet('cfg', cfg); }
+function hasConfig() { return cfg.owner && cfg.repo && cfg.token; }
 
 async function ghGet(path) {
   const res = await fetch(`${GITHUB_API}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
-    headers: {
-      'Authorization': `Bearer ${cfg.token}`,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
+    headers: { 'Authorization': `Bearer ${cfg.token}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
   });
   if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`GitHub API Error: ${res.status}`);
+  if (!res.ok) throw new Error(`GitHub API ${res.status}`);
   return res.json();
 }
-
 async function ghPut(path, content, sha, message) {
   const body = {
     message,
@@ -371,73 +403,69 @@ async function ghPut(path, content, sha, message) {
     committer: { name: 'FreePad', email: 'freepad@app.local' }
   };
   if (sha) body.sha = sha;
-
   const res = await fetch(`${GITHUB_API}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
     method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${cfg.token}`,
-      'Accept': 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    },
+    headers: { 'Authorization': `Bearer ${cfg.token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json', 'X-GitHub-Api-Version': '2022-11-28' },
     body: JSON.stringify(body)
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `GitHub PUT Error: ${res.status}`);
-  }
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || `PUT ${res.status}`); }
   return res.json();
 }
-
-// boards.json を読み込む
 async function loadBoardsFromGitHub() {
-  setSyncStatus('loading', '同期中...');
+  setSyncStatus('loading','同期中...');
   try {
     const file = await ghGet(DATA_PATH);
-    if (!file) {
-      fileSHA = null;
-      boards = [];
-    } else {
+    if (!file) { fileSHA = null; boards = []; }
+    else {
       fileSHA = file.sha;
-      const json = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
-      boards = JSON.parse(json);
+      boards = JSON.parse(decodeURIComponent(escape(atob(file.content.replace(/\n/g,'')))));
     }
-    setSyncStatus('ok', '同期済み');
-  } catch(e) {
-    setSyncStatus('error', 'エラー');
-    showToast('⚠️ 読み込み失敗: ' + e.message, 'error');
-  }
+    setSyncStatus('ok','同期済み');
+  } catch(e) { setSyncStatus('error','エラー'); showToast('⚠️ '+e.message,'error'); }
 }
-
-// boards.json を書き込む
 async function saveBoardsToGitHub() {
-  setSyncStatus('loading', '保存中...');
+  setSyncStatus('loading','保存中...');
   try {
-    const res = await ghPut(DATA_PATH, boards, fileSHA, `FreePad update ${new Date().toISOString()}`);
+    const res = await ghPut(DATA_PATH, boards, fileSHA, `FreePad ${new Date().toISOString()}`);
     fileSHA = res.content.sha;
-    setSyncStatus('ok', '同期済み');
-    return true;
-  } catch(e) {
-    setSyncStatus('error', 'エラー');
-    showToast('⚠️ 保存失敗: ' + e.message, 'error');
-    return false;
-  }
+    setSyncStatus('ok','同期済み'); return true;
+  } catch(e) { setSyncStatus('error','エラー'); showToast('⚠️ '+e.message,'error'); return false; }
 }
 
 // ===== STATE =====
-let boards = [];
-let currentId = null;
+let boards = [], currentId = null;
 let tool = 'pen', selectedShape = 'rect';
 let currentColor = '#1c1c1e', strokeSize = 4;
 let canvas, ctx, wrap;
-let isDrawing = false;
 let undoStack = [], redoStack = [];
 let scale = 1, panX = 0, panY = 0;
-let lastPinchDist = null, lastPanPos = null, isPanning = false;
-let textItems = [], textIdCounter = 0;
-let strokes = [], currentStroke = null;
-let shapeStart = null, shapePreview = null;
 let activePointers = {};
+let lastPinchDist = null, lastPanPos = null;
+
+// Strokes: [{id, type, color, size, shape, points}]
+// TextItems: [{id, x, y, w, h, text, textColor, borderColor, bgColor, bgOpacity, borderWidth, fontSize}]
+let strokes = [], textItems = [];
+let isDrawing = false, currentStroke = null;
+let shapeStart = null, shapePreview = null;
+
+// Selection
+let selectedId = null;   // stroke id or text id
+let selectedType = null; // 'stroke' | 'text'
+let selBox = null;       // DOM div
+let handles = [];        // DOM divs
+let dragMode = null;     // 'move' | 'resize-nw'|'ne'|'se'|'sw'
+let dragStart = null;    // {px,py, ox,oy,ow,oh}
+let shiftDown = false;
+
+// Text style defaults
+let tspTextColor  = '#1c1c1e';
+let tspBorderColor = '#7c3aed';
+let tspBgColor    = '#ffffff';
+let tspBgOpacity  = 90;
+let tspBorderWidth = 2;
+
+// Double-tap detection
+let lastTapTime = 0, lastTapPos = {x:0,y:0};
 
 const COLORS = ['#1c1c1e','#ff3b30','#ff9500','#ffcc00','#34c759','#007aff','#af52de','#ffffff'];
 
@@ -448,16 +476,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   wrap = document.getElementById('canvasWrap');
 
   buildColorPicker();
-  loadConfig();
+  buildTextStylePanel();
+  setupCanvasEvents();
   setupKeyboard();
 
-  document.getElementById('strokeSize').addEventListener('input', e => {
-    strokeSize = parseInt(e.target.value);
-  });
+  document.getElementById('strokeSize').addEventListener('input', e => strokeSize = +e.target.value);
 
-  if (!hasConfig()) {
-    show('setupScreen');
-  } else {
+  await loadConfig();
+  if (!hasConfig()) { show('setupScreen'); }
+  else {
     show('homeScreen');
     showLoading(true);
     await loadBoardsFromGitHub();
@@ -473,34 +500,24 @@ async function setupSave() {
   const token = document.getElementById('cfgToken').value.trim();
   const errEl = document.getElementById('setupError');
   errEl.style.display = 'none';
-
-  if (!owner || !repo || !token) {
-    errEl.textContent = 'すべての項目を入力してください。'; errEl.style.display = 'block'; return;
-  }
-  cfg = { owner, repo, token };
+  if (!owner||!repo||!token) { errEl.textContent='すべて入力してください'; errEl.style.display='block'; return; }
+  cfg = {owner,repo,token};
   showLoading(true);
-
-  // 接続テスト
   try {
-    const res = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, {
-      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+    const r = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, {
+      headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'}
     });
-    if (!res.ok) throw new Error('リポジトリにアクセスできません。ユーザー名・リポジトリ名・トークンを確認してください。');
-    saveConfig();
+    if (!r.ok) throw new Error('リポジトリにアクセスできません');
+    await saveConfig();
     await loadBoardsFromGitHub();
-    hide('setupScreen'); show('homeScreen');
-    renderHome();
-  } catch(e) {
-    errEl.textContent = e.message; errEl.style.display = 'block';
-  } finally {
-    showLoading(false);
-  }
+    hide('setupScreen'); show('homeScreen'); renderHome();
+  } catch(e) { errEl.textContent=e.message; errEl.style.display='block'; }
+  finally { showLoading(false); }
 }
-
 function showSetup() {
-  document.getElementById('cfgOwner').value = cfg.owner || '';
-  document.getElementById('cfgRepo').value  = cfg.repo  || '';
-  document.getElementById('cfgToken').value = cfg.token || '';
+  document.getElementById('cfgOwner').value = cfg.owner||'';
+  document.getElementById('cfgRepo').value  = cfg.repo||'';
+  document.getElementById('cfgToken').value = cfg.token||'';
   hide('homeScreen'); show('setupScreen');
 }
 
@@ -509,386 +526,712 @@ function renderHome() {
   const grid = document.getElementById('boardsGrid');
   grid.innerHTML = '';
   if (!boards.length) {
-    grid.innerHTML = `<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>`;
+    grid.innerHTML = '<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>';
     return;
   }
   boards.slice().reverse().forEach(b => {
-    const card = document.createElement('div');
-    card.className = 'board-card';
-    const thumb = document.createElement('canvas');
-    thumb.className = 'board-thumb';
-    thumb.width = 360; thumb.height = 270;
-    if (b.thumb) {
-      const img = new Image();
-      img.onload = () => { const c = thumb.getContext('2d'); c.drawImage(img, 0, 0, 360, 270); };
-      img.src = b.thumb;
-    } else {
-      const c = thumb.getContext('2d'); c.fillStyle='#f5f4ef'; c.fillRect(0,0,360,270);
-    }
-    const info = document.createElement('div'); info.className = 'board-info';
-    info.innerHTML = `<div class="board-name">${esc(b.name)}</div><div class="board-date">${fmtDate(b.date)}</div>`;
-    const del = document.createElement('button'); del.className = 'board-del'; del.innerHTML = '✕';
-    del.onclick = e => { e.stopPropagation(); deleteBoard(b.id); };
+    const card = document.createElement('div'); card.className='board-card';
+    const thumb = document.createElement('canvas'); thumb.className='board-thumb'; thumb.width=360; thumb.height=270;
+    if (b.thumb) { const img=new Image(); img.onload=()=>{const c=thumb.getContext('2d');c.drawImage(img,0,0,360,270);}; img.src=b.thumb; }
+    else { const c=thumb.getContext('2d');c.fillStyle='#f5f4ef';c.fillRect(0,0,360,270); }
+    const info=document.createElement('div'); info.className='board-info';
+    info.innerHTML=`<div class="board-name">${esc(b.name)}</div><div class="board-date">${fmtDate(b.date)}</div>`;
+    const del=document.createElement('button'); del.className='board-del'; del.innerHTML='✕';
+    del.onclick=e=>{e.stopPropagation();deleteBoard(b.id);};
     card.appendChild(thumb); card.appendChild(info); card.appendChild(del);
-    card.onclick = () => openBoard(b.id);
+    card.onclick=()=>openBoard(b.id);
     grid.appendChild(card);
   });
 }
-
-function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function fmtDate(iso){ if(!iso) return ''; const d=new Date(iso); return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; }
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(iso){if(!iso)return'';const d=new Date(iso);return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;}
 
 async function newBoard() {
-  const id = 'board_' + Date.now();
-  boards.push({ id, name: '新しいボード', date: new Date().toISOString(), strokes: [], texts: [], thumb: null });
-  showLoading(true);
-  await saveBoardsToGitHub();
-  showLoading(false);
+  const id='board_'+Date.now();
+  boards.push({id,name:'新しいボード',date:new Date().toISOString(),strokes:[],texts:[],thumb:null});
+  showLoading(true); await saveBoardsToGitHub(); showLoading(false);
   openBoard(id);
 }
-
 function openBoard(id) {
-  currentId = id;
-  const b = boards.find(x => x.id === id);
-  document.getElementById('boardTitle').value = b.name;
-  strokes = JSON.parse(JSON.stringify(b.strokes || []));
-  textItems = [];
-  document.querySelectorAll('.text-el').forEach(e => e.remove());
-  (b.texts || []).forEach(t => createTextEl(t));
-  undoStack = []; redoStack = [];
-  scale = 1; panX = 0; panY = 0;
+  currentId=id;
+  const b=boards.find(x=>x.id===id);
+  document.getElementById('boardTitle').value=b.name;
+  strokes=JSON.parse(JSON.stringify(b.strokes||[]));
+  textItems=JSON.parse(JSON.stringify(b.texts||[]));
+  undoStack=[]; redoStack=[];
+  scale=1; panX=0; panY=0;
+  clearSelection();
   hide('homeScreen'); show('editorScreen');
-  requestAnimationFrame(() => { resizeCanvas(); redraw(); });
+  requestAnimationFrame(()=>{resizeCanvas();redraw();});
 }
-
 async function goHome() {
+  clearSelection();
   await saveBoard(false);
-  document.querySelectorAll('.text-el').forEach(e => e.remove());
-  hide('editorScreen'); show('homeScreen');
-  renderHome();
+  hide('editorScreen'); show('homeScreen'); renderHome();
 }
-
 async function deleteBoard(id) {
-  if (!confirm('削除しますか?')) return;
-  boards = boards.filter(b => b.id !== id);
-  showLoading(true);
-  await saveBoardsToGitHub();
-  showLoading(false);
-  renderHome();
+  if(!confirm('削除しますか?'))return;
+  boards=boards.filter(b=>b.id!==id);
+  showLoading(true); await saveBoardsToGitHub(); showLoading(false); renderHome();
 }
-
 function clearBoard() {
-  if (!confirm('クリアしますか?')) return;
-  pushUndo(); strokes = [];
-  document.querySelectorAll('.text-el').forEach(e => e.remove());
-  textItems = []; redraw();
+  if(!confirm('クリアしますか?'))return;
+  pushUndo(); strokes=[]; textItems=[]; clearSelection(); redraw();
 }
 
 // ===== SAVE =====
-let saveTimer = null;
 async function saveBoard(showMsg) {
-  const b = boards.find(x => x.id === currentId);
-  if (!b) return;
-  b.name = document.getElementById('boardTitle').value || '無題';
-  b.date = new Date().toISOString();
-  b.strokes = JSON.parse(JSON.stringify(strokes));
-  b.texts = textItems.map(t => ({ id:t.id, text:t.el.innerText, x:t.x, y:t.y, color:t.color, fontSize:t.fontSize }));
-  b.thumb = canvas.toDataURL('image/jpeg', 0.4);
-
-  if (showMsg) showLoading(true);
-  const ok = await saveBoardsToGitHub();
-  if (showMsg) {
-    showLoading(false);
-    if (ok) showToast('💾 GitHubに保存しました', 'success');
-  }
+  const b=boards.find(x=>x.id===currentId); if(!b)return;
+  b.name=document.getElementById('boardTitle').value||'無題';
+  b.date=new Date().toISOString();
+  b.strokes=JSON.parse(JSON.stringify(strokes));
+  b.texts=JSON.parse(JSON.stringify(textItems));
+  b.thumb=canvas.toDataURL('image/jpeg',.4);
+  if(showMsg)showLoading(true);
+  const ok=await saveBoardsToGitHub();
+  if(showMsg){showLoading(false);if(ok)showToast('💾 GitHubに保存しました','success');}
 }
-
-// 自動保存（60秒ごと）
-setInterval(() => {
-  if (!document.getElementById('editorScreen').classList.contains('hidden')) saveBoard(false);
-}, 60000);
+setInterval(()=>{if(!document.getElementById('editorScreen').classList.contains('hidden'))saveBoard(false);},60000);
 
 // ===== CANVAS =====
 function resizeCanvas() {
-  const rect = wrap.getBoundingClientRect();
-  const dpr = window.devicePixelRatio;
-  canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
-  canvas.style.width = rect.width + 'px'; canvas.style.height = rect.height + 'px';
-  ctx.scale(dpr, dpr); redraw();
+  const rect=wrap.getBoundingClientRect(), dpr=window.devicePixelRatio;
+  canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
+  canvas.style.width=rect.width+'px'; canvas.style.height=rect.height+'px';
+  ctx.scale(dpr,dpr); redraw();
 }
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize',()=>{resizeCanvas();updateSelBox();});
 
 function redraw() {
-  if (!ctx) return;
-  const w = canvas.width / window.devicePixelRatio;
-  const h = canvas.height / window.devicePixelRatio;
-  ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = '#f5f4ef'; ctx.fillRect(0, 0, w, h);
-  drawGrid(w, h);
-  ctx.save();
-  ctx.translate(panX, panY); ctx.scale(scale, scale);
-  strokes.forEach(s => drawStroke(s));
-  if (currentStroke) drawStroke(currentStroke);
-  if (shapePreview) drawShapePreview();
+  if(!ctx)return;
+  const w=canvas.width/window.devicePixelRatio, h=canvas.height/window.devicePixelRatio;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#f5f4ef'; ctx.fillRect(0,0,w,h);
+  drawGrid(w,h);
+  ctx.save(); ctx.translate(panX,panY); ctx.scale(scale,scale);
+  // Draw text items on canvas (background + border)
+  textItems.forEach(t=>drawTextItem(t));
+  strokes.forEach(s=>drawStroke(s));
+  if(currentStroke)drawStroke(currentStroke);
+  if(shapePreview)drawShapePreview();
   ctx.restore();
 }
 
-function drawGrid(w, h) {
-  const sp = 24 * scale;
-  const ox = panX % sp, oy = panY % sp;
-  ctx.fillStyle = 'rgba(0,0,0,.06)';
-  for (let x = ox; x < w; x += sp)
-    for (let y = oy; y < h; y += sp)
-      { ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI*2); ctx.fill(); }
+function drawGrid(w,h) {
+  const sp=24*scale, ox=panX%sp, oy=panY%sp;
+  ctx.fillStyle='rgba(0,0,0,.06)';
+  for(let x=ox;x<w;x+=sp)for(let y=oy;y<h;y+=sp){ctx.beginPath();ctx.arc(x,y,1.2,0,Math.PI*2);ctx.fill();}
+}
+
+function drawTextItem(t) {
+  const x=t.x, y=t.y, w=t.w||200, h=t.h||60;
+  // Background
+  const bgRgb=hexToRgb(t.bgColor||'#ffffff');
+  const alpha=(t.bgOpacity??90)/100;
+  ctx.fillStyle=`rgba(${bgRgb.r},${bgRgb.g},${bgRgb.b},${alpha})`;
+  ctx.beginPath(); roundRect(ctx,x,y,w,h,8); ctx.fill();
+  // Border
+  if((t.borderWidth||2)>0){
+    ctx.strokeStyle=t.borderColor||'#7c3aed';
+    ctx.lineWidth=(t.borderWidth||2);
+    ctx.beginPath(); roundRect(ctx,x,y,w,h,8); ctx.stroke();
+  }
+  // Text
+  ctx.fillStyle=t.textColor||'#1c1c1e';
+  ctx.font=`${t.fontSize||18}px -apple-system,sans-serif`;
+  ctx.textBaseline='top';
+  wrapText(ctx, t.text||'', x+10, y+8, w-20, (t.fontSize||18)*1.5);
+}
+
+function wrapText(ctx,text,x,y,maxW,lineH){
+  const lines=text.split('\n');
+  lines.forEach(line=>{
+    let words=line.split(' '), curLine='';
+    words.forEach(word=>{
+      const test=curLine?curLine+' '+word:word;
+      if(ctx.measureText(test).width>maxW&&curLine){ctx.fillText(curLine,x,y);curLine=word;y+=lineH;}
+      else curLine=test;
+    });
+    ctx.fillText(curLine,x,y); y+=lineH;
+  });
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
 }
 
 function drawStroke(s) {
-  if (!s.points || s.points.length < 2) return;
-  if (s.type === 'eraser') {
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.strokeStyle = 'rgba(0,0,0,1)';
-  } else {
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.strokeStyle = s.color || '#1c1c1e';
+  if(!s.points||s.points.length<2)return;
+  if(s.type==='eraser'){ctx.globalCompositeOperation='destination-out';ctx.strokeStyle='rgba(0,0,0,1)';}
+  else{ctx.globalCompositeOperation='source-over';ctx.strokeStyle=s.color||'#1c1c1e';}
+  ctx.lineWidth=s.size||4; ctx.lineCap='round'; ctx.lineJoin='round';
+  if(s.shape&&s.shape!=='pen'){drawShape(s);return;}
+  ctx.beginPath(); ctx.moveTo(s.points[0].x,s.points[0].y);
+  for(let i=1;i<s.points.length;i++){
+    const p0=s.points[i-1],p1=s.points[i];
+    ctx.quadraticCurveTo(p0.x,p0.y,(p0.x+p1.x)/2,(p0.y+p1.y)/2);
   }
-  ctx.lineWidth = s.size || 4;
-  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  if (s.shape && s.shape !== 'pen') { drawShape(s); return; }
-  ctx.beginPath(); ctx.moveTo(s.points[0].x, s.points[0].y);
-  for (let i = 1; i < s.points.length; i++) {
-    const p0 = s.points[i-1], p1 = s.points[i];
-    ctx.quadraticCurveTo(p0.x, p0.y, (p0.x+p1.x)/2, (p0.y+p1.y)/2);
-  }
-  ctx.stroke();
-  ctx.globalCompositeOperation = 'source-over';
+  ctx.stroke(); ctx.globalCompositeOperation='source-over';
 }
-
-function drawShape(s) {
-  const pts = s.points;
-  const x1=pts[0].x, y1=pts[0].y, x2=pts[pts.length-1].x, y2=pts[pts.length-1].y;
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.strokeStyle = s.color; ctx.lineWidth = s.size; ctx.lineCap = 'round';
-  switch(s.shape) {
-    case 'rect':     ctx.strokeRect(x1,y1,x2-x1,y2-y1); break;
-    case 'circle': { const rx=(x2-x1)/2,ry=(y2-y1)/2;
-      ctx.beginPath(); ctx.ellipse(x1+rx,y1+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2); ctx.stroke(); break; }
-    case 'line':     ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); break;
-    case 'arrow':    drawArrow(x1,y1,x2,y2,s.size); break;
-    case 'triangle': ctx.beginPath(); ctx.moveTo((x1+x2)/2,y1); ctx.lineTo(x2,y2); ctx.lineTo(x1,y2); ctx.closePath(); ctx.stroke(); break;
+function drawShape(s){
+  const pts=s.points,x1=pts[0].x,y1=pts[0].y,x2=pts[pts.length-1].x,y2=pts[pts.length-1].y;
+  ctx.globalCompositeOperation='source-over';
+  ctx.strokeStyle=s.color; ctx.lineWidth=s.size; ctx.lineCap='round';
+  switch(s.shape){
+    case 'rect': ctx.strokeRect(x1,y1,x2-x1,y2-y1); break;
+    case 'circle':{const rx=(x2-x1)/2,ry=(y2-y1)/2;ctx.beginPath();ctx.ellipse(x1+rx,y1+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2);ctx.stroke();break;}
+    case 'line': ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();break;
+    case 'arrow': drawArrow(x1,y1,x2,y2,s.size);break;
+    case 'triangle':ctx.beginPath();ctx.moveTo((x1+x2)/2,y1);ctx.lineTo(x2,y2);ctx.lineTo(x1,y2);ctx.closePath();ctx.stroke();break;
   }
 }
-
-function drawArrow(x1,y1,x2,y2,lw) {
-  const angle = Math.atan2(y2-y1,x2-x1), hl = Math.max(lw*4,16);
-  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x2,y2);
-  ctx.lineTo(x2-hl*Math.cos(angle-Math.PI/7), y2-hl*Math.sin(angle-Math.PI/7));
-  ctx.lineTo(x2-hl*Math.cos(angle+Math.PI/7), y2-hl*Math.sin(angle+Math.PI/7));
-  ctx.closePath(); ctx.fillStyle = ctx.strokeStyle; ctx.fill();
+function drawArrow(x1,y1,x2,y2,lw){
+  const angle=Math.atan2(y2-y1,x2-x1),hl=Math.max(lw*4,16);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(angle-Math.PI/7),y2-hl*Math.sin(angle-Math.PI/7));
+  ctx.lineTo(x2-hl*Math.cos(angle+Math.PI/7),y2-hl*Math.sin(angle+Math.PI/7));
+  ctx.closePath();ctx.fillStyle=ctx.strokeStyle;ctx.fill();
 }
-
-function drawShapePreview() {
+function drawShapePreview(){
   ctx.setLineDash([6,4]);
-  drawShape({ color:currentColor, size:strokeSize/scale, shape:selectedShape,
-    points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}] });
+  drawShape({color:currentColor,size:strokeSize/scale,shape:selectedShape,
+    points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]});
   ctx.setLineDash([]);
 }
 
+// ===== SELECTION BOX =====
+function clearSelection() {
+  selectedId=null; selectedType=null; dragMode=null;
+  if(selBox){selBox.remove();selBox=null;}
+  handles.forEach(h=>h.remove()); handles=[];
+}
+
+function getObjectBounds(id, type) {
+  if(type==='text'){
+    const t=textItems.find(x=>x.id===id); if(!t)return null;
+    return {x:t.x,y:t.y,w:t.w||200,h:t.h||60};
+  }
+  if(type==='stroke'){
+    const s=strokes.find(x=>x.id===id); if(!s||!s.points.length)return null;
+    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    s.points.forEach(p=>{minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);});
+    const pad=(s.size||4)/2;
+    return{x:minX-pad,y:minY-pad,w:maxX-minX+pad*2,h:maxY-minY+pad*2};
+  }
+  return null;
+}
+
+function showSelBox(id,type){
+  clearSelection();
+  selectedId=id; selectedType=type;
+  const b=getObjectBounds(id,type); if(!b)return;
+
+  selBox=document.createElement('div'); selBox.className='sel-box';
+  updateSelBoxPos(b);
+  wrap.appendChild(selBox);
+
+  // 4 corner handles: nw, ne, se, sw
+  ['nw','ne','se','sw'].forEach(pos=>{
+    const h=document.createElement('div'); h.className='sel-handle';
+    h.dataset.pos=pos;
+    setHandleCursor(h,pos);
+    wrap.appendChild(h);
+    handles.push(h);
+    h.addEventListener('pointerdown',onHandleDown,{passive:false});
+  });
+  updateSelBox();
+}
+
+function setHandleCursor(h,pos){
+  const cursors={nw:'nw-resize',ne:'ne-resize',se:'se-resize',sw:'sw-resize'};
+  h.style.cursor=cursors[pos]||'pointer';
+}
+
+function updateSelBoxPos(b){
+  if(!selBox||!b)return;
+  const sx=b.x*scale+panX, sy=b.y*scale+panY;
+  const sw=b.w*scale, sh=b.h*scale;
+  selBox.style.left=sx+'px'; selBox.style.top=sy+'px';
+  selBox.style.width=sw+'px'; selBox.style.height=sh+'px';
+}
+
+function updateSelBox(){
+  if(!selectedId)return;
+  const b=getObjectBounds(selectedId,selectedType); if(!b)return;
+  updateSelBoxPos(b);
+  const sx=b.x*scale+panX, sy=b.y*scale+panY;
+  const sw=b.w*scale, sh=b.h*scale;
+  const positions={nw:{x:sx,y:sy},ne:{x:sx+sw,y:sy},se:{x:sx+sw,y:sy+sh},sw:{x:sx,y:sy+sh}};
+  handles.forEach(h=>{
+    const p=positions[h.dataset.pos];
+    if(p){h.style.left=p.x+'px';h.style.top=p.y+'px';}
+  });
+}
+
+// Handle resize drag
+function onHandleDown(e){
+  e.preventDefault(); e.stopPropagation();
+  const pos=e.currentTarget.dataset.pos;
+  dragMode='resize-'+pos;
+  const b=getObjectBounds(selectedId,selectedType);
+  dragStart={px:e.clientX,py:e.clientY,ox:b.x,oy:b.y,ow:b.w,oh:b.h,aspect:b.w/b.h};
+  e.currentTarget.setPointerCapture(e.pointerId);
+  e.currentTarget.addEventListener('pointermove',onHandleMove,{passive:false});
+  e.currentTarget.addEventListener('pointerup',onHandleUp,{passive:false});
+}
+function onHandleMove(e){
+  e.preventDefault();
+  if(!dragMode||!dragMode.startsWith('resize'))return;
+  const dx=(e.clientX-dragStart.px)/scale, dy=(e.clientY-dragStart.py)/scale;
+  const pos=dragMode.replace('resize-','');
+  let {ox,oy,ow,oh,aspect}=dragStart;
+  let nx=ox,ny=oy,nw=ow,nh=oh;
+
+  if(pos==='se'){nw=Math.max(40,ow+dx);nh=Math.max(20,oh+dy);}
+  else if(pos==='sw'){nx=ox+dx;nw=Math.max(40,ow-dx);nh=Math.max(20,oh+dy);}
+  else if(pos==='ne'){nw=Math.max(40,ow+dx);ny=oy+dy;nh=Math.max(20,oh-dy);}
+  else if(pos==='nw'){nx=ox+dx;ny=oy+dy;nw=Math.max(40,ow-dx);nh=Math.max(20,oh-dy);}
+
+  if(shiftDown){
+    // 縦横比固定
+    if(pos==='se'||pos==='nw') nh=nw/aspect;
+    else nh=nw/aspect;
+    if(pos==='ne'){ny=oy+(oh-nh);}
+    if(pos==='nw'){ny=oy+(oh-nh);}
+    if(pos==='sw'){ny=oy;}
+  }
+
+  applyBounds(nx,ny,nw,nh);
+  updateSelBox(); redraw();
+}
+function onHandleUp(e){
+  e.currentTarget.removeEventListener('pointermove',onHandleMove);
+  e.currentTarget.removeEventListener('pointerup',onHandleUp);
+  dragMode=null;
+}
+
+function applyBounds(x,y,w,h){
+  if(selectedType==='text'){
+    const t=textItems.find(t=>t.id===selectedId); if(!t)return;
+    t.x=x;t.y=y;t.w=w;t.h=h;
+  } else if(selectedType==='stroke'){
+    const s=strokes.find(s=>s.id===selectedId); if(!s)return;
+    const b0=getObjectBounds(selectedId,'stroke');
+    const scaleX=w/b0.w, scaleY=h/b0.h;
+    s.points=s.points.map(p=>({
+      x:x+(p.x-b0.x)*scaleX,
+      y:y+(p.y-b0.y)*scaleY
+    }));
+  }
+}
+
+// ===== HIT TEST =====
+function hitTest(cx,cy){
+  // canvas coords
+  // text items first (top layer)
+  for(let i=textItems.length-1;i>=0;i--){
+    const t=textItems[i],w=t.w||200,h=t.h||60;
+    if(cx>=t.x&&cx<=t.x+w&&cy>=t.y&&cy<=t.y+h) return {id:t.id,type:'text'};
+  }
+  // strokes
+  for(let i=strokes.length-1;i>=0;i--){
+    const s=strokes[i]; if(!s.id)continue;
+    const b=getObjectBounds(s.id,'stroke'); if(!b)continue;
+    if(cx>=b.x&&cx<=b.x+b.w&&cy>=b.y&&cy<=b.y+b.h) return {id:s.id,type:'stroke'};
+  }
+  return null;
+}
+
 // ===== POINTER EVENTS =====
-function setupCanvasEvents_() {}  // Called below
-document.addEventListener('DOMContentLoaded', () => {
-  const w2 = document.getElementById('canvasWrap');
-  w2.addEventListener('pointerdown',  onPointerDown,  {passive:false});
-  w2.addEventListener('pointermove',  onPointerMove,  {passive:false});
-  w2.addEventListener('pointerup',    onPointerUp,    {passive:false});
-  w2.addEventListener('pointercancel',onPointerUp,    {passive:false});
-  w2.addEventListener('wheel',        onWheel,        {passive:false});
-  w2.addEventListener('dblclick',     onDblClick);
-});
-
-function onPointerDown(e) {
-  e.preventDefault();
-  activePointers[e.pointerId] = {x:e.clientX, y:e.clientY};
-  const pCount = Object.keys(activePointers).length;
-  if (pCount === 2) {
-    isDrawing = false; currentStroke = null;
-    const pts = Object.values(activePointers);
-    lastPinchDist = dist(pts[0],pts[1]); lastPanPos = mid(pts[0],pts[1]); return;
-  }
-  if (tool === 'text') return;
-  const pos = cPos(e);
-  if (tool === 'select') { isPanning=true; lastPanPos={x:e.clientX,y:e.clientY}; return; }
-  if (tool === 'pen' || tool === 'eraser') {
-    pushUndo(); isDrawing = true;
-    currentStroke = { type:tool==='eraser'?'eraser':'pen', color:currentColor, size:strokeSize/scale, shape:'pen', points:[pos] };
-  }
-  if (tool === 'shape') {
-    pushUndo(); isDrawing=true; shapeStart=pos;
-    shapePreview = {x1:pos.x,y1:pos.y,x2:pos.x,y2:pos.y};
-  }
+function setupCanvasEvents(){
+  wrap.addEventListener('pointerdown', onPointerDown, {passive:false});
+  wrap.addEventListener('pointermove', onPointerMove, {passive:false});
+  wrap.addEventListener('pointerup',   onPointerUp,   {passive:false});
+  wrap.addEventListener('pointercancel',onPointerUp,  {passive:false});
+  wrap.addEventListener('wheel',       onWheel,       {passive:false});
+  // Double-click (PC)
+  wrap.addEventListener('dblclick', onDblActivate);
+  // Double-tap (iPad/touch)
+  wrap.addEventListener('touchend', onTouchEnd, {passive:false});
 }
 
-function onPointerMove(e) {
-  e.preventDefault();
-  activePointers[e.pointerId] = {x:e.clientX, y:e.clientY};
-  const pCount = Object.keys(activePointers).length;
-  if (pCount === 2) {
-    const pts = Object.values(activePointers);
-    const d = dist(pts[0],pts[1]), m = mid(pts[0],pts[1]);
-    if (lastPinchDist !== null) {
-      const f = d/lastPinchDist, rect = wrap.getBoundingClientRect();
-      const mx=m.x-rect.left, my=m.y-rect.top;
-      panX = mx-(mx-panX)*f; panY = my-(my-panY)*f;
-      scale = Math.max(.2, Math.min(5, scale*f));
+// Double-tap via touchend
+function onTouchEnd(e){
+  if(tool!=='text'&&tool!=='select')return;
+  if(e.changedTouches.length!==1)return;
+  const t=e.changedTouches[0];
+  const now=Date.now();
+  const dx=t.clientX-lastTapPos.x, dy=t.clientY-lastTapPos.y;
+  const dist2=Math.sqrt(dx*dx+dy*dy);
+  if(now-lastTapTime<350&&dist2<30){
+    // double tap!
+    e.preventDefault();
+    if(tool==='text'){
+      const pos=cPosFromClient(t.clientX,t.clientY);
+      createTextItem(pos);
+    } else if(tool==='select'){
+      const pos=cPosFromClient(t.clientX,t.clientY);
+      const hit=hitTest(pos.x,pos.y);
+      if(hit&&hit.type==='text') openTextEdit(hit.id);
     }
-    if (lastPanPos) { panX+=m.x-lastPanPos.x; panY+=m.y-lastPanPos.y; }
-    lastPinchDist=d; lastPanPos=m; redraw(); updateTextPos(); return;
+    lastTapTime=0;
+  } else {
+    lastTapTime=now;
+    lastTapPos={x:t.clientX,y:t.clientY};
   }
-  if (isPanning) {
-    panX+=e.clientX-lastPanPos.x; panY+=e.clientY-lastPanPos.y;
-    lastPanPos={x:e.clientX,y:e.clientY}; redraw(); updateTextPos(); return;
-  }
-  if (!isDrawing) return;
-  const pos = cPos(e);
-  if (tool==='pen'||tool==='eraser') { currentStroke.points.push(pos); redraw(); }
-  if (tool==='shape') { shapePreview.x2=pos.x; shapePreview.y2=pos.y; redraw(); }
 }
 
-function onPointerUp(e) {
+function onDblActivate(e){
+  const pos=cPos(e);
+  if(tool==='text'){ createTextItem(pos); return; }
+  if(tool==='select'){
+    const hit=hitTest(pos.x,pos.y);
+    if(hit&&hit.type==='text') openTextEdit(hit.id);
+  }
+}
+
+let moveDragActive=false;
+
+function onPointerDown(e){
+  e.preventDefault();
+  activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
+  const pCount=Object.keys(activePointers).length;
+  if(pCount===2){
+    isDrawing=false;currentStroke=null;moveDragActive=false;
+    const pts=Object.values(activePointers);
+    lastPinchDist=distP(pts[0],pts[1]);lastPanPos=midP(pts[0],pts[1]);return;
+  }
+
+  closeShapePopup(); closeTextStylePanel();
+
+  const pos=cPos(e);
+
+  if(tool==='select'){
+    const hit=hitTest(pos.x,pos.y);
+    if(hit){
+      if(hit.id!==selectedId) showSelBox(hit.id,hit.type);
+      // start move
+      pushUndo();
+      dragMode='move';
+      dragStart={px:e.clientX,py:e.clientY,
+        ox:hit.type==='text'?textItems.find(t=>t.id===hit.id).x:0,
+        oy:hit.type==='text'?textItems.find(t=>t.id===hit.id).y:0,
+        pts0: hit.type==='stroke'?JSON.parse(JSON.stringify(strokes.find(s=>s.id===hit.id).points)):null
+      };
+      moveDragActive=true;
+    } else {
+      clearSelection(); redraw();
+      // pan
+      dragMode='pan'; lastPanPos={x:e.clientX,y:e.clientY};
+    }
+    return;
+  }
+
+  if(tool==='text') return;
+
+  if(tool==='pen'||tool==='eraser'){
+    pushUndo(); isDrawing=true;
+    const id='s'+Date.now()+Math.random().toString(36).slice(2);
+    currentStroke={id,type:tool==='eraser'?'eraser':'pen',color:currentColor,size:strokeSize/scale,shape:'pen',points:[pos]};
+  }
+  if(tool==='shape'){
+    pushUndo(); isDrawing=true; shapeStart=pos;
+    shapePreview={x1:pos.x,y1:pos.y,x2:pos.x,y2:pos.y};
+  }
+}
+
+function onPointerMove(e){
+  e.preventDefault();
+  activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
+  const pCount=Object.keys(activePointers).length;
+
+  if(pCount===2){
+    const pts=Object.values(activePointers);
+    const d=distP(pts[0],pts[1]),m=midP(pts[0],pts[1]);
+    if(lastPinchDist!==null){
+      const f=d/lastPinchDist,rect=wrap.getBoundingClientRect();
+      const mx=m.x-rect.left,my=m.y-rect.top;
+      panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
+      scale=Math.max(.2,Math.min(5,scale*f));
+    }
+    if(lastPanPos){panX+=m.x-lastPanPos.x;panY+=m.y-lastPanPos.y;}
+    lastPinchDist=d;lastPanPos=m;redraw();updateSelBox();return;
+  }
+
+  if(dragMode==='pan'){
+    panX+=e.clientX-lastPanPos.x;panY+=e.clientY-lastPanPos.y;
+    lastPanPos={x:e.clientX,y:e.clientY};redraw();updateSelBox();return;
+  }
+
+  if(dragMode==='move'&&moveDragActive){
+    const dx=(e.clientX-dragStart.px)/scale, dy=(e.clientY-dragStart.py)/scale;
+    if(selectedType==='text'){
+      const t=textItems.find(t=>t.id===selectedId);if(t){t.x=dragStart.ox+dx;t.y=dragStart.oy+dy;}
+    } else if(selectedType==='stroke'){
+      const s=strokes.find(s=>s.id===selectedId);if(s&&dragStart.pts0){
+        s.points=dragStart.pts0.map(p=>({x:p.x+dx,y:p.y+dy}));
+      }
+    }
+    updateSelBox();redraw();return;
+  }
+
+  if(!isDrawing)return;
+  const pos=cPos(e);
+  if(tool==='pen'||tool==='eraser'){currentStroke.points.push(pos);redraw();}
+  if(tool==='shape'){shapePreview.x2=pos.x;shapePreview.y2=pos.y;redraw();}
+}
+
+function onPointerUp(e){
   e.preventDefault();
   delete activePointers[e.pointerId];
-  const pCount = Object.keys(activePointers).length;
-  if (pCount < 2) { lastPinchDist=null; lastPanPos=null; }
-  if (isPanning) { isPanning=false; return; }
-  if (!isDrawing) return;
-  isDrawing = false;
-  if (tool==='pen'||tool==='eraser') {
-    if (currentStroke && currentStroke.points.length >= 2) strokes.push(currentStroke);
-    currentStroke = null;
+  const pCount=Object.keys(activePointers).length;
+  if(pCount<2){lastPinchDist=null;lastPanPos=null;}
+
+  if(dragMode==='pan'){dragMode=null;return;}
+  if(dragMode==='move'){moveDragActive=false;dragMode=null;updateSelBox();return;}
+
+  if(!isDrawing)return;
+  isDrawing=false;
+
+  if(tool==='pen'||tool==='eraser'){
+    if(currentStroke&&currentStroke.points.length>=2)strokes.push(currentStroke);
+    currentStroke=null;
   }
-  if (tool==='shape' && shapePreview) {
-    if (Math.abs(shapePreview.x2-shapePreview.x1)>3 || Math.abs(shapePreview.y2-shapePreview.y1)>3)
-      strokes.push({ type:'shape', color:currentColor, size:strokeSize/scale, shape:selectedShape,
-        points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}] });
-    shapePreview=null; shapeStart=null;
+  if(tool==='shape'&&shapePreview){
+    if(Math.abs(shapePreview.x2-shapePreview.x1)>3||Math.abs(shapePreview.y2-shapePreview.y1)>3){
+      const id='s'+Date.now()+Math.random().toString(36).slice(2);
+      strokes.push({id,type:'shape',color:currentColor,size:strokeSize/scale,shape:selectedShape,
+        points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]});
+    }
+    shapePreview=null;shapeStart=null;
   }
   redraw();
 }
 
-function onDblClick(e) {
-  if (tool !== 'text') return;
-  const pos = cPos(e);
-  createTextEl({x:pos.x, y:pos.y, color:currentColor, fontSize:strokeSize*3+12}, true);
-}
-
-function onWheel(e) {
+function onWheel(e){
   e.preventDefault();
-  const rect=wrap.getBoundingClientRect(), mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const rect=wrap.getBoundingClientRect(),mx=e.clientX-rect.left,my=e.clientY-rect.top;
   const f=e.deltaY<0?1.1:.9;
-  panX=mx-(mx-panX)*f; panY=my-(my-panY)*f;
+  panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
   scale=Math.max(.2,Math.min(5,scale*f));
-  redraw(); updateTextPos();
+  redraw();updateSelBox();
 }
 
-function cPos(e) {
+function cPos(e){return cPosFromClient(e.clientX,e.clientY);}
+function cPosFromClient(cx,cy){
   const rect=wrap.getBoundingClientRect();
-  return { x:(e.clientX-rect.left-panX)/scale, y:(e.clientY-rect.top-panY)/scale };
+  return{x:(cx-rect.left-panX)/scale,y:(cy-rect.top-panY)/scale};
 }
-function dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
-function mid(a,b){ return {x:(a.x+b.x)/2,y:(a.y+b.y)/2}; }
+function distP(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+function midP(a,b){return{x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
 
-// ===== TEXT =====
-function createTextEl(data, focus=false) {
-  const id = data.id || ('text_'+(++textIdCounter));
-  const el = document.createElement('div');
-  el.className='text-el'; el.contentEditable='true'; el.innerText=data.text||'';
-  el.style.color=data.color||'#1c1c1e'; el.style.fontSize=(data.fontSize||18)+'px';
-  el.dataset.textId=id;
-  const item={id,el,x:data.x,y:data.y,color:data.color||'#1c1c1e',fontSize:data.fontSize||18};
-  textItems.push(item); posTextEl(item); wrap.appendChild(el);
-  el.addEventListener('blur',()=>{ if(!el.innerText.trim()){el.remove(); textItems=textItems.filter(t=>t.id!==id);} });
-  el.addEventListener('pointerdown',e=>e.stopPropagation());
-  if (focus) setTimeout(()=>el.focus(),50);
-  return item;
+// ===== TEXT ITEMS (canvas-rendered) =====
+let editingTextId=null;
+let floatInput=null;
+
+function createTextItem(pos){
+  pushUndo();
+  const id='t'+Date.now()+Math.random().toString(36).slice(2);
+  const item={
+    id,x:pos.x,y:pos.y,w:200,h:80,text:'',
+    textColor:tspTextColor,borderColor:tspBorderColor,
+    bgColor:tspBgColor,bgOpacity:tspBgOpacity,
+    borderWidth:tspBorderWidth,fontSize:strokeSize*3+12
+  };
+  textItems.push(item);
+  redraw();
+  openTextEdit(id);
 }
-function posTextEl(item) {
-  item.el.style.left=(item.x*scale+panX)+'px';
-  item.el.style.top=(item.y*scale+panY)+'px';
-  item.el.style.fontSize=(item.fontSize*scale)+'px';
+
+function openTextEdit(id){
+  closeTextEdit();
+  const t=textItems.find(x=>x.id===id); if(!t)return;
+  editingTextId=id;
+
+  // floating textarea
+  floatInput=document.createElement('textarea');
+  floatInput.style.cssText=`
+    position:absolute;z-index:50;resize:none;outline:none;
+    font-family:-apple-system,sans-serif;line-height:1.5;
+    padding:6px 10px;border-radius:8px;
+    background:transparent;color:transparent;caret-color:${t.textColor||'#1c1c1e'};
+    border:none;overflow:hidden;
+  `;
+  floatInput.value=t.text||'';
+  posFloatInput(t);
+  wrap.appendChild(floatInput);
+  floatInput.focus();
+
+  floatInput.addEventListener('input',()=>{
+    t.text=floatInput.value;
+    // auto-grow height
+    const lines=t.text.split('\n').length;
+    t.h=Math.max(60,lines*(t.fontSize||18)*1.5+20);
+    floatInput.style.height=t.h*scale+'px';
+    redraw();updateSelBox();
+  });
+  floatInput.addEventListener('blur',()=>closeTextEdit());
+  floatInput.addEventListener('pointerdown',e=>e.stopPropagation());
+  showSelBox(id,'text');
 }
-function updateTextPos(){ textItems.forEach(t=>posTextEl(t)); }
+
+function posFloatInput(t){
+  if(!floatInput)return;
+  const sx=t.x*scale+panX, sy=t.y*scale+panY;
+  floatInput.style.left=sx+'px';
+  floatInput.style.top=sy+'px';
+  floatInput.style.width=(t.w||200)*scale+'px';
+  floatInput.style.height=(t.h||80)*scale+'px';
+  floatInput.style.fontSize=(t.fontSize||18)*scale+'px';
+}
+
+function closeTextEdit(){
+  if(floatInput){floatInput.remove();floatInput=null;}
+  editingTextId=null;
+}
+
+// ===== TEXT STYLE PANEL =====
+function buildTextStylePanel(){
+  buildTspColors('tspTextColor', COLORS, ()=>tspTextColor, v=>{tspTextColor=v;applyStyleToSelected('textColor',v);});
+  buildTspColors('tspBorderColor',[...COLORS,'transparent'],()=>tspBorderColor,v=>{tspBorderColor=v;applyStyleToSelected('borderColor',v);});
+  buildTspColors('tspBgColor',[...COLORS,'transparent'],()=>tspBgColor,v=>{tspBgColor=v;applyStyleToSelected('bgColor',v);});
+
+  const opEl=document.getElementById('tspBgOpacity');
+  const opVal=document.getElementById('tspBgOpacityVal');
+  opEl.addEventListener('input',()=>{
+    tspBgOpacity=+opEl.value; opVal.textContent=tspBgOpacity+'%';
+    applyStyleToSelected('bgOpacity',tspBgOpacity);
+  });
+
+  const bwEl=document.getElementById('tspBorderWidth');
+  const bwVal=document.getElementById('tspBorderWidthVal');
+  bwEl.addEventListener('input',()=>{
+    tspBorderWidth=+bwEl.value; bwVal.textContent=tspBorderWidth+'px';
+    applyStyleToSelected('borderWidth',tspBorderWidth);
+  });
+}
+
+function buildTspColors(elId, colors, getVal, setVal){
+  const el=document.getElementById(elId);
+  colors.forEach(c=>{
+    const d=document.createElement('div'); d.className='tsp-dot';
+    if(c==='transparent'){
+      d.style.background='linear-gradient(135deg,#fff 45%,#f00 45%,#f00 55%,#fff 55%)';
+      d.style.border='2px solid #ccc';
+    } else {
+      d.style.background=c;
+      if(c==='#ffffff') d.style.border='2px solid #ccc';
+    }
+    d.onclick=()=>{
+      el.querySelectorAll('.tsp-dot').forEach(x=>x.classList.remove('active'));
+      d.classList.add('active'); setVal(c); redraw();
+    };
+    if(c===getVal()) d.classList.add('active');
+    el.appendChild(d);
+  });
+}
+
+function applyStyleToSelected(key,val){
+  if(selectedType==='text'){
+    const t=textItems.find(t=>t.id===selectedId); if(t){t[key]=val; redraw();}
+  }
+}
+
+function toggleTextStylePanel(){
+  const p=document.getElementById('textStylePanel');
+  p.classList.toggle('hidden');
+}
+function closeTextStylePanel(){document.getElementById('textStylePanel').classList.add('hidden');}
 
 // ===== TOOLS =====
-function setTool(t) {
+function setTool(t){
+  if(t!=='select')clearSelection();
   tool=t;
   ['pen','eraser','text','shape','select'].forEach(n=>{
     const btn=document.getElementById('tool'+n[0].toUpperCase()+n.slice(1));
-    if(btn) btn.classList.toggle('active',n===t);
+    if(btn)btn.classList.toggle('active',n===t);
   });
-  const badges={pen:'ペン',eraser:'消しゴム',text:'テキスト（ダブルタップ）',shape:'図形',select:'選択/パン'};
+  const badges={pen:'ペン',eraser:'消しゴム',text:'テキスト（ダブルタップで配置）',shape:'図形',select:'選択・移動・拡大縮小'};
   document.getElementById('modeBadge').textContent=badges[t]||t;
-  wrap.style.cursor=t==='select'?'grab':t==='text'?'text':'crosshair';
-  closeShapePopup();
+  wrap.style.cursor=t==='select'?'default':t==='text'?'crosshair':'crosshair';
+  closeShapePopup(); closeTextStylePanel();
 }
-function toggleShapePopup(){ document.getElementById('shapePopup').classList.toggle('hidden'); }
-function closeShapePopup(){ document.getElementById('shapePopup').classList.add('hidden'); }
-function selectShape(s){ selectedShape=s; setTool('shape'); document.getElementById('toolShape').classList.add('active'); closeShapePopup(); }
+function toggleShapePopup(){document.getElementById('shapePopup').classList.toggle('hidden');}
+function closeShapePopup(){document.getElementById('shapePopup').classList.add('hidden');}
+function selectShape(s){selectedShape=s;setTool('shape');document.getElementById('toolShape').classList.add('active');closeShapePopup();}
 
 // ===== UNDO/REDO =====
-function getState(){ return {strokes:JSON.parse(JSON.stringify(strokes)), texts:textItems.map(t=>({id:t.id,text:t.el.innerText,x:t.x,y:t.y,color:t.color,fontSize:t.fontSize}))}; }
-function applyState(s){ strokes=s.strokes; document.querySelectorAll('.text-el').forEach(e=>e.remove()); textItems=[]; s.texts.forEach(t=>createTextEl(t)); redraw(); }
-function pushUndo(){ undoStack.push(getState()); if(undoStack.length>50)undoStack.shift(); redoStack=[]; }
-function undo(){ if(!undoStack.length)return; redoStack.push(getState()); applyState(undoStack.pop()); }
-function redo(){ if(!redoStack.length)return; undoStack.push(getState()); applyState(redoStack.pop()); }
+function getState(){return{strokes:JSON.parse(JSON.stringify(strokes)),texts:JSON.parse(JSON.stringify(textItems))};}
+function applyState(s){strokes=s.strokes;textItems=s.texts;clearSelection();redraw();}
+function pushUndo(){undoStack.push(getState());if(undoStack.length>50)undoStack.shift();redoStack=[];}
+function undo(){if(!undoStack.length)return;redoStack.push(getState());applyState(undoStack.pop());}
+function redo(){if(!redoStack.length)return;undoStack.push(getState());applyState(redoStack.pop());}
 
 // ===== COLOR PICKER =====
-function buildColorPicker() {
+function buildColorPicker(){
   const cp=document.getElementById('colorPicker');
   COLORS.forEach(c=>{
     const d=document.createElement('div');
     d.className='color-dot'+(c===currentColor?' active':'');
     d.style.background=c;
-    if(c==='#ffffff') d.style.border='3px solid #ccc';
-    d.onclick=()=>{ document.querySelectorAll('.color-dot').forEach(x=>x.classList.remove('active')); d.classList.add('active'); currentColor=c; };
+    if(c==='#ffffff')d.style.border='3px solid #ccc';
+    d.onclick=()=>{document.querySelectorAll('#colorPicker .color-dot').forEach(x=>x.classList.remove('active'));d.classList.add('active');currentColor=c;};
     cp.appendChild(d);
   });
 }
 
 // ===== KEYBOARD =====
-function setupKeyboard() {
-  document.addEventListener('keydown', e=>{
-    if(document.getElementById('editorScreen').classList.contains('hidden')) return;
-    if(e.target.classList.contains('text-el')) return;
+function setupKeyboard(){
+  document.addEventListener('keydown',e=>{
+    shiftDown=e.shiftKey;
+    if(document.getElementById('editorScreen').classList.contains('hidden'))return;
+    if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
     if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
-    if((e.ctrlKey||e.metaKey)&&e.key==='y'){e.preventDefault();redo();}
-    if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key==='Z'){e.preventDefault();redo();}
+    if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){e.preventDefault();redo();}
     if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);}
+    if(e.key==='Delete'||e.key==='Backspace'){
+      if(selectedId&&selectedType){
+        pushUndo();
+        if(selectedType==='text')textItems=textItems.filter(t=>t.id!==selectedId);
+        if(selectedType==='stroke')strokes=strokes.filter(s=>s.id!==selectedId);
+        clearSelection();redraw();
+      }
+    }
     if(e.key==='p')setTool('pen');
     if(e.key==='e')setTool('eraser');
     if(e.key==='t')setTool('text');
+    if(e.key==='s'&&!e.ctrlKey&&!e.metaKey)setTool('select');
+    if(e.key==='Escape'){clearSelection();redraw();}
   });
+  document.addEventListener('keyup',e=>{shiftDown=e.shiftKey;});
 }
 
-// ===== UI HELPERS =====
-function show(id){ document.getElementById(id).classList.remove('hidden'); }
-function hide(id){ document.getElementById(id).classList.add('hidden'); }
-function showLoading(v){ document.getElementById('loadingOverlay').classList.toggle('hidden',!v); }
-
+// ===== UTILS =====
+function hexToRgb(hex){
+  if(!hex||hex==='transparent')return{r:255,g:255,b:255};
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return{r,g,b};
+}
+function show(id){document.getElementById(id).classList.remove('hidden');}
+function hide(id){document.getElementById(id).classList.add('hidden');}
+function showLoading(v){document.getElementById('loadingOverlay').classList.toggle('hidden',!v);}
 let toastTimer=null;
 function showToast(msg,type='success'){
   const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast '+type+' show';
-  if(toastTimer) clearTimeout(toastTimer);
+  t.textContent=msg;t.className='toast '+type+' show';
+  if(toastTimer)clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
 }
-
 function setSyncStatus(state,label){
   const dot=document.getElementById('syncDot');
   const lbl=document.getElementById('syncLabel');
-  if(!dot) return;
+  if(!dot)return;
   dot.className='sync-dot'+(state==='loading'?' loading':state==='error'?' error':'');
-  if(lbl) lbl.textContent=label;
+  if(lbl)lbl.textContent=label;
 }
 </script>
 </body>
