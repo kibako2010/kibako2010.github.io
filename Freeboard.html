@@ -30,7 +30,8 @@ body{
 .setup-input{
   width:100%;padding:11px 14px;
   background:#1c1c1e;border:1.5px solid #3a3a3c;
-  border-radius:10px;color:#fff;font-size:15px;outline:none;transition:border-color .2s
+  border-radius:10px;color:#fff;font-size:15px;outline:none;transition:border-color .2s;
+  touch-action:auto;user-select:text
 }
 .setup-input:focus{border-color:#7c3aed}
 .setup-input::placeholder{color:#636366}
@@ -59,7 +60,8 @@ body{
 
 .home-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c
+  padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c;
+  flex-shrink:0
 }
 .home-header h1{
   font-size:26px;font-weight:700;
@@ -81,25 +83,31 @@ body{
 .boards-grid{
   flex:1;overflow-y:auto;padding:16px;
   display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:14px;align-content:start
+  gap:14px;align-content:start;
+  touch-action:pan-y
 }
 .board-card{
   background:#2c2c2e;border-radius:16px;overflow:hidden;
   cursor:pointer;transition:transform .2s,box-shadow .2s;
   border:2px solid transparent;position:relative
 }
-.board-card:hover,.board-card:active{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.35);border-color:#7c3aed}
+.board-card:hover,.board-card:active{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px rgba(124,58,237,.35);border-color:#7c3aed
+}
 .board-thumb{width:100%;aspect-ratio:4/3;background:#f5f4ef;display:block}
 .board-info{padding:10px 12px}
 .board-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f2f2f7}
 .board-date{font-size:11px;color:#8e8e93;margin-top:2px}
 .board-del{
   position:absolute;top:6px;right:6px;
-  background:rgba(255,59,48,.85);border:none;border-radius:50%;
+  background:rgba(255,59,48,.9);border:none;border-radius:50%;
   width:28px;height:28px;color:#fff;font-size:14px;
-  cursor:pointer;display:none;align-items:center;justify-content:center
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s
 }
-.board-card:hover .board-del{display:flex}
+.board-card:hover .board-del{opacity:1}
+.board-del:active{opacity:1}
 .sync-status{font-size:12px;color:#8e8e93;display:flex;align-items:center;gap:5px}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:#34c759}
 .sync-dot.loading{background:#ff9500;animation:pulse 1s infinite}
@@ -113,7 +121,8 @@ body{
   background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
   border-bottom:1px solid #e0e0e0;
   flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
-  z-index:100;flex-shrink:0
+  z-index:100;flex-shrink:0;
+  touch-action:pan-x
 }
 .toolbar::-webkit-scrollbar{display:none}
 .tb-group{display:flex;gap:2px;align-items:center;flex-shrink:0}
@@ -122,32 +131,48 @@ body{
   border:none;background:transparent;border-radius:10px;
   width:38px;height:38px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;font-size:18px;transition:background .12s;flex-shrink:0;
-  -webkit-tap-highlight-color:transparent
+  -webkit-tap-highlight-color:transparent;color:#1c1c1e;
+  touch-action:manipulation
 }
 .tb-btn:hover{background:#f0f0f0}
-.tb-btn.active{background:#ede9fe}
-.tb-btn.danger:hover{background:#ffe4e4}
-.tb-btn.danger.has-selection{color:#ff3b30}
+.tb-btn:active{background:#e8e8e8}
+.tb-btn.active{background:#ede9fe;color:#7c3aed}
+.tb-btn.danger{color:#636366}
+.tb-btn.danger:active{background:#ffe4e4}
+/* 選択中は赤く目立たせる */
+.tb-btn.danger.has-selection{
+  color:#ff3b30;
+  background:#fff0f0
+}
 .tb-back{
   font-size:13px;font-weight:600;color:#7c3aed;
   background:none;border:none;cursor:pointer;
-  padding:6px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0
+  padding:6px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0;
+  touch-action:manipulation
 }
 .tb-back:hover{background:#ede9fe}
 .board-title-input{
   flex:1;min-width:80px;border:none;background:transparent;
-  font-size:16px;font-weight:600;color:#1c1c1e;text-align:center;outline:none
+  font-size:16px;font-weight:600;color:#1c1c1e;text-align:center;outline:none;
+  touch-action:auto;user-select:text
 }
 .color-dots{display:flex;gap:5px;align-items:center}
 .color-dot{
   width:22px;height:22px;border-radius:50%;
-  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0
+  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;
+  touch-action:manipulation
 }
 .color-dot:hover,.color-dot.active{transform:scale(1.2);border-color:#333}
-.stroke-slider{width:70px;accent-color:#7c3aed;flex-shrink:0}
+.stroke-slider{width:70px;accent-color:#7c3aed;flex-shrink:0;touch-action:none}
 
-.canvas-wrap{flex:1;position:relative;overflow:hidden;cursor:crosshair;background:#f5f4ef}
-#mainCanvas{position:absolute;top:0;left:0;touch-action:none}
+.canvas-wrap{flex:1;position:relative;overflow:hidden;background:#f5f4ef}
+
+#mainCanvas{
+  position:absolute;top:0;left:0;
+  touch-action:none;
+  cursor:crosshair
+}
+#mainCanvas.select-mode{cursor:default}
 
 .shape-popup{
   position:absolute;top:54px;left:50%;transform:translateX(-50%);
@@ -160,7 +185,7 @@ body{
   width:44px;height:44px;border:2px solid #e0e0e0;
   border-radius:10px;background:#f9f9f9;cursor:pointer;
   display:flex;align-items:center;justify-content:center;font-size:22px;
-  -webkit-tap-highlight-color:transparent
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent
 }
 .shape-opt:active{background:#ede9fe;border-color:#7c3aed}
 
@@ -169,7 +194,9 @@ body{
   background:#fff;border-radius:14px;
   box-shadow:0 8px 32px rgba(0,0,0,.2);
   padding:14px 16px;z-index:200;border:1px solid #e0e0e0;
-  display:flex;flex-direction:column;gap:12px;min-width:300px;max-width:92vw
+  display:flex;flex-direction:column;gap:12px;
+  min-width:300px;max-width:92vw;
+  touch-action:auto
 }
 .text-style-panel.hidden{display:none}
 .tsp-row{display:flex;align-items:center;gap:10px}
@@ -177,10 +204,11 @@ body{
 .tsp-colors{display:flex;gap:4px;flex-wrap:wrap}
 .tsp-dot{
   width:22px;height:22px;border-radius:50%;
-  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0
+  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;
+  touch-action:manipulation
 }
 .tsp-dot:hover,.tsp-dot.active{transform:scale(1.2);border-color:#333}
-.tsp-slider{flex:1;accent-color:#7c3aed}
+.tsp-slider{flex:1;accent-color:#7c3aed;touch-action:none}
 .tsp-val{font-size:12px;color:#636366;width:38px;text-align:right;flex-shrink:0}
 .tsp-select{
   flex:1;padding:5px 8px;border-radius:8px;
@@ -190,26 +218,32 @@ body{
 .tsp-close{
   align-self:flex-end;background:none;border:none;
   color:#7c3aed;font-size:13px;font-weight:600;cursor:pointer;
-  padding:4px 10px;border-radius:6px
+  padding:4px 10px;border-radius:6px;touch-action:manipulation
 }
 .tsp-close:hover{background:#ede9fe}
 
 .sel-box{
   position:absolute;pointer-events:none;z-index:20;
-  border:2px solid #2563eb;border-radius:3px
+  border:2px solid #2563eb;border-radius:3px;
+  box-sizing:border-box
 }
 .sel-handle{
-  position:absolute;width:18px;height:18px;
-  background:#fff;border:2px solid #2563eb;border-radius:4px;
+  position:absolute;width:20px;height:20px;
+  background:#fff;border:2.5px solid #2563eb;border-radius:5px;
   pointer-events:all;z-index:21;
-  transform:translate(-50%,-50%);touch-action:none
+  transform:translate(-50%,-50%);
+  touch-action:none;cursor:pointer
 }
 
 .float-textarea{
   position:absolute;z-index:50;
   resize:none;outline:none;border:none;overflow:hidden;
-  background:transparent;line-height:1.5;padding:6px 10px;border-radius:8px;
+  background:transparent;line-height:1.5;padding:6px 10px;
+  border-radius:8px;
+  /* 透明度を0.01にして視覚的に非表示だがフォーカスは受け取る */
   opacity:0.01;
+  touch-action:auto;user-select:text;
+  -webkit-user-select:text
 }
 
 .mode-badge{
@@ -221,10 +255,11 @@ body{
 
 .toast{
   position:fixed;bottom:20px;left:50%;
-  transform:translateX(-50%) translateY(70px);
+  transform:translateX(-50%) translateY(80px);
   padding:10px 24px;border-radius:20px;
   font-size:14px;font-weight:600;
-  transition:transform .3s ease;z-index:9999;pointer-events:none;white-space:nowrap
+  transition:transform .3s ease;z-index:9999;
+  pointer-events:none;white-space:nowrap
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{background:rgba(52,199,89,.95);color:#fff}
@@ -238,7 +273,8 @@ body{
 }
 .loading-overlay.hidden{display:none}
 .loading-spinner{
-  width:48px;height:48px;border:4px solid rgba(255,255,255,.2);
+  width:48px;height:48px;
+  border:4px solid rgba(255,255,255,.2);
   border-top-color:#a78bfa;border-radius:50%;
   animation:spin .8s linear infinite
 }
@@ -247,18 +283,18 @@ body{
 </head>
 <body>
 
-<!-- SETUP -->
-<div id="setupScreen" class="screen">
+<!-- ===== SETUP ===== -->
+<div id="setupScreen" class="screen hidden">
   <div class="setup-card">
     <h2>✦ FreePad 初期設定</h2>
     <p>設定完了後に表示される<strong style="color:#a78bfa">ブックマーク用URL</strong>をEdgeに登録してください。次回からは設定画面なしで直接起動します。</p>
     <div>
       <label><span class="step-badge">1</span>GitHubユーザー名</label>
-      <input class="setup-input" id="cfgOwner" placeholder="例: your-username" autocomplete="off" spellcheck="false">
+      <input class="setup-input" id="cfgOwner" placeholder="例: your-username" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none">
     </div>
     <div>
       <label><span class="step-badge">2</span>データ用リポジトリ名</label>
-      <input class="setup-input" id="cfgRepo" placeholder="例: freepad-data" autocomplete="off" spellcheck="false">
+      <input class="setup-input" id="cfgRepo" placeholder="例: freepad-data" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none">
     </div>
     <div>
       <label><span class="step-badge">3</span>Personal Access Token（Contents: Read &amp; Write）</label>
@@ -275,7 +311,7 @@ body{
   </div>
 </div>
 
-<!-- HOME -->
+<!-- ===== HOME ===== -->
 <div id="homeScreen" class="screen hidden">
   <div class="home-header">
     <h1>✦ FreePad</h1>
@@ -284,67 +320,113 @@ body{
         <div class="sync-dot" id="syncDot"></div>
         <span id="syncLabel">同期済み</span>
       </div>
-      <button class="btn-settings" onclick="showSetup()">⚙️</button>
+      <button class="btn-settings" onclick="showSetup()" title="設定">⚙️</button>
       <button class="btn-new" onclick="newBoard()">＋ 新しいボード</button>
     </div>
   </div>
   <div class="boards-grid" id="boardsGrid"></div>
 </div>
 
-<!-- EDITOR -->
+<!-- ===== EDITOR ===== -->
 <div id="editorScreen" class="screen hidden">
-  <div class="toolbar">
+  <div class="toolbar" id="toolbar">
     <button class="tb-back" onclick="goHome()">← 戻る</button>
     <input class="board-title-input" id="boardTitle" placeholder="ボード名">
     <div class="tb-sep"></div>
+
+    <!-- ツール -->
     <div class="tb-group">
+      <!-- ペン -->
       <button class="tb-btn active" id="toolPen" onclick="setTool('pen')" title="ペン(P)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9"/>
+          <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
       </button>
+      <!-- テキスト -->
       <button class="tb-btn" id="toolText" onclick="setTool('text')" title="テキスト(T)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="4 7 4 4 20 4 20 7"/>
+          <line x1="9" y1="20" x2="15" y2="20"/>
+          <line x1="12" y1="4" x2="12" y2="20"/>
+        </svg>
       </button>
+      <!-- 図形 -->
       <button class="tb-btn" id="toolShape" onclick="toggleShapePopup()" title="図形">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+        </svg>
       </button>
+      <!-- 選択 -->
       <button class="tb-btn" id="toolSelect" onclick="setTool('select')" title="選択(S)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-7 1-3 7z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 3l14 9-7 1-3 7z"/>
+        </svg>
       </button>
     </div>
+
     <div class="tb-sep"></div>
     <div class="tb-group color-dots" id="colorPicker"></div>
     <div class="tb-sep"></div>
     <input type="range" class="stroke-slider" id="strokeSize" min="1" max="30" value="4" title="線の太さ">
     <div class="tb-sep"></div>
+
     <div class="tb-group">
+      <!-- テキストスタイル -->
       <button class="tb-btn" id="btnTextStyle" onclick="toggleTextStylePanel()" title="テキストスタイル">🎨</button>
-      <!-- 選択オブジェクト削除ボタン -->
+
+      <!-- 選択オブジェクト削除（ゴミ箱） -->
       <button class="tb-btn danger" id="btnDeleteObj" onclick="deleteSelected()" title="選択を削除(Delete)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14H6L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+          <path d="M9 6V4h6v2"/>
+        </svg>
       </button>
+
+      <!-- Undo -->
       <button class="tb-btn" onclick="undo()" title="元に戻す(Ctrl+Z)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13C4.3 7.2 9.7 3 16 3a9 9 0 110 18 9.3 9.3 0 01-7.5-3.8"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 7v6h6"/>
+          <path d="M3 13C4.3 7.2 9.7 3 16 3a9 9 0 110 18 9.3 9.3 0 01-7.5-3.8"/>
+        </svg>
       </button>
+      <!-- Redo -->
       <button class="tb-btn" onclick="redo()" title="やり直し(Ctrl+Y)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M21 13c-1.3-5.8-6.7-10-13-10a9 9 0 100 18 9.3 9.3 0 007.5-3.8"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 7v6h-6"/>
+          <path d="M21 13c-1.3-5.8-6.7-10-13-10a9 9 0 100 18 9.3 9.3 0 007.5-3.8"/>
+        </svg>
       </button>
+      <!-- 保存 -->
       <button class="tb-btn" onclick="saveBoard(true)" title="保存(Ctrl+S)">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
       </button>
+      <!-- 全消去 -->
       <button class="tb-btn" onclick="clearBoard()" title="全消去">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l11-11 6 6-1.5 1.5"/><path d="M6 11l7 7"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 20H7L3 16l11-11 6 6-1.5 1.5"/>
+          <path d="M6 11l7 7"/>
+        </svg>
       </button>
     </div>
   </div>
 
+  <!-- 図形選択ポップアップ -->
   <div class="shape-popup hidden" id="shapePopup">
-    <div class="shape-opt" onclick="selectShape('rect')">▭</div>
-    <div class="shape-opt" onclick="selectShape('circle')">○</div>
-    <div class="shape-opt" onclick="selectShape('line')">╱</div>
-    <div class="shape-opt" onclick="selectShape('arrow')">→</div>
-    <div class="shape-opt" onclick="selectShape('triangle')">△</div>
+    <div class="shape-opt" onclick="selectShape('rect')" title="四角形">▭</div>
+    <div class="shape-opt" onclick="selectShape('circle')" title="楕円">○</div>
+    <div class="shape-opt" onclick="selectShape('line')" title="直線">╱</div>
+    <div class="shape-opt" onclick="selectShape('arrow')" title="矢印">→</div>
+    <div class="shape-opt" onclick="selectShape('triangle')" title="三角形">△</div>
   </div>
 
+  <!-- テキストスタイルパネル -->
   <div class="text-style-panel hidden" id="textStylePanel">
     <div class="tsp-row"><span class="tsp-label">文字色</span><div class="tsp-colors" id="tspTextColor"></div></div>
     <div class="tsp-row"><span class="tsp-label">枠の色</span><div class="tsp-colors" id="tspBorderColor"></div></div>
@@ -377,27 +459,35 @@ body{
     <button class="tsp-close" onclick="closeTextStylePanel()">✕ 閉じる</button>
   </div>
 
+  <!-- キャンバス領域 -->
   <div class="canvas-wrap" id="canvasWrap">
     <canvas id="mainCanvas"></canvas>
     <div class="mode-badge" id="modeBadge">ペン</div>
   </div>
 </div>
 
-<div class="loading-overlay hidden" id="loadingOverlay"><div class="loading-spinner"></div></div>
+<!-- ローディング -->
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+</div>
+<!-- トースト通知 -->
 <div class="toast" id="toast"></div>
 
 <script>
-/* =====================================================
-   FreePad v5
-   主な修正:
-   - SHA不一致エラー対策: PUT前に毎回最新SHAをGETで取得
-     + 409時はSHAを再取得してリトライ(最大3回)
-   - 消しゴム廃止 → 選択削除ボタン(ゴミ箱)に変更
-   - Unicode対応Base64 (TextEncoder/Decoder)
-   - IME/ハードウェアキーボード対応
-   ===================================================== */
+'use strict';
 
-// ===== Unicode対応 Base64 =====
+/* ==============================================
+   FreePad — 完全版
+   修正点:
+   ① 設定済み(URLハッシュあり)なら初期設定画面をスキップ
+   ② 選択削除ボタン(ゴミ箱)の確実な動作
+   ③ iPad Edgeでのダブルタップ検出改善
+   ④ GitHub API SHA不一致(409)エラー対策強化
+   ⑤ Unicode対応Base64 (TextEncoder/Decoder)
+   ⑥ IME/ハードウェアキーボード対応改善
+   ============================================== */
+
+// ─── Unicode対応 Base64 ───────────────────────
 function encodeBase64(str) {
   const bytes = new TextEncoder().encode(str);
   let bin = '';
@@ -405,71 +495,78 @@ function encodeBase64(str) {
   return btoa(bin);
 }
 function decodeBase64(b64) {
-  const bin = atob(b64.replace(/\n/g,''));
+  const bin = atob(b64.replace(/[\n\r]/g, ''));
   const bytes = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
   return new TextDecoder().decode(bytes);
 }
 
-// ===== URL HASH CONFIG =====
+// ─── URLハッシュ設定管理 ──────────────────────
 let cfg = {};
+
 function parseHash() {
-  const p = {};
-  location.hash.slice(1).split('&').forEach(pair => {
-    const [k,...v] = pair.split('=');
-    if (k) p[k] = decodeURIComponent(v.join('='));
+  const map = {};
+  const hash = location.hash.slice(1);
+  if (!hash) return map;
+  hash.split('&').forEach(pair => {
+    const idx = pair.indexOf('=');
+    if (idx < 0) return;
+    const k = pair.slice(0, idx);
+    const v = decodeURIComponent(pair.slice(idx + 1));
+    map[k] = v;
   });
-  return p;
+  return map;
 }
+
 function buildHashUrl(owner, repo, token) {
   const base = location.href.split('#')[0];
   return `${base}#owner=${encodeURIComponent(owner)}&repo=${encodeURIComponent(repo)}&token=${encodeURIComponent(token)}`;
 }
+
+// ハッシュからcfgをロード。揃っていればtrueを返す
 function loadConfig() {
   const p = parseHash();
-  if (p.owner && p.repo && p.token) { cfg = p; return true; }
+  if (p.owner && p.repo && p.token) {
+    cfg = p;
+    return true;
+  }
   return false;
 }
 
-// ===== GITHUB API =====
-const GH = 'https://api.github.com';
+// ─── GitHub API ───────────────────────────────
+const GH        = 'https://api.github.com';
 const DATA_PATH = 'data/boards.json';
-// ★ fileSHAはGET時に毎回更新。PUTの直前にも再取得する
-let fileSHA = null;
+let   fileSHA   = null;  // 最後にGETで取得したSHA
 
 function ghHeaders() {
   return {
-    'Authorization':      `Bearer ${cfg.token}`,
-    'Accept':             'application/vnd.github+json',
+    'Authorization':        `Bearer ${cfg.token}`,
+    'Accept':               'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28'
   };
 }
 
-// ★ GET: 常に最新SHAを返す
+// GETは毎回 cache:'no-store' で最新SHAを取得
 async function ghGetFile(path) {
-  const res = await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
-    headers: ghHeaders(),
-    // キャッシュを使わず必ず最新を取得
-    cache: 'no-store'
-  });
+  const res = await fetch(
+    `${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,
+    { headers: ghHeaders(), cache: 'no-store' }
+  );
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`GET ${res.status} ${res.statusText}`);
   return res.json();
 }
 
-// ★ PUT: 409時は最新SHAを再取得してリトライ(最大3回)
+// PUT: 409時は最新SHAを再取得してリトライ(最大3回)
 async function ghPutFile(path, contentObj, message) {
-  const jsonStr = JSON.stringify(contentObj, null, 2);
-  const b64 = encodeBase64(jsonStr);
+  const b64 = encodeBase64(JSON.stringify(contentObj, null, 2));
 
   for (let attempt = 1; attempt <= 3; attempt++) {
-    // 毎回PUTの直前にGETで最新SHAを取得する
+    // PUTの直前に毎回最新SHAを取得
     try {
-      const current = await ghGetFile(path);
-      fileSHA = current ? current.sha : null;
-    } catch(e) {
-      // GETが失敗しても1回は試みる
-    }
+      const cur = await ghGetFile(path);
+      fileSHA = cur ? cur.sha : null;
+    } catch (_) { /* GETが失敗しても1回試みる */ }
 
     const body = {
       message,
@@ -478,25 +575,26 @@ async function ghPutFile(path, contentObj, message) {
     };
     if (fileSHA) body.sha = fileSHA;
 
-    const res = await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`, {
-      method: 'PUT',
-      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+    const res = await fetch(
+      `${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,
+      {
+        method: 'PUT',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      }
+    );
 
     if (res.ok) {
       const data = await res.json();
-      // 成功したら新しいSHAを保持
-      fileSHA = data.content.sha;
+      fileSHA = data.content.sha;  // 次回PUT用にSHAを更新
       return data;
     }
 
     const errBody = await res.json().catch(() => ({}));
 
     if (res.status === 409) {
-      // SHAずれ → 少し待ってリトライ
-      console.warn(`FreePad: SHA mismatch (attempt ${attempt}), retrying...`);
-      await sleep(600 * attempt);
+      console.warn(`FreePad: SHA mismatch attempt=${attempt}, retrying...`);
+      await sleep(700 * attempt);
       continue;
     }
 
@@ -512,13 +610,14 @@ async function loadBoardsFromGitHub() {
   try {
     const file = await ghGetFile(DATA_PATH);
     if (!file) {
-      fileSHA = null; boards = [];
+      fileSHA = null;
+      boards  = [];
     } else {
       fileSHA = file.sha;
-      boards = JSON.parse(decodeBase64(file.content));
+      boards  = JSON.parse(decodeBase64(file.content));
     }
     setSyncStatus('ok', '同期済み');
-  } catch(e) {
+  } catch (e) {
     setSyncStatus('error', 'エラー');
     showToast('⚠️ 読み込み失敗: ' + e.message, 'error');
   }
@@ -530,33 +629,55 @@ async function saveBoardsToGitHub() {
     await ghPutFile(DATA_PATH, boards, `FreePad ${new Date().toISOString()}`);
     setSyncStatus('ok', '同期済み');
     return true;
-  } catch(e) {
+  } catch (e) {
     setSyncStatus('error', 'エラー');
     showToast('⚠️ ' + e.message, 'error');
     return false;
   }
 }
 
-// ===== STATE =====
-let boards = [], currentId = null;
-let tool = 'pen', selectedShape = 'rect';
-let currentColor = '#1c1c1e', strokeSize = 4;
+// ─── アプリ状態 ────────────────────────────────
+let boards      = [];
+let currentId   = null;
+let tool        = 'pen';
+let selectedShape = 'rect';
+let currentColor  = '#1c1c1e';
+let strokeSize    = 4;
+
 let canvas, ctx, wrap;
 let undoStack = [], redoStack = [];
 let scale = 1, panX = 0, panY = 0;
-let activePointers = {};
-let lastPinchDist = null, lastPanPos = null;
-let strokes = [], textItems = [];
-let isDrawing = false, currentStroke = null;
-let shapeStart = null, shapePreview = null;
-let selectedId = null, selectedType = null;
-let selBox = null, handles = [];
-let dragMode = null, dragStart = null, moveDragActive = false;
-let shiftDown = false;
-let lastTapTime = 0, lastTapPos = {x:0,y:0};
-let editingTextId = null, floatInput = null;
-let isComposing = false;
 
+let activePointers  = {};
+let lastPinchDist   = null;
+let lastPanPos      = null;
+
+let strokes         = [];
+let textItems       = [];
+let isDrawing       = false;
+let currentStroke   = null;
+let shapeStart      = null;
+let shapePreview    = null;
+
+let selectedId      = null;
+let selectedType    = null;
+let selBox          = null;
+let handles         = [];
+let dragMode        = null;
+let dragStart       = null;
+let moveDragActive  = false;
+let shiftDown       = false;
+
+// ダブルタップ検出用
+let lastTapTime = 0;
+let lastTapPos  = { x: 0, y: 0 };
+
+// テキスト編集用
+let editingTextId = null;
+let floatInput    = null;
+let isComposing   = false;
+
+// テキストスタイル初期値
 let tspTextColor   = '#1c1c1e';
 let tspBorderColor = '#7c3aed';
 let tspBgColor     = '#ffffff';
@@ -565,9 +686,12 @@ let tspBorderWidth = 2;
 let tspFontSize    = 18;
 let tspFontFamily  = '-apple-system,BlinkMacSystemFont,sans-serif';
 
+// 保存中フラグ（重複保存防止）
+let isSaving = false;
+
 const COLORS = ['#1c1c1e','#ff3b30','#ff9500','#ffcc00','#34c759','#007aff','#af52de','#ffffff'];
 
-// ===== INIT =====
+// ─── 初期化 ────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   canvas = document.getElementById('mainCanvas');
   ctx    = canvas.getContext('2d');
@@ -577,687 +701,1115 @@ document.addEventListener('DOMContentLoaded', async () => {
   buildTextStylePanel();
   setupCanvasEvents();
   setupKeyboard();
-  document.getElementById('strokeSize').addEventListener('input', e => strokeSize = +e.target.value);
 
-  updateDeleteBtn();
+  document.getElementById('strokeSize').addEventListener('input', e => {
+    strokeSize = +e.target.value;
+  });
 
-  if (!loadConfig()) {
-    show('setupScreen');
-  } else {
+  // ① 設定済みならセットアップ画面をスキップしてホームへ直行
+  if (loadConfig()) {
     show('homeScreen');
     showLoading(true);
     await loadBoardsFromGitHub();
     showLoading(false);
     renderHome();
+  } else {
+    show('setupScreen');
   }
 });
 
-// ===== SETUP =====
+// ─── セットアップ ──────────────────────────────
 let verifiedUrl = '';
+
 async function setupSave() {
   const owner = document.getElementById('cfgOwner').value.trim();
   const repo  = document.getElementById('cfgRepo').value.trim();
   const token = document.getElementById('cfgToken').value.trim();
   const errEl = document.getElementById('setupError');
   errEl.style.display = 'none';
-  if (!owner||!repo||!token) { errEl.textContent='すべての項目を入力してください'; errEl.style.display='block'; return; }
+
+  if (!owner || !repo || !token) {
+    errEl.textContent = 'すべての項目を入力してください';
+    errEl.style.display = 'block';
+    return;
+  }
+
   showLoading(true);
   try {
     const r = await fetch(`${GH}/repos/${owner}/${repo}`, {
-      headers: {'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'}
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json'
+      }
     });
-    if (!r.ok) throw new Error('リポジトリにアクセスできません。');
+    if (!r.ok) throw new Error('リポジトリにアクセスできません。ユーザー名・リポジトリ名・トークンを確認してください。');
+
     verifiedUrl = buildHashUrl(owner, repo, token);
-    document.getElementById('urlText').textContent = verifiedUrl;
-    document.getElementById('urlBox').style.display  = 'block';
-    document.getElementById('btnCopy').style.display = 'inline-block';
-    document.getElementById('btnGo').style.display   = 'block';
-  } catch(e) { errEl.textContent=e.message; errEl.style.display='block'; }
-  finally { showLoading(false); }
+    document.getElementById('urlText').textContent    = verifiedUrl;
+    document.getElementById('urlBox').style.display   = 'block';
+    document.getElementById('btnCopy').style.display  = 'inline-block';
+    document.getElementById('btnGo').style.display    = 'block';
+  } catch (e) {
+    errEl.textContent    = e.message;
+    errEl.style.display  = 'block';
+  } finally {
+    showLoading(false);
+  }
 }
+
 function copyUrl() {
   if (!verifiedUrl) return;
   navigator.clipboard.writeText(verifiedUrl)
-    .then(()=>showToast('📋 コピーしました','success'))
-    .catch(()=>{
-      const ta=document.createElement('textarea'); ta.value=verifiedUrl;
-      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
-      showToast('📋 コピーしました','success');
+    .then(() => showToast('📋 コピーしました', 'success'))
+    .catch(() => {
+      // clipboardが使えない場合のフォールバック
+      const ta = document.createElement('textarea');
+      ta.value = verifiedUrl;
+      ta.style.position = 'fixed';
+      ta.style.opacity  = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      ta.remove();
+      showToast('📋 コピーしました', 'success');
     });
 }
-function goToApp() { location.href = verifiedUrl; }
-function showSetup() {
-  document.getElementById('cfgOwner').value=cfg.owner||'';
-  document.getElementById('cfgRepo').value=cfg.repo||'';
-  document.getElementById('cfgToken').value=cfg.token||'';
-  ['urlBox','btnCopy','setupError'].forEach(id=>document.getElementById(id).style.display='none');
-  document.getElementById('btnGo').style.display='none';
-  hide('homeScreen'); show('setupScreen');
+
+function goToApp() {
+  location.href = verifiedUrl;
 }
 
-// ===== HOME =====
+function showSetup() {
+  document.getElementById('cfgOwner').value = cfg.owner || '';
+  document.getElementById('cfgRepo').value  = cfg.repo  || '';
+  document.getElementById('cfgToken').value = cfg.token || '';
+  ['urlBox', 'btnCopy', 'setupError'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  document.getElementById('btnGo').style.display = 'none';
+  hide('homeScreen');
+  show('setupScreen');
+}
+
+// ─── ホーム画面 ────────────────────────────────
 function renderHome() {
   const grid = document.getElementById('boardsGrid');
   grid.innerHTML = '';
+
   if (!boards.length) {
-    grid.innerHTML='<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>';
+    grid.innerHTML = `
+      <div class="empty-state">
+        <p style="font-size:48px;margin-bottom:12px">📋</p>
+        <p>「新しいボード」から始めましょう</p>
+      </div>`;
     return;
   }
+
   boards.slice().reverse().forEach(b => {
-    const card=document.createElement('div'); card.className='board-card';
-    const thumb=document.createElement('canvas'); thumb.className='board-thumb'; thumb.width=360; thumb.height=270;
+    const card  = document.createElement('div');
+    card.className = 'board-card';
+
+    // サムネイル
+    const thumb = document.createElement('canvas');
+    thumb.className = 'board-thumb';
+    thumb.width  = 360;
+    thumb.height = 270;
     if (b.thumb) {
-      const img=new Image();
-      img.onload=()=>{const c=thumb.getContext('2d');c.drawImage(img,0,0,360,270);};
-      img.src=b.thumb;
-    } else { const c=thumb.getContext('2d');c.fillStyle='#f5f4ef';c.fillRect(0,0,360,270); }
-    const info=document.createElement('div'); info.className='board-info';
-    info.innerHTML=`<div class="board-name">${esc(b.name)}</div><div class="board-date">${fmtDate(b.date)}</div>`;
-    const del=document.createElement('button'); del.className='board-del'; del.innerHTML='✕';
-    del.onclick=e=>{e.stopPropagation();deleteBoard(b.id);};
-    card.appendChild(thumb); card.appendChild(info); card.appendChild(del);
-    card.onclick=()=>openBoard(b.id);
+      const img  = new Image();
+      img.onload = () => {
+        const c = thumb.getContext('2d');
+        c.drawImage(img, 0, 0, 360, 270);
+      };
+      img.src = b.thumb;
+    } else {
+      const c = thumb.getContext('2d');
+      c.fillStyle = '#f5f4ef';
+      c.fillRect(0, 0, 360, 270);
+    }
+
+    // 情報
+    const info = document.createElement('div');
+    info.className  = 'board-info';
+    info.innerHTML  = `
+      <div class="board-name">${esc(b.name)}</div>
+      <div class="board-date">${fmtDate(b.date)}</div>`;
+
+    // 削除ボタン
+    const del = document.createElement('button');
+    del.className   = 'board-del';
+    del.textContent = '✕';
+    del.title       = '削除';
+    del.onclick = e => { e.stopPropagation(); deleteBoard(b.id); };
+
+    card.appendChild(thumb);
+    card.appendChild(info);
+    card.appendChild(del);
+    card.onclick = () => openBoard(b.id);
     grid.appendChild(card);
   });
 }
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function fmtDate(iso){if(!iso)return'';const d=new Date(iso);return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;}
+
+function esc(s) {
+  return (s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
 
 async function newBoard() {
-  const id='board_'+Date.now();
-  boards.push({id,name:'新しいボード',date:new Date().toISOString(),strokes:[],texts:[],thumb:null});
-  showLoading(true); await saveBoardsToGitHub(); showLoading(false);
+  const id = 'board_' + Date.now();
+  boards.push({
+    id, name: '新しいボード',
+    date: new Date().toISOString(),
+    strokes: [], texts: [], thumb: null
+  });
+  showLoading(true);
+  await saveBoardsToGitHub();
+  showLoading(false);
   openBoard(id);
 }
+
 function openBoard(id) {
-  currentId=id;
-  const b=boards.find(x=>x.id===id);
-  document.getElementById('boardTitle').value=b.name;
-  strokes=JSON.parse(JSON.stringify(b.strokes||[]));
-  textItems=JSON.parse(JSON.stringify(b.texts||[]));
-  undoStack=[]; redoStack=[];
-  scale=1; panX=0; panY=0;
-  clearSelection(); closeTextEdit();
-  hide('homeScreen'); show('editorScreen');
-  requestAnimationFrame(()=>{resizeCanvas();redraw();});
-}
-async function goHome() {
-  clearSelection(); closeTextEdit();
-  await saveBoard(false);
-  hide('editorScreen'); show('homeScreen'); renderHome();
-}
-async function deleteBoard(id) {
-  if(!confirm('削除しますか?'))return;
-  boards=boards.filter(b=>b.id!==id);
-  showLoading(true); await saveBoardsToGitHub(); showLoading(false); renderHome();
-}
-function clearBoard() {
-  if(!confirm('全オブジェクトを削除しますか?'))return;
-  pushUndo(); strokes=[]; textItems=[]; clearSelection(); closeTextEdit(); redraw();
+  currentId = id;
+  const b = boards.find(x => x.id === id);
+  if (!b) return;
+  document.getElementById('boardTitle').value = b.name;
+  strokes   = JSON.parse(JSON.stringify(b.strokes || []));
+  textItems = JSON.parse(JSON.stringify(b.texts   || []));
+  undoStack = []; redoStack = [];
+  scale = 1; panX = 0; panY = 0;
+  clearSelection();
+  closeTextEdit();
+  hide('homeScreen');
+  show('editorScreen');
+  setTool('pen');
+  requestAnimationFrame(() => { resizeCanvas(); redraw(); });
 }
 
-// ===== 選択オブジェクト削除 =====
-function deleteSelected() {
-  if (!selectedId) return;
-  pushUndo();
-  if (selectedType==='text')   textItems=textItems.filter(t=>t.id!==selectedId);
-  if (selectedType==='stroke') strokes=strokes.filter(s=>s.id!==selectedId);
-  clearSelection(); redraw();
-  updateDeleteBtn();
+async function goHome() {
+  clearSelection();
+  closeTextEdit();
+  await saveBoard(false);
+  hide('editorScreen');
+  show('homeScreen');
+  renderHome();
 }
+
+async function deleteBoard(id) {
+  if (!confirm('このボードを削除しますか？')) return;
+  boards = boards.filter(b => b.id !== id);
+  showLoading(true);
+  await saveBoardsToGitHub();
+  showLoading(false);
+  renderHome();
+}
+
+function clearBoard() {
+  if (!confirm('ボード上の全オブジェクトを削除しますか？')) return;
+  pushUndo();
+  strokes   = [];
+  textItems = [];
+  clearSelection();
+  closeTextEdit();
+  redraw();
+}
+
+// ─── ② 選択オブジェクト削除 ───────────────────
+function deleteSelected() {
+  if (!selectedId) {
+    showToast('オブジェクトを選択してください', 'info');
+    return;
+  }
+  pushUndo();
+  if (selectedType === 'text')   textItems = textItems.filter(t => t.id !== selectedId);
+  if (selectedType === 'stroke') strokes   = strokes.filter(s => s.id !== selectedId);
+  clearSelection();
+  redraw();
+  updateDeleteBtn();
+  showToast('🗑️ 削除しました', 'info');
+}
+
+// ゴミ箱ボタンの状態更新（選択中は赤くする）
 function updateDeleteBtn() {
-  const btn=document.getElementById('btnDeleteObj');
+  const btn = document.getElementById('btnDeleteObj');
   if (!btn) return;
   if (selectedId) btn.classList.add('has-selection');
   else            btn.classList.remove('has-selection');
 }
 
-// ===== SAVE =====
-// 保存中フラグ（重複保存防止）
-let isSaving = false;
-
+// ─── 保存 ──────────────────────────────────────
 async function saveBoard(showMsg) {
-  if (isSaving) return; // 前の保存が終わるまで待つ
+  if (isSaving) {
+    if (showMsg) showToast('⏳ 保存中です。しばらくお待ちください。', 'info');
+    return;
+  }
   isSaving = true;
-  const b=boards.find(x=>x.id===currentId); if(!b){isSaving=false;return;}
-  b.name=document.getElementById('boardTitle').value||'無題';
-  b.date=new Date().toISOString();
-  b.strokes=JSON.parse(JSON.stringify(strokes));
-  b.texts=JSON.parse(JSON.stringify(textItems));
-  b.thumb=canvas.toDataURL('image/jpeg',.4);
-  if(showMsg)showLoading(true);
-  const ok=await saveBoardsToGitHub();
-  if(showMsg){showLoading(false);if(ok)showToast('💾 GitHubに保存しました','success');}
+  const b = boards.find(x => x.id === currentId);
+  if (!b) { isSaving = false; return; }
+
+  b.name    = document.getElementById('boardTitle').value || '無題';
+  b.date    = new Date().toISOString();
+  b.strokes = JSON.parse(JSON.stringify(strokes));
+  b.texts   = JSON.parse(JSON.stringify(textItems));
+  b.thumb   = canvas.toDataURL('image/jpeg', 0.4);
+
+  if (showMsg) showLoading(true);
+  const ok = await saveBoardsToGitHub();
+  if (showMsg) {
+    showLoading(false);
+    if (ok) showToast('💾 保存しました', 'success');
+  }
   isSaving = false;
 }
 
-// 自動保存（90秒ごと、保存中でなければ実行）
-setInterval(()=>{
-  if(!document.getElementById('editorScreen').classList.contains('hidden')) saveBoard(false);
-},90000);
+// 90秒ごとの自動保存
+setInterval(() => {
+  if (!document.getElementById('editorScreen').classList.contains('hidden')) {
+    saveBoard(false);
+  }
+}, 90000);
 
-// ===== CANVAS =====
+// ─── Canvas ────────────────────────────────────
 function resizeCanvas() {
-  const rect=wrap.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
-  canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
-  canvas.style.width=rect.width+'px'; canvas.style.height=rect.height+'px';
-  ctx.scale(dpr,dpr); redraw();
+  const rect = wrap.getBoundingClientRect();
+  const dpr  = window.devicePixelRatio || 1;
+  canvas.width        = rect.width  * dpr;
+  canvas.height       = rect.height * dpr;
+  canvas.style.width  = rect.width  + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.scale(dpr, dpr);
+  redraw();
 }
-window.addEventListener('resize',()=>{resizeCanvas();updateSelBox();});
+window.addEventListener('resize', () => { resizeCanvas(); updateSelBox(); });
 
 function redraw() {
-  if(!ctx)return;
-  const w=canvas.width/(window.devicePixelRatio||1), h=canvas.height/(window.devicePixelRatio||1);
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle='#f5f4ef'; ctx.fillRect(0,0,w,h);
-  drawGrid(w,h);
-  ctx.save(); ctx.translate(panX,panY); ctx.scale(scale,scale);
-  textItems.forEach(t=>drawTextItem(t));
-  strokes.forEach(s=>drawStroke(s));
-  if(currentStroke) drawStroke(currentStroke);
-  if(shapePreview)  drawShapePreview();
+  if (!ctx) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W   = canvas.width  / dpr;
+  const H   = canvas.height / dpr;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f5f4ef';
+  ctx.fillRect(0, 0, W, H);
+  drawGrid(W, H);
+  ctx.save();
+  ctx.translate(panX, panY);
+  ctx.scale(scale, scale);
+  textItems.forEach(t => drawTextItem(t));
+  strokes.forEach(s => drawStroke(s));
+  if (currentStroke) drawStroke(currentStroke);
+  if (shapePreview)  drawShapePreview();
   ctx.restore();
 }
 
-function drawGrid(w,h){
-  const sp=24*scale, ox=panX%sp, oy=panY%sp;
-  ctx.fillStyle='rgba(0,0,0,.06)';
-  for(let x=ox;x<w;x+=sp) for(let y=oy;y<h;y+=sp){ctx.beginPath();ctx.arc(x,y,1.2,0,Math.PI*2);ctx.fill();}
+function drawGrid(W, H) {
+  const sp = 24 * scale;
+  const ox = ((panX % sp) + sp) % sp;
+  const oy = ((panY % sp) + sp) % sp;
+  ctx.fillStyle = 'rgba(0,0,0,.06)';
+  for (let x = ox; x < W; x += sp)
+    for (let y = oy; y < H; y += sp) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
 }
 
-function drawTextItem(t){
-  const x=t.x,y=t.y,w=t.w||200,h=t.h||80;
-  const rgb=hexToRgb(t.bgColor||'#ffffff'), alpha=(t.bgOpacity??90)/100;
-  ctx.fillStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
-  ctx.beginPath(); roundRect(ctx,x,y,w,h,8); ctx.fill();
-  const bw=t.borderWidth??2;
-  if(bw>0&&t.borderColor!=='transparent'){
-    ctx.strokeStyle=t.borderColor||'#7c3aed'; ctx.lineWidth=bw;
-    ctx.beginPath(); roundRect(ctx,x,y,w,h,8); ctx.stroke();
+function drawTextItem(t) {
+  const x = t.x, y = t.y, w = t.w || 200, h = t.h || 80;
+  const rgb   = hexToRgb(t.bgColor || '#ffffff');
+  const alpha = (t.bgOpacity ?? 90) / 100;
+  ctx.fillStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
+  ctx.beginPath(); roundRect(ctx, x, y, w, h, 8); ctx.fill();
+  const bw = t.borderWidth ?? 2;
+  if (bw > 0 && t.borderColor && t.borderColor !== 'transparent') {
+    ctx.strokeStyle = t.borderColor;
+    ctx.lineWidth   = bw;
+    ctx.beginPath(); roundRect(ctx, x, y, w, h, 8); ctx.stroke();
   }
-  const ff=t.fontFamily||'-apple-system,BlinkMacSystemFont,sans-serif', fs=t.fontSize||18;
-  ctx.fillStyle=t.textColor||'#1c1c1e';
-  ctx.font=`${fs}px ${ff}`; ctx.textBaseline='top';
-  wrapText(ctx,t.text||'',x+10,y+8,w-20,fs*1.5);
+  const ff = t.fontFamily || '-apple-system,BlinkMacSystemFont,sans-serif';
+  const fs = t.fontSize   || 18;
+  ctx.fillStyle    = t.textColor || '#1c1c1e';
+  ctx.font         = `${fs}px ${ff}`;
+  ctx.textBaseline = 'top';
+  wrapText(ctx, t.text || '', x + 10, y + 8, w - 20, fs * 1.5);
 }
 
-function wrapText(ctx,text,x,y,maxW,lineH){
-  text.split('\n').forEach(line=>{
-    const words=line.split(' '); let cur='';
-    words.forEach(word=>{
-      const test=cur?cur+' '+word:word;
-      if(ctx.measureText(test).width>maxW&&cur){ctx.fillText(cur,x,y);cur=word;y+=lineH;}
-      else cur=test;
+function wrapText(ctx, text, x, y, maxW, lineH) {
+  text.split('\n').forEach(line => {
+    const words = line.split(' ');
+    let cur = '';
+    words.forEach(word => {
+      const test = cur ? cur + ' ' + word : word;
+      if (ctx.measureText(test).width > maxW && cur) {
+        ctx.fillText(cur, x, y); cur = word; y += lineH;
+      } else { cur = test; }
     });
-    ctx.fillText(cur,x,y); y+=lineH;
+    ctx.fillText(cur, x, y); y += lineH;
   });
 }
 
-function roundRect(ctx,x,y,w,h,r){
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
-  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);      ctx.arcTo(x + w, y,   x + w, y + r,   r);
+  ctx.lineTo(x + w, y + h - r);  ctx.arcTo(x + w, y+h, x+w-r, y + h,   r);
+  ctx.lineTo(x + r, y + h);      ctx.arcTo(x,     y+h, x,     y+h-r,   r);
+  ctx.lineTo(x,     y + r);      ctx.arcTo(x,     y,   x + r, y,        r);
+  ctx.closePath();
 }
 
-function drawStroke(s){
-  if(!s.points||s.points.length<2)return;
-  ctx.globalCompositeOperation='source-over';
-  ctx.strokeStyle=s.color||'#1c1c1e';
-  ctx.lineWidth=s.size||4; ctx.lineCap='round'; ctx.lineJoin='round';
-  if(s.shape&&s.shape!=='pen'){drawShape(s);return;}
-  ctx.beginPath(); ctx.moveTo(s.points[0].x,s.points[0].y);
-  for(let i=1;i<s.points.length;i++){
-    const p0=s.points[i-1],p1=s.points[i];
-    ctx.quadraticCurveTo(p0.x,p0.y,(p0.x+p1.x)/2,(p0.y+p1.y)/2);
+function drawStroke(s) {
+  if (!s.points || s.points.length < 2) return;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.strokeStyle = s.color || '#1c1c1e';
+  ctx.lineWidth   = s.size  || 4;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+  if (s.shape && s.shape !== 'pen') { drawShape(s); return; }
+  ctx.beginPath();
+  ctx.moveTo(s.points[0].x, s.points[0].y);
+  for (let i = 1; i < s.points.length; i++) {
+    const p0 = s.points[i - 1], p1 = s.points[i];
+    ctx.quadraticCurveTo(p0.x, p0.y, (p0.x+p1.x)/2, (p0.y+p1.y)/2);
   }
   ctx.stroke();
 }
 
-function drawShape(s){
-  const pts=s.points,x1=pts[0].x,y1=pts[0].y,x2=pts[pts.length-1].x,y2=pts[pts.length-1].y;
-  ctx.globalCompositeOperation='source-over';
-  ctx.strokeStyle=s.color; ctx.lineWidth=s.size; ctx.lineCap='round';
-  switch(s.shape){
-    case 'rect':     ctx.strokeRect(x1,y1,x2-x1,y2-y1);break;
-    case 'circle':{const rx=(x2-x1)/2,ry=(y2-y1)/2;ctx.beginPath();ctx.ellipse(x1+rx,y1+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2);ctx.stroke();break;}
-    case 'line':     ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();break;
-    case 'arrow':    drawArrow(x1,y1,x2,y2,s.size);break;
-    case 'triangle': ctx.beginPath();ctx.moveTo((x1+x2)/2,y1);ctx.lineTo(x2,y2);ctx.lineTo(x1,y2);ctx.closePath();ctx.stroke();break;
+function drawShape(s) {
+  const pts = s.points;
+  const x1 = pts[0].x, y1 = pts[0].y;
+  const x2 = pts[pts.length-1].x, y2 = pts[pts.length-1].y;
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.strokeStyle = s.color; ctx.lineWidth = s.size; ctx.lineCap = 'round';
+  switch (s.shape) {
+    case 'rect':
+      ctx.strokeRect(x1, y1, x2-x1, y2-y1); break;
+    case 'circle': {
+      const rx = (x2-x1)/2, ry = (y2-y1)/2;
+      ctx.beginPath();
+      ctx.ellipse(x1+rx, y1+ry, Math.abs(rx), Math.abs(ry), 0, 0, Math.PI*2);
+      ctx.stroke(); break;
+    }
+    case 'line':
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); break;
+    case 'arrow':
+      drawArrow(x1, y1, x2, y2, s.size); break;
+    case 'triangle':
+      ctx.beginPath();
+      ctx.moveTo((x1+x2)/2, y1); ctx.lineTo(x2, y2); ctx.lineTo(x1, y2);
+      ctx.closePath(); ctx.stroke(); break;
   }
 }
-function drawArrow(x1,y1,x2,y2,lw){
-  const angle=Math.atan2(y2-y1,x2-x1),hl=Math.max(lw*4,16);
-  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(x2,y2);
-  ctx.lineTo(x2-hl*Math.cos(angle-Math.PI/7),y2-hl*Math.sin(angle-Math.PI/7));
-  ctx.lineTo(x2-hl*Math.cos(angle+Math.PI/7),y2-hl*Math.sin(angle+Math.PI/7));
-  ctx.closePath();ctx.fillStyle=ctx.strokeStyle;ctx.fill();
+function drawArrow(x1, y1, x2, y2, lw) {
+  const angle = Math.atan2(y2-y1, x2-x1);
+  const hl    = Math.max(lw * 4, 16);
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - hl*Math.cos(angle - Math.PI/7), y2 - hl*Math.sin(angle - Math.PI/7));
+  ctx.lineTo(x2 - hl*Math.cos(angle + Math.PI/7), y2 - hl*Math.sin(angle + Math.PI/7));
+  ctx.closePath();
+  ctx.fillStyle = ctx.strokeStyle; ctx.fill();
 }
-function drawShapePreview(){
-  ctx.setLineDash([6,4]);
-  drawShape({color:currentColor,size:strokeSize/scale,shape:selectedShape,
-    points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]});
+function drawShapePreview() {
+  ctx.setLineDash([6, 4]);
+  drawShape({
+    color: currentColor, size: strokeSize / scale, shape: selectedShape,
+    points: [{ x: shapePreview.x1, y: shapePreview.y1 },
+             { x: shapePreview.x2, y: shapePreview.y2 }]
+  });
   ctx.setLineDash([]);
 }
 
-// ===== SELECTION =====
-function clearSelection(){
-  selectedId=null;selectedType=null;dragMode=null;moveDragActive=false;
-  if(selBox){selBox.remove();selBox=null;}
-  handles.forEach(h=>h.remove());handles=[];
+// ─── 選択ボックス ──────────────────────────────
+function clearSelection() {
+  selectedId = null; selectedType = null;
+  dragMode = null;   moveDragActive = false;
+  if (selBox) { selBox.remove(); selBox = null; }
+  handles.forEach(h => h.remove());
+  handles = [];
   updateDeleteBtn();
 }
-function getObjectBounds(id,type){
-  if(type==='text'){const t=textItems.find(x=>x.id===id);if(!t)return null;return{x:t.x,y:t.y,w:t.w||200,h:t.h||80};}
-  if(type==='stroke'){
-    const s=strokes.find(x=>x.id===id);if(!s||!s.points.length)return null;
-    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
-    s.points.forEach(p=>{minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);});
-    const pad=(s.size||4)/2;
-    return{x:minX-pad,y:minY-pad,w:maxX-minX+pad*2,h:maxY-minY+pad*2};
+
+function getObjectBounds(id, type) {
+  if (type === 'text') {
+    const t = textItems.find(x => x.id === id);
+    if (!t) return null;
+    return { x: t.x, y: t.y, w: t.w || 200, h: t.h || 80 };
+  }
+  if (type === 'stroke') {
+    const s = strokes.find(x => x.id === id);
+    if (!s || !s.points || !s.points.length) return null;
+    let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+    s.points.forEach(p => {
+      minX = Math.min(minX, p.x); minY = Math.min(minY, p.y);
+      maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y);
+    });
+    const pad = (s.size || 4) / 2;
+    return { x: minX-pad, y: minY-pad, w: maxX-minX+pad*2, h: maxY-minY+pad*2 };
   }
   return null;
 }
-function showSelBox(id,type){
-  clearSelection(); selectedId=id; selectedType=type;
-  selBox=document.createElement('div');selBox.className='sel-box';wrap.appendChild(selBox);
-  ['nw','ne','se','sw'].forEach(pos=>{
-    const h=document.createElement('div');h.className='sel-handle';h.dataset.pos=pos;
-    h.style.cursor={nw:'nw-resize',ne:'ne-resize',se:'se-resize',sw:'sw-resize'}[pos];
-    wrap.appendChild(h);handles.push(h);
-    h.addEventListener('pointerdown',onHandleDown,{passive:false});
+
+function showSelBox(id, type) {
+  clearSelection();
+  selectedId   = id;
+  selectedType = type;
+
+  selBox = document.createElement('div');
+  selBox.className = 'sel-box';
+  wrap.appendChild(selBox);
+
+  ['nw','ne','se','sw'].forEach(pos => {
+    const h = document.createElement('div');
+    h.className  = 'sel-handle';
+    h.dataset.pos = pos;
+    h.style.cursor = { nw:'nw-resize', ne:'ne-resize', se:'se-resize', sw:'sw-resize' }[pos];
+    wrap.appendChild(h);
+    handles.push(h);
+    h.addEventListener('pointerdown', onHandleDown, { passive: false });
   });
-  updateSelBox(); updateDeleteBtn();
+
+  updateSelBox();
+  updateDeleteBtn();
 }
-function updateSelBox(){
-  if(!selectedId)return;
-  const b=getObjectBounds(selectedId,selectedType);if(!b)return;
-  const sx=b.x*scale+panX,sy=b.y*scale+panY,sw=b.w*scale,sh=b.h*scale;
-  selBox.style.cssText+=`;left:${sx}px;top:${sy}px;width:${sw}px;height:${sh}px`;
-  const pos={nw:{x:sx,y:sy},ne:{x:sx+sw,y:sy},se:{x:sx+sw,y:sy+sh},sw:{x:sx,y:sy+sh}};
-  handles.forEach(h=>{const p=pos[h.dataset.pos];if(p){h.style.left=p.x+'px';h.style.top=p.y+'px';}});
+
+function updateSelBox() {
+  if (!selectedId || !selBox) return;
+  const b = getObjectBounds(selectedId, selectedType);
+  if (!b) return;
+  const sx = b.x * scale + panX;
+  const sy = b.y * scale + panY;
+  const sw = b.w * scale;
+  const sh = b.h * scale;
+  selBox.style.left   = sx + 'px';
+  selBox.style.top    = sy + 'px';
+  selBox.style.width  = sw + 'px';
+  selBox.style.height = sh + 'px';
+  const pos = {
+    nw: { x: sx,    y: sy    },
+    ne: { x: sx+sw, y: sy    },
+    se: { x: sx+sw, y: sy+sh },
+    sw: { x: sx,    y: sy+sh }
+  };
+  handles.forEach(h => {
+    const p = pos[h.dataset.pos];
+    if (p) { h.style.left = p.x + 'px'; h.style.top = p.y + 'px'; }
+  });
 }
-function onHandleDown(e){
-  e.preventDefault();e.stopPropagation();
-  dragMode='resize-'+e.currentTarget.dataset.pos;
-  const b=getObjectBounds(selectedId,selectedType);
-  dragStart={px:e.clientX,py:e.clientY,ox:b.x,oy:b.y,ow:b.w,oh:b.h,aspect:b.w/b.h};
+
+function onHandleDown(e) {
+  e.preventDefault(); e.stopPropagation();
+  dragMode = 'resize-' + e.currentTarget.dataset.pos;
+  const b  = getObjectBounds(selectedId, selectedType);
+  dragStart = {
+    px: e.clientX, py: e.clientY,
+    ox: b.x, oy: b.y, ow: b.w, oh: b.h,
+    aspect: b.w / (b.h || 1)
+  };
   e.currentTarget.setPointerCapture(e.pointerId);
-  e.currentTarget.addEventListener('pointermove',onHandleMove,{passive:false});
-  e.currentTarget.addEventListener('pointerup',onHandleUp,{passive:false});
+  e.currentTarget.addEventListener('pointermove', onHandleMove, { passive: false });
+  e.currentTarget.addEventListener('pointerup',   onHandleUp,   { passive: false });
 }
-function onHandleMove(e){
+function onHandleMove(e) {
   e.preventDefault();
-  const dx=(e.clientX-dragStart.px)/scale,dy=(e.clientY-dragStart.py)/scale;
-  const pos=dragMode.replace('resize-','');
-  let{ox,oy,ow,oh,aspect}=dragStart,nx=ox,ny=oy,nw=ow,nh=oh;
-  if(pos==='se'){nw=Math.max(40,ow+dx);nh=Math.max(20,oh+dy);}
-  else if(pos==='sw'){nx=ox+dx;nw=Math.max(40,ow-dx);nh=Math.max(20,oh+dy);}
-  else if(pos==='ne'){nw=Math.max(40,ow+dx);ny=oy+dy;nh=Math.max(20,oh-dy);}
-  else if(pos==='nw'){nx=ox+dx;ny=oy+dy;nw=Math.max(40,ow-dx);nh=Math.max(20,oh-dy);}
-  if(shiftDown){nh=nw/aspect;if(pos==='ne'||pos==='nw')ny=oy+(oh-nh);}
-  applyBounds(nx,ny,nw,nh);updateSelBox();redraw();
+  if (!dragStart) return;
+  const dx = (e.clientX - dragStart.px) / scale;
+  const dy = (e.clientY - dragStart.py) / scale;
+  const pos = dragMode.replace('resize-', '');
+  let { ox, oy, ow, oh, aspect } = dragStart;
+  let nx=ox, ny=oy, nw=ow, nh=oh;
+  if (pos==='se') { nw=Math.max(40,ow+dx); nh=Math.max(20,oh+dy); }
+  else if (pos==='sw') { nx=ox+dx; nw=Math.max(40,ow-dx); nh=Math.max(20,oh+dy); }
+  else if (pos==='ne') { nw=Math.max(40,ow+dx); ny=oy+dy; nh=Math.max(20,oh-dy); }
+  else if (pos==='nw') { nx=ox+dx; ny=oy+dy; nw=Math.max(40,ow-dx); nh=Math.max(20,oh-dy); }
+  if (shiftDown) { nh = nw / aspect; if (pos==='ne'||pos==='nw') ny = oy + (oh - nh); }
+  applyBounds(nx, ny, nw, nh);
+  updateSelBox(); redraw();
 }
-function onHandleUp(e){
-  e.currentTarget.removeEventListener('pointermove',onHandleMove);
-  e.currentTarget.removeEventListener('pointerup',onHandleUp);
-  dragMode=null;
+function onHandleUp(e) {
+  e.currentTarget.removeEventListener('pointermove', onHandleMove);
+  e.currentTarget.removeEventListener('pointerup',   onHandleUp);
+  dragMode = null;
 }
-function applyBounds(x,y,w,h){
-  if(selectedType==='text'){
-    const t=textItems.find(t=>t.id===selectedId);if(!t)return;
-    t.x=x;t.y=y;t.w=w;t.h=h;
-    if(floatInput&&editingTextId===selectedId)posFloatInput(t);
-  }else if(selectedType==='stroke'){
-    const s=strokes.find(s=>s.id===selectedId);if(!s)return;
-    const b0=getObjectBounds(selectedId,'stroke');
-    const sx=w/b0.w,sy=h/b0.h;
-    s.points=s.points.map(p=>({x:x+(p.x-b0.x)*sx,y:y+(p.y-b0.y)*sy}));
+function applyBounds(x, y, w, h) {
+  if (selectedType === 'text') {
+    const t = textItems.find(t => t.id === selectedId);
+    if (!t) return;
+    t.x = x; t.y = y; t.w = w; t.h = h;
+    if (floatInput && editingTextId === selectedId) posFloatInput(t);
+  } else if (selectedType === 'stroke') {
+    const s  = strokes.find(s => s.id === selectedId);
+    if (!s) return;
+    const b0 = getObjectBounds(selectedId, 'stroke');
+    const sx = w / (b0.w || 1), sy = h / (b0.h || 1);
+    s.points = s.points.map(p => ({
+      x: x + (p.x - b0.x) * sx,
+      y: y + (p.y - b0.y) * sy
+    }));
   }
 }
 
-// ===== HIT TEST =====
-function hitTest(cx,cy){
-  for(let i=textItems.length-1;i>=0;i--){
-    const t=textItems[i],w=t.w||200,h=t.h||80;
-    if(cx>=t.x&&cx<=t.x+w&&cy>=t.y&&cy<=t.y+h)return{id:t.id,type:'text'};
+// ─── ヒットテスト ──────────────────────────────
+function hitTest(cx, cy) {
+  // テキストを優先（上に描かれているため後から追加されたものを先にチェック）
+  for (let i = textItems.length - 1; i >= 0; i--) {
+    const t = textItems[i];
+    if (cx >= t.x && cx <= t.x + (t.w||200) &&
+        cy >= t.y && cy <= t.y + (t.h||80))
+      return { id: t.id, type: 'text' };
   }
-  for(let i=strokes.length-1;i>=0;i--){
-    const s=strokes[i];if(!s.id)continue;
-    const b=getObjectBounds(s.id,'stroke');if(!b)continue;
-    if(cx>=b.x&&cx<=b.x+b.w&&cy>=b.y&&cy<=b.y+b.h)return{id:s.id,type:'stroke'};
+  for (let i = strokes.length - 1; i >= 0; i--) {
+    const s = strokes[i];
+    if (!s.id) continue;
+    const b = getObjectBounds(s.id, 'stroke');
+    if (!b) continue;
+    if (cx >= b.x && cx <= b.x + b.w &&
+        cy >= b.y && cy <= b.y + b.h)
+      return { id: s.id, type: 'stroke' };
   }
   return null;
 }
 
-// ===== POINTER EVENTS =====
-function setupCanvasEvents(){
-  wrap.addEventListener('pointerdown', onPointerDown,  {passive:false});
-  wrap.addEventListener('pointermove', onPointerMove,  {passive:false});
-  wrap.addEventListener('pointerup',   onPointerUp,    {passive:false});
-  wrap.addEventListener('pointercancel',onPointerUp,   {passive:false});
-  wrap.addEventListener('wheel',       onWheel,        {passive:false});
-  wrap.addEventListener('dblclick',    onDblActivate);
-  wrap.addEventListener('touchend',    onTouchEnd,     {passive:false});
+// ─── ③ ポインターイベント ─────────────────────
+function setupCanvasEvents() {
+  wrap.addEventListener('pointerdown',  onPointerDown,  { passive: false });
+  wrap.addEventListener('pointermove',  onPointerMove,  { passive: false });
+  wrap.addEventListener('pointerup',    onPointerUp,    { passive: false });
+  wrap.addEventListener('pointercancel',onPointerUp,    { passive: false });
+  wrap.addEventListener('wheel',        onWheel,        { passive: false });
+  // PCのダブルクリック
+  wrap.addEventListener('dblclick',     onDblActivate);
+  // ③ iPadのダブルタップ: touchendで時間・距離を計測
+  wrap.addEventListener('touchend',     onTouchEnd,     { passive: false });
 }
 
-function onTouchEnd(e){
-  if(e.changedTouches.length!==1)return;
-  const t=e.changedTouches[0], now=Date.now();
-  const dx=t.clientX-lastTapPos.x, dy=t.clientY-lastTapPos.y;
-  if(now-lastTapTime<350&&Math.hypot(dx,dy)<30){
+function onTouchEnd(e) {
+  if (e.changedTouches.length !== 1) return;
+  const touch = e.changedTouches[0];
+  const now = Date.now();
+  const dx  = touch.clientX - lastTapPos.x;
+  const dy  = touch.clientY - lastTapPos.y;
+  const dist = Math.hypot(dx, dy);
+
+  if (now - lastTapTime < 350 && dist < 35) {
+    // ダブルタップ確定
     e.preventDefault();
-    handleDoubleTap(cPosFromClient(t.clientX,t.clientY));
-    lastTapTime=0;lastTapPos={x:0,y:0};
-  }else{lastTapTime=now;lastTapPos={x:t.clientX,y:t.clientY};}
-}
-function onDblActivate(e){handleDoubleTap(cPos(e));}
-function handleDoubleTap(pos){
-  if(tool==='text'){createTextItem(pos);return;}
-  if(tool==='select'){const hit=hitTest(pos.x,pos.y);if(hit&&hit.type==='text')openTextEdit(hit.id);}
+    const pos = cPosFromClient(touch.clientX, touch.clientY);
+    handleDoubleTap(pos);
+    lastTapTime = 0;
+    lastTapPos  = { x: 0, y: 0 };
+  } else {
+    lastTapTime = now;
+    lastTapPos  = { x: touch.clientX, y: touch.clientY };
+  }
 }
 
-function onPointerDown(e){
-  if(floatInput&&e.target===floatInput)return;
-  e.preventDefault();
-  activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
-  const pCount=Object.keys(activePointers).length;
-  if(pCount===2){
-    isDrawing=false;currentStroke=null;moveDragActive=false;
-    const pts=Object.values(activePointers);
-    lastPinchDist=distP(pts[0],pts[1]);lastPanPos=midP(pts[0],pts[1]);return;
-  }
-  closeShapePopup();closeTextStylePanel();
-  if(editingTextId){closeTextEdit();return;}
-  const pos=cPos(e);
-  if(tool==='select'){
-    const hit=hitTest(pos.x,pos.y);
-    if(hit){
-      if(hit.id!==selectedId)showSelBox(hit.id,hit.type);
-      pushUndo();
-      const bSave=getObjectBounds(hit.id,hit.type);
-      dragMode='move';moveDragActive=true;
-      dragStart={px:e.clientX,py:e.clientY,ox:bSave.x,oy:bSave.y,
-        pts0:hit.type==='stroke'?JSON.parse(JSON.stringify(strokes.find(s=>s.id===hit.id).points)):null};
-    }else{clearSelection();redraw();dragMode='pan';lastPanPos={x:e.clientX,y:e.clientY};}
+function onDblActivate(e) {
+  handleDoubleTap(cPos(e));
+}
+
+function handleDoubleTap(pos) {
+  if (tool === 'text') {
+    createTextItem(pos);
     return;
   }
-  if(tool==='text')return;
-  if(tool==='pen'){
-    pushUndo();isDrawing=true;
-    const id='s'+Date.now()+Math.random().toString(36).slice(2);
-    currentStroke={id,type:'pen',color:currentColor,size:strokeSize/scale,shape:'pen',points:[pos]};
-  }
-  if(tool==='shape'){
-    pushUndo();isDrawing=true;shapeStart=pos;
-    shapePreview={x1:pos.x,y1:pos.y,x2:pos.x,y2:pos.y};
+  if (tool === 'select') {
+    const hit = hitTest(pos.x, pos.y);
+    if (hit && hit.type === 'text') openTextEdit(hit.id);
   }
 }
 
-function onPointerMove(e){
-  if(floatInput&&e.target===floatInput)return;
+function onPointerDown(e) {
+  // floatInputへのポインターはそのまま通過させる
+  if (floatInput && e.target === floatInput) return;
   e.preventDefault();
-  activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
-  const pCount=Object.keys(activePointers).length;
-  if(pCount===2){
-    const pts=Object.values(activePointers),d=distP(pts[0],pts[1]),m=midP(pts[0],pts[1]);
-    if(lastPinchDist!==null){
-      const f=d/lastPinchDist,rect=wrap.getBoundingClientRect();
-      const mx=m.x-rect.left,my=m.y-rect.top;
-      panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
-      scale=Math.max(.2,Math.min(5,scale*f));
+  activePointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+  const pCount = Object.keys(activePointers).length;
+
+  if (pCount === 2) {
+    // ピンチ開始
+    isDrawing = false; currentStroke = null; moveDragActive = false;
+    const pts = Object.values(activePointers);
+    lastPinchDist = distP(pts[0], pts[1]);
+    lastPanPos    = midP(pts[0], pts[1]);
+    return;
+  }
+
+  closeShapePopup();
+  closeTextStylePanel();
+
+  if (editingTextId) { closeTextEdit(); return; }
+
+  const pos = cPos(e);
+
+  if (tool === 'select') {
+    const hit = hitTest(pos.x, pos.y);
+    if (hit) {
+      if (hit.id !== selectedId) showSelBox(hit.id, hit.type);
+      pushUndo();
+      const bSave = getObjectBounds(hit.id, hit.type);
+      dragMode       = 'move';
+      moveDragActive = true;
+      dragStart = {
+        px: e.clientX, py: e.clientY,
+        ox: bSave.x,   oy: bSave.y,
+        pts0: hit.type === 'stroke'
+          ? JSON.parse(JSON.stringify(strokes.find(s => s.id === hit.id).points))
+          : null
+      };
+    } else {
+      clearSelection();
+      redraw();
+      dragMode   = 'pan';
+      lastPanPos = { x: e.clientX, y: e.clientY };
     }
-    if(lastPanPos){panX+=m.x-lastPanPos.x;panY+=m.y-lastPanPos.y;}
-    lastPinchDist=d;lastPanPos=m;redraw();updateSelBox();return;
+    return;
   }
-  if(dragMode==='pan'){
-    panX+=e.clientX-lastPanPos.x;panY+=e.clientY-lastPanPos.y;
-    lastPanPos={x:e.clientX,y:e.clientY};redraw();updateSelBox();return;
+
+  if (tool === 'text') return; // テキストはダブルタップで配置
+
+  if (tool === 'pen') {
+    pushUndo();
+    isDrawing = true;
+    const id = 's' + Date.now() + Math.random().toString(36).slice(2);
+    currentStroke = {
+      id, type: 'pen', color: currentColor,
+      size: strokeSize / scale, shape: 'pen', points: [pos]
+    };
   }
-  if(dragMode==='move'&&moveDragActive){
-    const dx=(e.clientX-dragStart.px)/scale,dy=(e.clientY-dragStart.py)/scale;
-    if(selectedType==='text'){
-      const t=textItems.find(t=>t.id===selectedId);
-      if(t){t.x=dragStart.ox+dx;t.y=dragStart.oy+dy;if(floatInput&&editingTextId===selectedId)posFloatInput(t);}
-    }else if(selectedType==='stroke'){
-      const s=strokes.find(s=>s.id===selectedId);
-      if(s&&dragStart.pts0)s.points=dragStart.pts0.map(p=>({x:p.x+dx,y:p.y+dy}));
-    }
-    updateSelBox();redraw();return;
+
+  if (tool === 'shape') {
+    pushUndo();
+    isDrawing    = true;
+    shapeStart   = pos;
+    shapePreview = { x1: pos.x, y1: pos.y, x2: pos.x, y2: pos.y };
   }
-  if(!isDrawing)return;
-  const pos=cPos(e);
-  if(tool==='pen'){currentStroke.points.push(pos);redraw();}
-  if(tool==='shape'){shapePreview.x2=pos.x;shapePreview.y2=pos.y;redraw();}
 }
 
-function onPointerUp(e){
-  if(floatInput&&e.target===floatInput)return;
+function onPointerMove(e) {
+  if (floatInput && e.target === floatInput) return;
+  e.preventDefault();
+  activePointers[e.pointerId] = { x: e.clientX, y: e.clientY };
+  const pCount = Object.keys(activePointers).length;
+
+  if (pCount === 2) {
+    const pts = Object.values(activePointers);
+    const d   = distP(pts[0], pts[1]);
+    const m   = midP(pts[0], pts[1]);
+    if (lastPinchDist !== null) {
+      const f    = d / lastPinchDist;
+      const rect = wrap.getBoundingClientRect();
+      const mx   = m.x - rect.left, my = m.y - rect.top;
+      panX  = mx - (mx - panX) * f;
+      panY  = my - (my - panY) * f;
+      scale = Math.max(0.2, Math.min(5, scale * f));
+    }
+    if (lastPanPos) {
+      panX += m.x - lastPanPos.x;
+      panY += m.y - lastPanPos.y;
+    }
+    lastPinchDist = d; lastPanPos = m;
+    redraw(); updateSelBox();
+    return;
+  }
+
+  if (dragMode === 'pan') {
+    panX += e.clientX - lastPanPos.x;
+    panY += e.clientY - lastPanPos.y;
+    lastPanPos = { x: e.clientX, y: e.clientY };
+    redraw(); updateSelBox();
+    return;
+  }
+
+  if (dragMode === 'move' && moveDragActive) {
+    const dx = (e.clientX - dragStart.px) / scale;
+    const dy = (e.clientY - dragStart.py) / scale;
+    if (selectedType === 'text') {
+      const t = textItems.find(t => t.id === selectedId);
+      if (t) {
+        t.x = dragStart.ox + dx; t.y = dragStart.oy + dy;
+        if (floatInput && editingTextId === selectedId) posFloatInput(t);
+      }
+    } else if (selectedType === 'stroke') {
+      const s = strokes.find(s => s.id === selectedId);
+      if (s && dragStart.pts0)
+        s.points = dragStart.pts0.map(p => ({ x: p.x+dx, y: p.y+dy }));
+    }
+    updateSelBox(); redraw();
+    return;
+  }
+
+  if (!isDrawing) return;
+  const pos = cPos(e);
+  if (tool === 'pen')   { currentStroke.points.push(pos); redraw(); }
+  if (tool === 'shape') { shapePreview.x2 = pos.x; shapePreview.y2 = pos.y; redraw(); }
+}
+
+function onPointerUp(e) {
+  if (floatInput && e.target === floatInput) return;
   e.preventDefault();
   delete activePointers[e.pointerId];
-  const pCount=Object.keys(activePointers).length;
-  if(pCount<2){lastPinchDist=null;lastPanPos=null;}
-  if(dragMode==='pan'){dragMode=null;return;}
-  if(dragMode==='move'){moveDragActive=false;dragMode=null;updateSelBox();return;}
-  if(!isDrawing)return;
-  isDrawing=false;
-  if(tool==='pen'){if(currentStroke&&currentStroke.points.length>=2)strokes.push(currentStroke);currentStroke=null;}
-  if(tool==='shape'&&shapePreview){
-    if(Math.abs(shapePreview.x2-shapePreview.x1)>3||Math.abs(shapePreview.y2-shapePreview.y1)>3){
-      const id='s'+Date.now()+Math.random().toString(36).slice(2);
-      strokes.push({id,type:'shape',color:currentColor,size:strokeSize/scale,shape:selectedShape,
-        points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]});
+  const pCount = Object.keys(activePointers).length;
+  if (pCount < 2) { lastPinchDist = null; lastPanPos = null; }
+
+  if (dragMode === 'pan')  { dragMode = null; return; }
+  if (dragMode === 'move') { moveDragActive = false; dragMode = null; updateSelBox(); return; }
+  if (!isDrawing) return;
+  isDrawing = false;
+
+  if (tool === 'pen') {
+    if (currentStroke && currentStroke.points.length >= 2)
+      strokes.push(currentStroke);
+    currentStroke = null;
+  }
+  if (tool === 'shape' && shapePreview) {
+    if (Math.abs(shapePreview.x2 - shapePreview.x1) > 3 ||
+        Math.abs(shapePreview.y2 - shapePreview.y1) > 3) {
+      const id = 's' + Date.now() + Math.random().toString(36).slice(2);
+      strokes.push({
+        id, type: 'shape', color: currentColor,
+        size: strokeSize / scale, shape: selectedShape,
+        points: [{ x: shapePreview.x1, y: shapePreview.y1 },
+                 { x: shapePreview.x2, y: shapePreview.y2 }]
+      });
     }
-    shapePreview=null;shapeStart=null;
+    shapePreview = null; shapeStart = null;
   }
   redraw();
 }
 
-function onWheel(e){
+function onWheel(e) {
   e.preventDefault();
-  const rect=wrap.getBoundingClientRect(),mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  const f=e.deltaY<0?1.1:.9;
-  panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
-  scale=Math.max(.2,Math.min(5,scale*f));
-  redraw();updateSelBox();
+  const rect = wrap.getBoundingClientRect();
+  const mx   = e.clientX - rect.left;
+  const my   = e.clientY - rect.top;
+  const f    = e.deltaY < 0 ? 1.1 : 0.9;
+  panX  = mx - (mx - panX) * f;
+  panY  = my - (my - panY) * f;
+  scale = Math.max(0.2, Math.min(5, scale * f));
+  redraw(); updateSelBox();
 }
 
-function cPos(e){return cPosFromClient(e.clientX,e.clientY);}
-function cPosFromClient(cx,cy){const r=wrap.getBoundingClientRect();return{x:(cx-r.left-panX)/scale,y:(cy-r.top-panY)/scale};}
-function distP(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
-function midP(a,b){return{x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function cPos(e)                  { return cPosFromClient(e.clientX, e.clientY); }
+function cPosFromClient(cx, cy)   {
+  const r = wrap.getBoundingClientRect();
+  return { x: (cx - r.left - panX) / scale, y: (cy - r.top  - panY) / scale };
+}
+function distP(a, b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+function midP(a, b)  { return { x: (a.x+b.x)/2, y: (a.y+b.y)/2 }; }
 
-// ===== TEXT ITEM =====
-function createTextItem(pos){
+// ─── テキストアイテム ──────────────────────────
+function createTextItem(pos) {
   pushUndo();
-  const id='t'+Date.now()+Math.random().toString(36).slice(2);
-  const item={id,x:pos.x,y:pos.y,w:200,h:80,text:'',
-    textColor:tspTextColor,borderColor:tspBorderColor,bgColor:tspBgColor,
-    bgOpacity:tspBgOpacity,borderWidth:tspBorderWidth,fontSize:tspFontSize,fontFamily:tspFontFamily};
-  textItems.push(item); redraw(); openTextEdit(id);
+  const id = 't' + Date.now() + Math.random().toString(36).slice(2);
+  const item = {
+    id, x: pos.x, y: pos.y, w: 200, h: 80, text: '',
+    textColor:   tspTextColor,
+    borderColor: tspBorderColor,
+    bgColor:     tspBgColor,
+    bgOpacity:   tspBgOpacity,
+    borderWidth: tspBorderWidth,
+    fontSize:    tspFontSize,
+    fontFamily:  tspFontFamily
+  };
+  textItems.push(item);
+  redraw();
+  openTextEdit(id);
 }
 
-function openTextEdit(id){
+function openTextEdit(id) {
   closeTextEdit();
-  const t=textItems.find(x=>x.id===id);if(!t)return;
-  editingTextId=id;
-  floatInput=document.createElement('textarea');
-  floatInput.className='float-textarea';
-  floatInput.value=t.text||'';
-  floatInput.style.color=t.textColor||'#1c1c1e';
-  floatInput.style.caretColor=t.textColor||'#1c1c1e';
-  floatInput.style.fontFamily=t.fontFamily||'-apple-system,sans-serif';
-  floatInput.setAttribute('autocomplete','off');
-  floatInput.setAttribute('autocorrect','off');
-  floatInput.setAttribute('spellcheck','false');
-  posFloatInput(t); wrap.appendChild(floatInput);
+  const t = textItems.find(x => x.id === id);
+  if (!t) return;
+  editingTextId = id;
 
-  isComposing=false;
-  floatInput.addEventListener('compositionstart',()=>{isComposing=true;});
-  floatInput.addEventListener('compositionend',()=>{
-    isComposing=false;t.text=floatInput.value;autoGrow(t);redraw();updateSelBox();
+  floatInput = document.createElement('textarea');
+  floatInput.className = 'float-textarea';
+  floatInput.value     = t.text || '';
+  floatInput.style.color      = t.textColor   || '#1c1c1e';
+  floatInput.style.caretColor = t.textColor   || '#1c1c1e';
+  floatInput.style.fontFamily = t.fontFamily  || '-apple-system,sans-serif';
+  floatInput.setAttribute('autocomplete', 'off');
+  floatInput.setAttribute('autocorrect',  'off');
+  floatInput.setAttribute('autocapitalize', 'none');
+  floatInput.setAttribute('spellcheck',   'false');
+
+  posFloatInput(t);
+  wrap.appendChild(floatInput);
+
+  isComposing = false;
+
+  // ⑥ IME/ハードウェアキーボード対応
+  floatInput.addEventListener('compositionstart', () => { isComposing = true; });
+  floatInput.addEventListener('compositionend',   () => {
+    isComposing  = false;
+    t.text = floatInput.value;
+    autoGrow(t); redraw(); updateSelBox();
   });
-  floatInput.addEventListener('input',()=>{
-    t.text=floatInput.value;autoGrow(t);redraw();updateSelBox();
+  floatInput.addEventListener('input', () => {
+    // compositionend前にinputが来る場合があるので両方でtextを更新
+    t.text = floatInput.value;
+    autoGrow(t); redraw(); updateSelBox();
   });
-  floatInput.addEventListener('keydown',e=>{
-    if(isComposing)return;
-    if(e.key==='Escape'){e.preventDefault();closeTextEdit();}
+  floatInput.addEventListener('keydown', e => {
+    if (isComposing) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeTextEdit(); }
+    // Enterは改行として通過させる（stopしない）
   });
-  floatInput.addEventListener('pointerdown',e=>e.stopPropagation());
-  floatInput.addEventListener('pointermove',e=>e.stopPropagation());
-  floatInput.addEventListener('pointerup',  e=>e.stopPropagation());
-  floatInput.addEventListener('touchstart', e=>e.stopPropagation(),{passive:true});
-  floatInput.addEventListener('touchmove',  e=>e.stopPropagation(),{passive:true});
-  floatInput.addEventListener('touchend',   e=>e.stopPropagation(),{passive:true});
-  floatInput.addEventListener('blur',()=>{if(!isComposing)closeTextEdit();});
+  // タッチ/ポインターイベントがキャンバスに届かないようstopPropagation
+  // ただしpreventDefaultはしない（IMEが壊れる）
+  ['pointerdown','pointermove','pointerup',
+   'touchstart','touchmove','touchend'].forEach(ev => {
+    floatInput.addEventListener(ev, e => e.stopPropagation(), { passive: true });
+  });
+  floatInput.addEventListener('blur', () => {
+    if (!isComposing) {
+      // blurしても即closeせず少し待つ（セレクト変更時の誤closeを防ぐ）
+      setTimeout(() => {
+        if (editingTextId && !isComposing) closeTextEdit();
+      }, 200);
+    }
+  });
 
-  showSelBox(id,'text');
-  setTimeout(()=>{if(floatInput)floatInput.focus();},100);
+  showSelBox(id, 'text');
+  setTimeout(() => { if (floatInput) floatInput.focus(); }, 80);
 }
 
-function autoGrow(t){
-  if(!floatInput)return;
-  const lines=(t.text||'').split('\n').length;
-  t.h=Math.max(80,lines*(t.fontSize||18)*1.6+20);
-  floatInput.style.height=t.h*scale+'px';
+function autoGrow(t) {
+  if (!floatInput) return;
+  const lines = (t.text || '').split('\n').length;
+  const lh    = (t.fontSize || 18) * 1.6;
+  t.h = Math.max(80, lines * lh + 20);
+  floatInput.style.height = (t.h * scale) + 'px';
 }
-function posFloatInput(t){
-  if(!floatInput)return;
-  floatInput.style.left=(t.x*scale+panX)+'px';
-  floatInput.style.top=(t.y*scale+panY)+'px';
-  floatInput.style.width=((t.w||200)*scale)+'px';
-  floatInput.style.height=((t.h||80)*scale)+'px';
-  floatInput.style.fontSize=((t.fontSize||18)*scale)+'px';
+function posFloatInput(t) {
+  if (!floatInput) return;
+  floatInput.style.left     = (t.x * scale + panX) + 'px';
+  floatInput.style.top      = (t.y * scale + panY) + 'px';
+  floatInput.style.width    = ((t.w || 200) * scale) + 'px';
+  floatInput.style.height   = ((t.h || 80)  * scale) + 'px';
+  floatInput.style.fontSize = ((t.fontSize || 18) * scale) + 'px';
 }
-function closeTextEdit(){
-  if(floatInput){floatInput.remove();floatInput=null;}
-  editingTextId=null;isComposing=false;redraw();
+function closeTextEdit() {
+  if (floatInput) { floatInput.remove(); floatInput = null; }
+  editingTextId = null;
+  isComposing   = false;
+  redraw();
 }
 
-// ===== TEXT STYLE PANEL =====
-function buildTextStylePanel(){
-  buildTspColors('tspTextColor',COLORS,()=>tspTextColor,v=>{tspTextColor=v;applyStyleToSelected('textColor',v);});
-  buildTspColors('tspBorderColor',[...COLORS,'transparent'],()=>tspBorderColor,v=>{tspBorderColor=v;applyStyleToSelected('borderColor',v);});
-  buildTspColors('tspBgColor',[...COLORS,'transparent'],()=>tspBgColor,v=>{tspBgColor=v;applyStyleToSelected('bgColor',v);});
+// ─── テキストスタイルパネル ────────────────────
+function buildTextStylePanel() {
+  buildTspColors('tspTextColor',   COLORS,
+    () => tspTextColor,
+    v  => { tspTextColor = v; applyStyleToSelected('textColor', v); });
+  buildTspColors('tspBorderColor', [...COLORS, 'transparent'],
+    () => tspBorderColor,
+    v  => { tspBorderColor = v; applyStyleToSelected('borderColor', v); });
+  buildTspColors('tspBgColor',     [...COLORS, 'transparent'],
+    () => tspBgColor,
+    v  => { tspBgColor = v; applyStyleToSelected('bgColor', v); });
 
-  const bind=(id,valId,unit,setter,key)=>{
-    const el=document.getElementById(id),vEl=document.getElementById(valId);
-    el.addEventListener('input',()=>{
-      const v=+el.value;setter(v);vEl.textContent=v+unit;
-      applyStyleToSelected(key,v);
-      if(key==='fontSize'&&floatInput)floatInput.style.fontSize=v*scale+'px';
+  const bind = (id, valId, unit, key, setter) => {
+    const el  = document.getElementById(id);
+    const vEl = document.getElementById(valId);
+    el.addEventListener('input', () => {
+      const v = +el.value;
+      setter(v);
+      vEl.textContent = v + unit;
+      applyStyleToSelected(key, v);
+      if (key === 'fontSize' && floatInput)
+        floatInput.style.fontSize = (v * scale) + 'px';
     });
   };
-  bind('tspBgOpacity','tspBgOpacityVal','%',v=>tspBgOpacity=v,'bgOpacity');
-  bind('tspBorderWidth','tspBorderWidthVal','px',v=>tspBorderWidth=v,'borderWidth');
-  bind('tspFontSize','tspFontSizeVal','px',v=>tspFontSize=v,'fontSize');
+  bind('tspBgOpacity',   'tspBgOpacityVal',   '%',  'bgOpacity',   v => tspBgOpacity   = v);
+  bind('tspBorderWidth', 'tspBorderWidthVal', 'px', 'borderWidth', v => tspBorderWidth = v);
+  bind('tspFontSize',    'tspFontSizeVal',    'px', 'fontSize',    v => tspFontSize    = v);
 
-  const ffEl=document.getElementById('tspFontFamily');
-  ffEl.addEventListener('change',()=>{
-    tspFontFamily=ffEl.value;applyStyleToSelected('fontFamily',tspFontFamily);
-    if(floatInput)floatInput.style.fontFamily=tspFontFamily;redraw();
+  const ffEl = document.getElementById('tspFontFamily');
+  ffEl.addEventListener('change', () => {
+    tspFontFamily = ffEl.value;
+    applyStyleToSelected('fontFamily', tspFontFamily);
+    if (floatInput) floatInput.style.fontFamily = tspFontFamily;
+    redraw();
   });
 }
-function buildTspColors(elId,colors,getVal,setVal){
-  const el=document.getElementById(elId);
-  colors.forEach(c=>{
-    const d=document.createElement('div');d.className='tsp-dot';
-    if(c==='transparent'){d.style.background='linear-gradient(135deg,#fff 45%,#f00 45%,#f00 55%,#fff 55%)';d.style.border='2px solid #ccc';d.title='透明';}
-    else{d.style.background=c;if(c==='#ffffff')d.style.border='2px solid #ccc';}
-    d.onclick=()=>{el.querySelectorAll('.tsp-dot').forEach(x=>x.classList.remove('active'));d.classList.add('active');setVal(c);redraw();};
-    if(c===getVal())d.classList.add('active');
+
+function buildTspColors(elId, colors, getVal, setVal) {
+  const el = document.getElementById(elId);
+  colors.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'tsp-dot';
+    if (c === 'transparent') {
+      d.style.background = 'linear-gradient(135deg,#fff 45%,#f00 45%,#f00 55%,#fff 55%)';
+      d.style.border = '2px solid #ccc';
+      d.title = '透明';
+    } else {
+      d.style.background = c;
+      if (c === '#ffffff') d.style.border = '2px solid #ccc';
+    }
+    d.onclick = () => {
+      el.querySelectorAll('.tsp-dot').forEach(x => x.classList.remove('active'));
+      d.classList.add('active');
+      setVal(c); redraw();
+    };
+    if (c === getVal()) d.classList.add('active');
     el.appendChild(d);
   });
 }
-function applyStyleToSelected(key,val){
-  if(selectedType==='text'){const t=textItems.find(t=>t.id===selectedId);if(t){t[key]=val;redraw();}}
-}
-function toggleTextStylePanel(){document.getElementById('textStylePanel').classList.toggle('hidden');}
-function closeTextStylePanel(){document.getElementById('textStylePanel').classList.add('hidden');}
 
-// ===== TOOLS =====
-function setTool(t){
-  if(t!=='select')clearSelection();
-  tool=t;
-  ['pen','text','shape','select'].forEach(n=>{
-    const btn=document.getElementById('tool'+n[0].toUpperCase()+n.slice(1));
-    if(btn)btn.classList.toggle('active',n===t);
+function applyStyleToSelected(key, val) {
+  if (selectedType === 'text') {
+    const t = textItems.find(t => t.id === selectedId);
+    if (t) { t[key] = val; redraw(); }
+  }
+}
+function toggleTextStylePanel() {
+  document.getElementById('textStylePanel').classList.toggle('hidden');
+}
+function closeTextStylePanel() {
+  document.getElementById('textStylePanel').classList.add('hidden');
+}
+
+// ─── ツール切替 ────────────────────────────────
+function setTool(t) {
+  if (t !== 'select') clearSelection();
+  tool = t;
+  ['Pen','Text','Shape','Select'].forEach(n => {
+    const btn = document.getElementById('tool' + n);
+    if (btn) btn.classList.toggle('active', n.toLowerCase() === t);
   });
-  const badges={pen:'ペン',text:'テキスト（ダブルタップで配置）',shape:'図形',select:'選択・移動・拡大縮小'};
-  document.getElementById('modeBadge').textContent=badges[t]||t;
-  wrap.style.cursor=t==='select'?'default':'crosshair';
-  closeShapePopup();closeTextStylePanel();
+  const badges = {
+    pen:    'ペン',
+    text:   'テキスト（ダブルタップで配置）',
+    shape:  '図形（ドラッグで描画）',
+    select: '選択・移動・拡大縮小（SHIFTで比率固定）'
+  };
+  document.getElementById('modeBadge').textContent = badges[t] || t;
+  canvas.classList.toggle('select-mode', t === 'select');
+  closeShapePopup();
+  closeTextStylePanel();
 }
-function toggleShapePopup(){document.getElementById('shapePopup').classList.toggle('hidden');}
-function closeShapePopup(){document.getElementById('shapePopup').classList.add('hidden');}
-function selectShape(s){selectedShape=s;setTool('shape');document.getElementById('toolShape').classList.add('active');closeShapePopup();}
+function toggleShapePopup() {
+  document.getElementById('shapePopup').classList.toggle('hidden');
+}
+function closeShapePopup() {
+  document.getElementById('shapePopup').classList.add('hidden');
+}
+function selectShape(s) {
+  selectedShape = s;
+  setTool('shape');
+  document.getElementById('toolShape').classList.add('active');
+  closeShapePopup();
+}
 
-// ===== UNDO / REDO =====
-function getState(){return{strokes:JSON.parse(JSON.stringify(strokes)),texts:JSON.parse(JSON.stringify(textItems))};}
-function applyState(s){strokes=s.strokes;textItems=s.texts;clearSelection();closeTextEdit();redraw();}
-function pushUndo(){undoStack.push(getState());if(undoStack.length>50)undoStack.shift();redoStack=[];}
-function undo(){if(!undoStack.length)return;redoStack.push(getState());applyState(undoStack.pop());}
-function redo(){if(!redoStack.length)return;undoStack.push(getState());applyState(redoStack.pop());}
+// ─── Undo / Redo ───────────────────────────────
+function getState() {
+  return {
+    strokes:   JSON.parse(JSON.stringify(strokes)),
+    texts:     JSON.parse(JSON.stringify(textItems))
+  };
+}
+function applyState(s) {
+  strokes   = s.strokes;
+  textItems = s.texts;
+  clearSelection();
+  closeTextEdit();
+  redraw();
+}
+function pushUndo() {
+  undoStack.push(getState());
+  if (undoStack.length > 50) undoStack.shift();
+  redoStack = [];
+}
+function undo() { if (!undoStack.length) return; redoStack.push(getState()); applyState(undoStack.pop()); }
+function redo() { if (!redoStack.length) return; undoStack.push(getState()); applyState(redoStack.pop()); }
 
-// ===== COLOR PICKER =====
-function buildColorPicker(){
-  const cp=document.getElementById('colorPicker');
-  COLORS.forEach(c=>{
-    const d=document.createElement('div');
-    d.className='color-dot'+(c===currentColor?' active':'');
-    d.style.background=c;
-    if(c==='#ffffff')d.style.border='3px solid #ccc';
-    d.onclick=()=>{document.querySelectorAll('#colorPicker .color-dot').forEach(x=>x.classList.remove('active'));d.classList.add('active');currentColor=c;};
+// ─── カラーピッカー ────────────────────────────
+function buildColorPicker() {
+  const cp = document.getElementById('colorPicker');
+  COLORS.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'color-dot' + (c === currentColor ? ' active' : '');
+    d.style.background = c;
+    if (c === '#ffffff') d.style.border = '3px solid #ccc';
+    d.onclick = () => {
+      document.querySelectorAll('#colorPicker .color-dot').forEach(x => x.classList.remove('active'));
+      d.classList.add('active');
+      currentColor = c;
+    };
     cp.appendChild(d);
   });
 }
 
-// ===== KEYBOARD =====
-function setupKeyboard(){
-  document.addEventListener('keydown',e=>{
-    shiftDown=e.shiftKey;
-    if(isComposing)return;
-    if(document.getElementById('editorScreen').classList.contains('hidden'))return;
-    const tag=e.target.tagName;
-    if(tag==='TEXTAREA'||tag==='INPUT'){
-      if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);}
-      if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
+// ─── キーボード ────────────────────────────────
+function setupKeyboard() {
+  document.addEventListener('keydown', e => {
+    shiftDown = e.shiftKey;
+    if (isComposing) return;
+    if (document.getElementById('editorScreen').classList.contains('hidden')) return;
+
+    const tag = document.activeElement ? document.activeElement.tagName : '';
+
+    // テキストエリアやインプット内では最低限だけ処理
+    if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT') {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault(); saveBoard(true);
+      }
       return;
     }
-    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();}
-    if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){e.preventDefault();redo();}
-    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);}
-    if((e.key==='Delete'||e.key==='Backspace')&&selectedId){deleteSelected();}
-    if(e.key==='p')setTool('pen');
-    if(e.key==='t')setTool('text');
-    if(e.key==='s'&&!e.ctrlKey&&!e.metaKey)setTool('select');
-    if(e.key==='Escape'){clearSelection();closeTextEdit();redraw();}
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); return; }
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'Z'))) { e.preventDefault(); redo(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); saveBoard(true); return; }
+    if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
+      e.preventDefault(); deleteSelected(); return;
+    }
+    if (e.key === 'p') { setTool('pen');    return; }
+    if (e.key === 't') { setTool('text');   return; }
+    if (e.key === 's' && !e.ctrlKey && !e.metaKey) { setTool('select'); return; }
+    if (e.key === 'Escape') {
+      clearSelection(); closeTextEdit();
+      closeShapePopup(); closeTextStylePanel();
+      redraw();
+    }
   });
-  document.addEventListener('keyup',e=>{shiftDown=e.shiftKey;});
+  document.addEventListener('keyup', e => { shiftDown = e.shiftKey; });
 }
 
-// ===== UTILS =====
-function hexToRgb(hex){
-  if(!hex||hex==='transparent')return{r:255,g:255,b:255};
-  return{r:parseInt(hex.slice(1,3),16),g:parseInt(hex.slice(3,5),16),b:parseInt(hex.slice(5,7),16)};
+// ─── ユーティリティ ────────────────────────────
+function hexToRgb(hex) {
+  if (!hex || hex === 'transparent') return { r:255, g:255, b:255 };
+  return {
+    r: parseInt(hex.slice(1,3), 16),
+    g: parseInt(hex.slice(3,5), 16),
+    b: parseInt(hex.slice(5,7), 16)
+  };
 }
-function show(id){document.getElementById(id).classList.remove('hidden');}
-function hide(id){document.getElementById(id).classList.add('hidden');}
-function showLoading(v){document.getElementById('loadingOverlay').classList.toggle('hidden',!v);}
-let toastTimer=null;
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast '+type+' show';
-  if(toastTimer)clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+function hide(id) { document.getElementById(id).classList.add('hidden');    }
+function showLoading(v) {
+  document.getElementById('loadingOverlay').classList.toggle('hidden', !v);
 }
-function setSyncStatus(state,label){
-  const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel');
-  if(!dot)return;
-  dot.className='sync-dot'+(state==='loading'?' loading':state==='error'?' error':'');
-  if(lbl)lbl.textContent=label;
+let toastTimer = null;
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast ' + type + ' show';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+function setSyncStatus(state, label) {
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if (!dot) return;
+  dot.className = 'sync-dot' +
+    (state === 'loading' ? ' loading' : state === 'error' ? ' error' : '');
+  if (lbl) lbl.textContent = label;
 }
 </script>
 </body>
