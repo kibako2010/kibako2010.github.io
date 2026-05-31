@@ -20,8 +20,7 @@ body{
 #setupScreen{background:#1c1c1e;align-items:center;justify-content:center;overflow-y:auto}
 .setup-card{
   background:#2c2c2e;border-radius:20px;padding:36px 32px;
-  width:min(480px,92vw);display:flex;flex-direction:column;gap:18px;
-  margin:24px auto;
+  width:min(480px,92vw);display:flex;flex-direction:column;gap:18px;margin:24px auto;
 }
 .setup-card h2{
   font-size:24px;font-weight:700;
@@ -47,52 +46,20 @@ body{
 .setup-error{color:#ff453a;font-size:13px;display:none;padding:8px 12px;background:rgba(255,69,58,.1);border-radius:8px}
 .url-box{
   background:#1c1c1e;border:1.5px solid #3a3a3c;border-radius:10px;
-  padding:10px 14px;font-size:12px;color:#8e8e93;
-  word-break:break-all;line-height:1.6;display:none
+  padding:10px 14px;font-size:12px;color:#8e8e93;word-break:break-all;line-height:1.6;display:none
 }
 .url-box strong{color:#a78bfa;display:block;margin-bottom:4px}
-.btn-copy{
-  background:#3a3a3c;color:#fff;border:none;border-radius:8px;
-  padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;
-  align-self:flex-start;display:none
-}
-.step-badge{
-  background:rgba(124,58,237,.15);color:#a78bfa;
-  border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;margin-right:6px
-}
+.btn-copy{background:#3a3a3c;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;align-self:flex-start;display:none}
+.step-badge{background:rgba(124,58,237,.15);color:#a78bfa;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;margin-right:6px}
 
 /* ===== HOME ===== */
-.home-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c;flex-shrink:0
-}
-.home-header h1{
-  font-size:26px;font-weight:700;
-  background:linear-gradient(135deg,#a78bfa,#60a5fa);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
-}
+.home-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c;flex-shrink:0}
+.home-header h1{font-size:26px;font-weight:700;background:linear-gradient(135deg,#a78bfa,#60a5fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .header-actions{display:flex;gap:8px;align-items:center}
-.btn-new{
-  display:flex;align-items:center;gap:6px;
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  color:#fff;border:none;border-radius:20px;
-  padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer
-}
-.btn-settings{
-  background:#3a3a3c;border:none;border-radius:50%;
-  width:36px;height:36px;cursor:pointer;color:#fff;font-size:16px;
-  display:flex;align-items:center;justify-content:center
-}
-.boards-grid{
-  flex:1;overflow-y:auto;padding:16px;
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:14px;align-content:start;touch-action:pan-y
-}
-.board-card{
-  background:#2c2c2e;border-radius:16px;overflow:hidden;
-  cursor:pointer;transition:transform .2s,box-shadow .2s;
-  border:2px solid transparent;position:relative
-}
+.btn-new{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;border-radius:20px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-settings{background:#3a3a3c;border:none;border-radius:50%;width:36px;height:36px;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center}
+.boards-grid{flex:1;overflow-y:auto;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;align-content:start;touch-action:pan-y}
+.board-card{background:#2c2c2e;border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;border:2px solid transparent;position:relative}
 .board-card:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.35);border-color:#7c3aed}
 .board-thumb{width:100%;aspect-ratio:4/3;background:#f5f4ef;display:block}
 .board-info{padding:10px 12px}
@@ -100,13 +67,7 @@ body{
 .board-date{font-size:11px;color:#8e8e93;margin-top:2px}
 .board-props{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
 .prop-badge{font-size:10px;padding:2px 7px;border-radius:10px;background:rgba(124,58,237,.2);color:#a78bfa;white-space:nowrap}
-.board-del{
-  position:absolute;top:6px;right:6px;
-  background:rgba(255,59,48,.9);border:none;border-radius:50%;
-  width:28px;height:28px;color:#fff;font-size:14px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .2s
-}
+.board-del{position:absolute;top:6px;right:6px;background:rgba(255,59,48,.9);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .board-card:hover .board-del{opacity:1}
 .sync-status{font-size:12px;color:#8e8e93;display:flex;align-items:center;gap:5px}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:#34c759}
@@ -118,375 +79,191 @@ body{
 /* ===== EDITOR ===== */
 #editorScreen{background:#f5f4ef}
 
-/* ツールバー */
 .toolbar{
   display:flex;align-items:center;gap:4px;padding:6px 10px;
   background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
   border-bottom:1px solid #e0e0e0;
   flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
   z-index:100;flex-shrink:0;touch-action:pan-x;
-  -webkit-overflow-scrolling:touch;
 }
 .toolbar::-webkit-scrollbar{display:none}
 .tb-group{display:flex;gap:2px;align-items:center;flex-shrink:0}
 .tb-sep{width:1px;height:28px;background:#d1d1d6;margin:0 4px;flex-shrink:0}
-.tb-btn{
-  border:none;background:transparent;border-radius:10px;
-  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:17px;transition:background .12s;flex-shrink:0;
-  -webkit-tap-highlight-color:transparent;color:#1c1c1e;touch-action:manipulation
-}
+.tb-btn{border:none;background:transparent;border-radius:10px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:background .12s;flex-shrink:0;-webkit-tap-highlight-color:transparent;color:#1c1c1e;touch-action:manipulation}
 .tb-btn:hover{background:#f0f0f0}
 .tb-btn:active{background:#e8e8e8}
 .tb-btn.active{background:#ede9fe;color:#7c3aed}
 .tb-btn.danger.has-selection{color:#ff3b30;background:#fff0f0}
-.tb-back{
-  font-size:13px;font-weight:600;color:#7c3aed;
-  background:none;border:none;cursor:pointer;
-  padding:6px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;
-  touch-action:manipulation
-}
+.tb-back{font-size:13px;font-weight:600;color:#7c3aed;background:none;border:none;cursor:pointer;padding:6px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;touch-action:manipulation}
 .tb-back:hover{background:#ede9fe}
-.board-title-input{
-  flex:1;min-width:60px;border:none;background:transparent;
-  font-size:15px;font-weight:600;color:#1c1c1e;text-align:center;outline:none;
-  touch-action:auto;user-select:text;-webkit-user-select:text
-}
+.board-title-input{flex:1;min-width:60px;border:none;background:transparent;font-size:15px;font-weight:600;color:#1c1c1e;text-align:center;outline:none;touch-action:auto;user-select:text;-webkit-user-select:text}
 .color-dots{display:flex;gap:4px;align-items:center}
-.color-dot{
-  width:20px;height:20px;border-radius:50%;
-  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;
-  touch-action:manipulation
-}
+.color-dot{width:20px;height:20px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;touch-action:manipulation}
 .color-dot.active{transform:scale(1.25);border-color:#333}
 .stroke-slider{width:60px;accent-color:#7c3aed;flex-shrink:0;touch-action:none}
+.portrait-toggle{font-size:12px;font-weight:700;background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:4px;touch-action:manipulation}
 
-/* ===== エディタ本体 ===== */
-/*
-  縦長: toolbar / [panel(固定高)] / canvas(flex:1)
-  横長: toolbar / [panel(固定幅) | canvas(flex:1)]
-  パネルは overflow:hidden + height/width アニメーション
-*/
-.editor-body{
-  flex:1;
-  overflow:hidden;
-  display:flex;
-  min-height:0; /* flex child がつぶれないようにする */
-}
-/* 縦長 */
+.editor-body{flex:1;overflow:hidden;display:flex;min-height:0}
 .editor-body.portrait{flex-direction:column}
-/* 横長 */
 .editor-body.landscape{flex-direction:row}
 
 /* ===== サイドパネル ===== */
-.side-panel{
-  background:#fff;
-  flex-shrink:0;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  border-color:#e0e0e0;
-  border-style:solid;
-  border-width:0;
-  /* transitionはJS経由でstyle属性に直接指定 */
-}
-/* 縦長時: 高さで開閉 */
-.editor-body.portrait .side-panel{
-  border-bottom-width:1px;
-  width:100%;
-}
-/* 横長時: 幅で開閉 */
-.editor-body.landscape .side-panel{
-  border-right-width:1px;
-  height:100%;
-}
+.side-panel{background:#fff;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;border-color:#e0e0e0;border-style:solid;border-width:0}
+.editor-body.portrait .side-panel{border-bottom-width:1px;width:100%}
+.editor-body.landscape .side-panel{border-right-width:1px;height:100%}
+.side-panel-inner{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px;touch-action:pan-y;-webkit-overflow-scrolling:touch;min-height:0}
 
-/* パネル内スクロール領域 */
-.side-panel-inner{
-  flex:1;
-  overflow-y:auto;
-  overflow-x:hidden;
-  padding:16px;
-  touch-action:pan-y;
-  -webkit-overflow-scrolling:touch;
-  min-height:0;
-}
+.landscape-toggle{position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:110;background:#7c3aed;color:#fff;border:none;border-radius:0 8px 8px 0;width:18px;height:56px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;writing-mode:vertical-rl;font-size:11px;font-weight:700}
 
-/* パネルトグルボタン */
-/* 縦長: ツールバー内ボタン */
-.portrait-toggle{
-  font-size:12px;font-weight:700;
-  background:#7c3aed;color:#fff;border:none;
-  border-radius:8px;padding:5px 10px;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
-  display:flex;align-items:center;gap:4px;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
-}
-/* 横長: キャンバス左端のタブ */
-.landscape-toggle{
-  position:absolute;left:0;top:50%;transform:translateY(-50%);
-  z-index:110;
-  background:#7c3aed;color:#fff;border:none;
-  border-radius:0 8px 8px 0;
-  width:18px;height:56px;
-  cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
-  writing-mode:vertical-rl;font-size:11px;font-weight:700;
-}
-
-/* ===== プロパティUI ===== */
-.prop-board-title{
-  width:100%;font-size:20px;font-weight:700;color:#1c1c1e;
-  border:none;border-bottom:2px solid #ebebef;outline:none;background:transparent;
-  padding:0 0 6px;margin-bottom:14px;
-  touch-action:auto;user-select:text;-webkit-user-select:text
-}
-.prop-section-label{
-  font-size:11px;font-weight:700;color:#8e8e93;
-  text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px
-}
+/* ===== プロパティ ===== */
+.prop-board-title{width:100%;font-size:20px;font-weight:700;color:#1c1c1e;border:none;border-bottom:2px solid #ebebef;outline:none;background:transparent;padding:0 0 6px;margin-bottom:14px;touch-action:auto;user-select:text;-webkit-user-select:text}
+.prop-section-label{font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
 .prop-list{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
-.prop-row{
-  display:flex;align-items:center;gap:6px;
-  padding:6px 8px;border-radius:8px;background:#f9f9fb;
-  border:1px solid #ebebef
-}
-.prop-name{
-  font-size:12px;color:#636366;min-width:60px;flex-shrink:0;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap
-}
+.prop-row{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:8px;background:#f9f9fb;border:1px solid #ebebef}
+.prop-name{font-size:12px;color:#636366;min-width:60px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .prop-value-wrap{flex:1;min-width:0}
-.prop-input{
-  width:100%;border:none;background:transparent;font-size:13px;color:#1c1c1e;
-  outline:none;touch-action:auto;user-select:text;-webkit-user-select:text
-}
-.prop-select{
-  width:100%;border:none;background:transparent;font-size:13px;color:#1c1c1e;
-  outline:none;cursor:pointer
-}
-.prop-checkbox{width:16px;height:16px;accent-color:#7c3aed;cursor:pointer;flex-shrink:0}
-.prop-del-btn{
-  background:none;border:none;color:#c7c7cc;font-size:13px;cursor:pointer;
-  flex-shrink:0;padding:2px 4px;border-radius:4px;line-height:1
-}
+.prop-input{width:100%;border:none;background:transparent;font-size:13px;color:#1c1c1e;outline:none;touch-action:auto;user-select:text;-webkit-user-select:text}
+.prop-select{width:100%;border:none;background:transparent;font-size:13px;color:#1c1c1e;outline:none;cursor:pointer}
+.prop-del-btn{background:none;border:none;color:#c7c7cc;font-size:13px;cursor:pointer;flex-shrink:0;padding:2px 4px;border-radius:4px;line-height:1}
 .prop-del-btn:hover{color:#ff3b30;background:#fff0f0}
-.prop-options-edit{
-  font-size:11px;color:#7c3aed;cursor:pointer;
-  padding:2px 6px;border-radius:4px;background:#ede9fe;border:none;flex-shrink:0
-}
-.btn-add-prop{
-  display:flex;align-items:center;gap:6px;
-  background:none;border:1.5px dashed #c7c7cc;border-radius:8px;
-  padding:7px 12px;font-size:13px;color:#8e8e93;cursor:pointer;width:100%;
-  touch-action:manipulation;margin-top:2px
-}
+.prop-options-edit{font-size:11px;color:#7c3aed;cursor:pointer;padding:2px 6px;border-radius:4px;background:#ede9fe;border:none;flex-shrink:0}
+.btn-add-prop{display:flex;align-items:center;gap:6px;background:none;border:1.5px dashed #c7c7cc;border-radius:8px;padding:7px 12px;font-size:13px;color:#8e8e93;cursor:pointer;width:100%;touch-action:manipulation;margin-top:2px}
 .btn-add-prop:hover{border-color:#7c3aed;color:#7c3aed;background:#faf8ff}
 
+/* チェックリスト */
+.checklist-container{display:flex;flex-direction:column;gap:2px;margin-top:2px}
+.checklist-item{display:flex;align-items:center;gap:6px;padding:4px 2px;border-radius:6px}
+.checklist-item:hover{background:#f5f0ff}
+.checklist-item input[type=checkbox]{width:16px;height:16px;accent-color:#7c3aed;cursor:pointer;flex-shrink:0}
+.checklist-item-text{flex:1;font-size:13px;color:#1c1c1e;border:none;background:transparent;outline:none;touch-action:auto;user-select:text;-webkit-user-select:text}
+.checklist-item-text.done{text-decoration:line-through;color:#8e8e93}
+.checklist-item-del{background:none;border:none;color:#c7c7cc;font-size:12px;cursor:pointer;padding:2px;border-radius:4px;flex-shrink:0;opacity:0}
+.checklist-item:hover .checklist-item-del{opacity:1}
+.checklist-item-del:hover{color:#ff3b30}
+.btn-add-checklist-item{display:flex;align-items:center;gap:5px;background:none;border:none;color:#8e8e93;font-size:12px;cursor:pointer;padding:4px 2px;touch-action:manipulation}
+.btn-add-checklist-item:hover{color:#7c3aed}
+.checklist-progress{font-size:11px;color:#8e8e93;margin-left:2px}
+
 /* プロパティ型ポップアップ */
-.prop-type-popup{
+.prop-type-popup{position:fixed;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:8px;z-index:800;border:1px solid #e0e0e0;display:flex;flex-direction:column;gap:2px;min-width:150px}
+.prop-type-popup.hidden{display:none}
+.prop-type-opt{padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#1c1c1e}
+.prop-type-opt:hover{background:#f5f0ff;color:#7c3aed}
+
+/* ===== Markdownエディタ ===== */
+.md-section{border-top:1px solid #ebebef;padding:14px 0 8px;display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.md-toolbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.md-label{font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em}
+.md-mode-btns{display:flex;gap:4px}
+.md-mode-btn{font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;border:1.5px solid #e0e0e0;background:#fff;color:#636366;cursor:pointer;touch-action:manipulation}
+.md-mode-btn.active{background:#7c3aed;border-color:#7c3aed;color:#fff}
+
+/* リッチエディタ（ブロック式） */
+.rich-editor{display:flex;flex-direction:column;gap:2px;min-height:60px;cursor:text}
+.block{
+  display:flex;align-items:flex-start;gap:6px;
+  padding:3px 2px;border-radius:6px;
+  position:relative;
+}
+.block:hover .block-handle{opacity:.4}
+.block-handle{width:16px;flex-shrink:0;text-align:center;font-size:11px;color:#c7c7cc;cursor:grab;margin-top:4px;opacity:0;touch-action:manipulation;user-select:none}
+.block-content{
+  flex:1;min-width:0;outline:none;
+  font-size:14px;color:#1c1c1e;line-height:1.6;
+  border:none;background:transparent;
+  touch-action:auto;user-select:text;-webkit-user-select:text;
+  white-space:pre-wrap;word-break:break-word;
+}
+/* ブロック種別スタイル */
+.block[data-type="h1"] .block-content{font-size:22px;font-weight:700;color:#1c1c1e}
+.block[data-type="h2"] .block-content{font-size:18px;font-weight:700;color:#1c1c1e}
+.block[data-type="h3"] .block-content{font-size:15px;font-weight:600;color:#1c1c1e}
+.block[data-type="quote"] .block-content{color:#636366;font-style:italic}
+.block[data-type="quote"]{border-left:3px solid #7c3aed;padding-left:8px}
+.block[data-type="code"] .block-content{font-family:'Courier New',monospace;font-size:12px;background:#f0f0f5;padding:2px 6px;border-radius:4px;color:#c7254e}
+.block[data-type="hr"]{border-top:1px solid #e0e0e0;padding:0;margin:4px 0;pointer-events:none}
+.block[data-type="bullet"] .block-bullet{color:#7c3aed;font-size:16px;margin-top:2px;flex-shrink:0}
+.block[data-type="todo"] .block-check{width:16px;height:16px;accent-color:#7c3aed;cursor:pointer;flex-shrink:0;margin-top:4px}
+.block[data-type="todo"].done .block-content{text-decoration:line-through;color:#8e8e93}
+
+/* ブロック追加ボタン */
+.block-add-row{display:flex;align-items:center;gap:4px;margin-top:4px}
+.btn-add-block{display:flex;align-items:center;gap:5px;background:none;border:none;color:#c7c7cc;font-size:12px;cursor:pointer;padding:4px 2px;touch-action:manipulation}
+.btn-add-block:hover{color:#7c3aed}
+
+/* ブロック型選択ポップアップ */
+.block-type-popup{
   position:fixed;background:#fff;border-radius:12px;
   box-shadow:0 8px 32px rgba(0,0,0,.2);
   padding:8px;z-index:800;border:1px solid #e0e0e0;
-  display:flex;flex-direction:column;gap:2px;min-width:150px
+  display:flex;flex-direction:column;gap:2px;min-width:170px
 }
-.prop-type-popup.hidden{display:none}
-.prop-type-opt{
-  padding:8px 12px;border-radius:8px;font-size:13px;cursor:pointer;
-  display:flex;align-items:center;gap:8px;color:#1c1c1e
-}
-.prop-type-opt:hover{background:#f5f0ff;color:#7c3aed}
+.block-type-popup.hidden{display:none}
+.block-type-opt{padding:7px 12px;border-radius:7px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#1c1c1e}
+.block-type-opt:hover{background:#f5f0ff;color:#7c3aed}
+.block-type-shortcut{font-size:10px;color:#c7c7cc;margin-left:auto}
 
-/* ===== Markdownエリア ===== */
-.md-section{
-  border-top:1px solid #ebebef;
-  padding:14px 0 8px;
-  display:flex;flex-direction:column;gap:8px;
-  margin-top:12px;
-}
-.md-toolbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.md-label{font-size:11px;font-weight:700;color:#8e8e93;text-transform:uppercase;letter-spacing:.06em}
-.md-toggle-btn{
-  font-size:12px;font-weight:600;color:#7c3aed;
-  background:#ede9fe;border:none;border-radius:6px;
-  padding:4px 10px;cursor:pointer;touch-action:manipulation;white-space:nowrap
-}
-/* プレビュー */
-.md-preview{
-  font-size:14px;color:#1c1c1e;line-height:1.7;
-  min-height:50px;cursor:pointer;
-  padding:8px;border-radius:8px;
-  background:#fafafa;border:1px solid #ebebef;
-}
-.md-preview.empty::before{
-  content:'クリックして Markdown を入力...';
-  color:#c7c7cc;font-size:13px;font-style:italic
-}
-.md-preview h1{font-size:20px;font-weight:700;margin-bottom:8px}
-.md-preview h2{font-size:17px;font-weight:700;margin-bottom:6px}
-.md-preview h3{font-size:15px;font-weight:600;margin-bottom:4px}
-.md-preview p{margin-bottom:8px}
-.md-preview ul,.md-preview ol{padding-left:20px;margin-bottom:8px}
-.md-preview li{margin-bottom:3px}
-.md-preview code{background:#f0f0f5;padding:1px 5px;border-radius:4px;font-size:12px;font-family:monospace}
-.md-preview pre{background:#f0f0f5;padding:10px;border-radius:8px;overflow-x:auto;margin-bottom:8px}
-.md-preview pre code{background:none;padding:0}
-.md-preview blockquote{border-left:3px solid #7c3aed;padding-left:10px;color:#636366;margin-bottom:8px}
-.md-preview strong{font-weight:700}
-.md-preview em{font-style:italic}
-.md-preview a{color:#7c3aed;text-decoration:none}
-.md-preview hr{border:none;border-top:1px solid #e0e0e0;margin:10px 0}
-/* 編集テキストエリア */
-.md-textarea{
-  width:100%;
-  min-height:160px;
-  border:1.5px solid #7c3aed;border-radius:8px;
-  padding:10px 12px;font-size:13px;
-  font-family:'Courier New',Courier,monospace;
-  outline:none;resize:vertical;
-  color:#1c1c1e;background:#faf8ff;
-  touch-action:auto;user-select:text;-webkit-user-select:text;
-  line-height:1.6;
+/* Rawテキストエリア */
+.md-raw-textarea{
+  width:100%;min-height:180px;border:1.5px solid #7c3aed;border-radius:8px;
+  padding:10px 12px;font-size:13px;font-family:'Courier New',Courier,monospace;
+  outline:none;resize:vertical;color:#1c1c1e;background:#faf8ff;
+  touch-action:auto;user-select:text;-webkit-user-select:text;line-height:1.6;
 }
 
-/* ===== キャンバス領域 ===== */
-.canvas-wrap{
-  flex:1;
-  position:relative;
-  overflow:hidden;
-  background:#f5f4ef;
-  min-width:0;min-height:0;
-}
-#mainCanvas{
-  position:absolute;top:0;left:0;
-  touch-action:none;cursor:crosshair
-}
+/* ===== Canvas ===== */
+.canvas-wrap{flex:1;position:relative;overflow:hidden;background:#f5f4ef;min-width:0;min-height:0}
+#mainCanvas{position:absolute;top:0;left:0;touch-action:none;cursor:crosshair}
 #mainCanvas.select-mode{cursor:default}
 
 /* 図形ポップアップ */
-.shape-popup{
-  position:absolute;top:8px;left:50%;transform:translateX(-50%);
-  background:#2c2c2e;border-radius:16px;
-  box-shadow:0 8px 32px rgba(0,0,0,.45);
-  padding:10px;display:flex;gap:8px;z-index:200;border:1px solid #3a3a3c
-}
+.shape-popup{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#2c2c2e;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.45);padding:10px;display:flex;gap:8px;z-index:200;border:1px solid #3a3a3c}
 .shape-popup.hidden{display:none}
-.shape-opt{
-  width:48px;height:48px;border-radius:12px;background:#1c1c1e;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  border:2px solid #3a3a3c;transition:background .15s,border-color .15s;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent
-}
+.shape-opt{width:48px;height:48px;border-radius:12px;background:#1c1c1e;cursor:pointer;display:flex;align-items:center;justify-content:center;border:2px solid #3a3a3c;transition:background .15s,border-color .15s;touch-action:manipulation}
 .shape-opt.selected,.shape-opt:hover{background:#2d1e6b;border-color:#7c3aed}
 
 /* スタイルパネル */
-.style-panel{
-  position:absolute;top:8px;left:50%;transform:translateX(-50%);
-  background:#fff;border-radius:16px;
-  box-shadow:0 8px 32px rgba(0,0,0,.2);
-  padding:16px;z-index:200;border:1px solid #e0e0e0;
-  display:flex;flex-direction:column;gap:12px;
-  min-width:300px;max-width:94vw;
-  touch-action:auto;max-height:80vh;overflow-y:auto;
-}
+.style-panel{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.2);padding:16px;z-index:200;border:1px solid #e0e0e0;display:flex;flex-direction:column;gap:12px;min-width:300px;max-width:94vw;touch-action:auto;max-height:80vh;overflow-y:auto}
 .style-panel.hidden{display:none}
 .sp-tabs{display:flex;gap:6px;border-bottom:1px solid #e0e0e0;padding-bottom:8px}
-.sp-tab{
-  font-size:13px;font-weight:600;padding:5px 12px;border-radius:8px;
-  border:none;background:none;cursor:pointer;color:#636366;touch-action:manipulation
-}
+.sp-tab{font-size:13px;font-weight:600;padding:5px 12px;border-radius:8px;border:none;background:none;cursor:pointer;color:#636366;touch-action:manipulation}
 .sp-tab.active{background:#ede9fe;color:#7c3aed}
 .sp-body{display:flex;flex-direction:column;gap:10px}
 .sp-body.hidden{display:none}
 .sp-row{display:flex;align-items:center;gap:8px}
 .sp-label{font-size:12px;color:#636366;width:70px;flex-shrink:0}
 .sp-colors{display:flex;gap:4px;flex-wrap:wrap}
-.sp-dot{
-  width:20px;height:20px;border-radius:50%;
-  border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;
-  touch-action:manipulation
-}
+.sp-dot{width:20px;height:20px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:transform .12s;flex-shrink:0;touch-action:manipulation}
 .sp-dot.active,.sp-dot:hover{transform:scale(1.2);border-color:#333}
 .sp-slider{flex:1;accent-color:#7c3aed;touch-action:none}
 .sp-val{font-size:11px;color:#636366;width:36px;text-align:right;flex-shrink:0}
-.sp-select{
-  flex:1;padding:5px 8px;border-radius:8px;border:1.5px solid #d1d1d6;
-  font-size:13px;outline:none;color:#1c1c1e;background:#fff;touch-action:auto
-}
-.sp-close{
-  align-self:flex-end;background:none;border:none;color:#7c3aed;
-  font-size:13px;font-weight:600;cursor:pointer;padding:4px 10px;border-radius:6px;
-  touch-action:manipulation
-}
+.sp-select{flex:1;padding:5px 8px;border-radius:8px;border:1.5px solid #d1d1d6;font-size:13px;outline:none;color:#1c1c1e;background:#fff;touch-action:auto}
+.sp-close{align-self:flex-end;background:none;border:none;color:#7c3aed;font-size:13px;font-weight:600;cursor:pointer;padding:4px 10px;border-radius:6px;touch-action:manipulation}
 .sp-close:hover{background:#ede9fe}
 
 /* 選択ボックス */
-.sel-box{
-  position:absolute;pointer-events:none;z-index:20;
-  border:2px solid #2563eb;border-radius:3px
-}
-.sel-handle{
-  position:absolute;width:22px;height:22px;
-  background:#fff;border:2.5px solid #2563eb;border-radius:6px;
-  pointer-events:all;z-index:21;transform:translate(-50%,-50%);
-  touch-action:none;cursor:pointer
-}
-.float-textarea{
-  position:absolute;z-index:50;
-  resize:none;outline:none;border:none;overflow:hidden;
-  background:transparent;line-height:1.5;padding:6px 10px;
-  border-radius:8px;opacity:0.01;
-  touch-action:auto;user-select:text;-webkit-user-select:text
-}
-.mode-badge{
-  position:absolute;bottom:12px;right:12px;
-  background:rgba(0,0,0,.5);color:#fff;
-  padding:4px 12px;border-radius:12px;
-  font-size:11px;font-weight:600;pointer-events:none;z-index:50
-}
+.sel-box{position:absolute;pointer-events:none;z-index:20;border:2px solid #2563eb;border-radius:3px}
+.sel-handle{position:absolute;width:22px;height:22px;background:#fff;border:2.5px solid #2563eb;border-radius:6px;pointer-events:all;z-index:21;transform:translate(-50%,-50%);touch-action:none;cursor:pointer}
+.float-textarea{position:absolute;z-index:50;resize:none;outline:none;border:none;overflow:hidden;background:transparent;line-height:1.5;padding:6px 10px;border-radius:8px;opacity:0.01;touch-action:auto;user-select:text;-webkit-user-select:text}
+.mode-badge{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.5);color:#fff;padding:4px 12px;border-radius:12px;font-size:11px;font-weight:600;pointer-events:none;z-index:50}
 
 /* Toast & Loading */
-.toast{
-  position:fixed;bottom:20px;left:50%;
-  transform:translateX(-50%) translateY(80px);
-  padding:10px 22px;border-radius:20px;
-  font-size:14px;font-weight:600;
-  transition:transform .3s ease;z-index:9999;pointer-events:none;white-space:nowrap
-}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);padding:10px 22px;border-radius:20px;font-size:14px;font-weight:600;transition:transform .3s ease;z-index:9999;pointer-events:none;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{background:rgba(52,199,89,.95);color:#fff}
 .toast.error{background:rgba(255,69,58,.95);color:#fff}
 .toast.info{background:rgba(0,122,255,.95);color:#fff}
-.loading-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.5);
-  display:flex;align-items:center;justify-content:center;
-  z-index:9999;backdrop-filter:blur(4px)
-}
+.loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999;backdrop-filter:blur(4px)}
 .loading-overlay.hidden{display:none}
-.loading-spinner{
-  width:48px;height:48px;border:4px solid rgba(255,255,255,.2);
-  border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite
-}
+.loading-spinner{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* モーダル */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.4);
-  display:flex;align-items:center;justify-content:center;
-  z-index:900;backdrop-filter:blur(4px)
-}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:900;backdrop-filter:blur(4px)}
 .modal-overlay.hidden{display:none}
-.modal-card{
-  background:#fff;border-radius:16px;padding:24px;
-  width:min(380px,90vw);display:flex;flex-direction:column;gap:14px;
-  box-shadow:0 12px 40px rgba(0,0,0,.2)
-}
+.modal-card{background:#fff;border-radius:16px;padding:24px;width:min(380px,90vw);display:flex;flex-direction:column;gap:14px;box-shadow:0 12px 40px rgba(0,0,0,.2)}
 .modal-card h3{font-size:16px;font-weight:700;color:#1c1c1e}
-.modal-input{
-  width:100%;padding:10px 12px;border:1.5px solid #d1d1d6;border-radius:8px;
-  font-size:14px;color:#1c1c1e;outline:none;
-  touch-action:auto;user-select:text;-webkit-user-select:text
-}
+.modal-input{width:100%;padding:10px 12px;border:1.5px solid #d1d1d6;border-radius:8px;font-size:14px;color:#1c1c1e;outline:none;touch-action:auto;user-select:text;-webkit-user-select:text}
 .modal-input:focus{border-color:#7c3aed}
 .modal-btns{display:flex;gap:8px;justify-content:flex-end}
 .modal-btn{padding:8px 18px;border-radius:8px;border:none;font-size:14px;font-weight:600;cursor:pointer}
@@ -494,31 +271,20 @@ body{
 .modal-btn.ok{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff}
 .options-list{display:flex;flex-direction:column;gap:6px;max-height:180px;overflow-y:auto}
 .option-row{display:flex;gap:6px;align-items:center}
-.option-row input{
-  flex:1;padding:7px 10px;border:1.5px solid #d1d1d6;border-radius:7px;
-  font-size:13px;color:#1c1c1e;outline:none;
-  touch-action:auto;user-select:text;-webkit-user-select:text
-}
+.option-row input{flex:1;padding:7px 10px;border:1.5px solid #d1d1d6;border-radius:7px;font-size:13px;color:#1c1c1e;outline:none;touch-action:auto;user-select:text;-webkit-user-select:text}
 .option-row input:focus{border-color:#7c3aed}
-.option-del{
-  background:#fff0f0;border:none;color:#ff3b30;border-radius:6px;
-  width:28px;height:28px;cursor:pointer;font-size:14px;
-  display:flex;align-items:center;justify-content:center
-}
-.btn-add-option{
-  background:none;border:1.5px dashed #c7c7cc;border-radius:7px;
-  padding:6px;font-size:13px;color:#8e8e93;cursor:pointer;width:100%
-}
+.option-del{background:#fff0f0;border:none;color:#ff3b30;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.btn-add-option{background:none;border:1.5px dashed #c7c7cc;border-radius:7px;padding:6px;font-size:13px;color:#8e8e93;cursor:pointer;width:100%}
 .btn-add-option:hover{border-color:#7c3aed;color:#7c3aed}
 </style>
 </head>
 <body>
 
-<!-- ===== SETUP ===== -->
+<!-- SETUP -->
 <div id="setupScreen" class="screen hidden">
   <div class="setup-card">
     <h2>✦ FreePad 初期設定</h2>
-    <p>設定後に表示されるURLをブックマーク登録してください。次回からそのURLを開くだけで使えます。</p>
+    <p>設定後に表示されるURLをブックマーク登録してください。</p>
     <div>
       <label><span class="step-badge">1</span>GitHubユーザー名</label>
       <input class="setup-input" id="cfgOwner" placeholder="例: your-username" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none">
@@ -528,29 +294,23 @@ body{
       <input class="setup-input" id="cfgRepo" placeholder="例: freepad-data" autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="none">
     </div>
     <div>
-      <label><span class="step-badge">3</span>Personal Access Token（Contents: Read &amp; Write）</label>
+      <label><span class="step-badge">3</span>Personal Access Token</label>
       <input class="setup-input" id="cfgToken" type="password" placeholder="github_pat_..." autocomplete="off" spellcheck="false">
     </div>
     <div class="setup-error" id="setupError"></div>
     <button class="btn-primary" onclick="setupSave()">接続して確認 →</button>
-    <div class="url-box" id="urlBox">
-      <strong>📌 このURLをブックマーク登録してください</strong>
-      <span id="urlText"></span>
-    </div>
+    <div class="url-box" id="urlBox"><strong>📌 このURLをブックマーク登録してください</strong><span id="urlText"></span></div>
     <button class="btn-copy" id="btnCopy" onclick="copyUrl()">📋 URLをコピー</button>
     <button class="btn-primary" id="btnGo" style="display:none" onclick="goToApp()">アプリを開く →</button>
   </div>
 </div>
 
-<!-- ===== HOME ===== -->
+<!-- HOME -->
 <div id="homeScreen" class="screen hidden">
   <div class="home-header">
     <h1>✦ FreePad</h1>
     <div class="header-actions">
-      <div class="sync-status">
-        <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">同期済み</span>
-      </div>
+      <div class="sync-status"><div class="sync-dot" id="syncDot"></div><span id="syncLabel">同期済み</span></div>
       <button class="btn-settings" onclick="showSetup()">⚙️</button>
       <button class="btn-new" onclick="newBoard()">＋ 新しいボード</button>
     </div>
@@ -558,34 +318,24 @@ body{
   <div class="boards-grid" id="boardsGrid"></div>
 </div>
 
-<!-- ===== EDITOR ===== -->
+<!-- EDITOR -->
 <div id="editorScreen" class="screen hidden">
-
-  <!-- ツールバー -->
   <div class="toolbar" id="toolbar">
     <button class="tb-back" onclick="goHome()">← 戻る</button>
     <input class="board-title-input" id="boardTitle" placeholder="ボード名">
     <div class="tb-sep"></div>
     <div class="tb-group">
       <button class="tb-btn active" id="toolPen" onclick="setTool('pen')" title="ペン(P)">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-        </svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
       </button>
       <button class="tb-btn" id="toolText" onclick="setTool('text')" title="テキスト(T)">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/>
-        </svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
       </button>
       <button class="tb-btn" id="toolShape" onclick="toggleShapePopup()" title="図形">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-        </svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
       </button>
       <button class="tb-btn" id="toolSelect" onclick="setTool('select')" title="選択(S)">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 3l14 9-7 1-3 7z"/>
-        </svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3l14 9-7 1-3 7z"/></svg>
       </button>
     </div>
     <div class="tb-sep"></div>
@@ -596,129 +346,87 @@ body{
     <div class="tb-group">
       <button class="tb-btn" onclick="toggleStylePanel()" title="スタイル">🎨</button>
       <button class="tb-btn danger" id="btnDeleteObj" onclick="deleteSelected()" title="削除">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
-          <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
       </button>
       <button class="tb-btn" onclick="undo()" title="Undo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 7v6h6"/><path d="M3 13C4.3 7.2 9.7 3 16 3a9 9 0 110 18 9.3 9.3 0 01-7.5-3.8"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M3 13C4.3 7.2 9.7 3 16 3a9 9 0 110 18 9.3 9.3 0 01-7.5-3.8"/></svg>
       </button>
       <button class="tb-btn" onclick="redo()" title="Redo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 7v6h-6"/><path d="M21 13c-1.3-5.8-6.7-10-13-10a9 9 0 100 18 9.3 9.3 0 007.5-3.8"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M21 13c-1.3-5.8-6.7-10-13-10a9 9 0 100 18 9.3 9.3 0 007.5-3.8"/></svg>
       </button>
       <button class="tb-btn" onclick="saveBoard(true)" title="保存">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
       </button>
       <button class="tb-btn" onclick="clearBoard()" title="全消去">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 20H7L3 16l11-11 6 6-1.5 1.5"/><path d="M6 11l7 7"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l11-11 6 6-1.5 1.5"/><path d="M6 11l7 7"/></svg>
       </button>
-      <!-- 縦長専用パネルトグル -->
       <button class="portrait-toggle" id="portraitToggle" onclick="togglePanel()" style="display:none">
         📋 <span id="ptIcon">▲</span>
       </button>
     </div>
   </div>
 
-  <!-- エディタ本体（portrait/landscape で flex-direction 切り替え） -->
   <div class="editor-body portrait" id="editorBody">
 
-    <!-- ========== サイドパネル ========== -->
+    <!-- サイドパネル -->
     <div class="side-panel" id="sidePanel">
-      <div class="side-panel-inner">
+      <div class="side-panel-inner" id="sidePanelInner">
 
-        <!-- ボードタイトル -->
         <input class="prop-board-title" id="propBoardTitle" placeholder="ボードタイトル">
 
-        <!-- プロパティリスト -->
         <div class="prop-section-label">プロパティ</div>
-        <div class="prop-list" id="propList">
-          <!-- JS で描画 -->
-        </div>
-        <button class="btn-add-prop" id="btnAddProp" onclick="showPropTypePopup(event)">
-          ＋ プロパティを追加
-        </button>
+        <div class="prop-list" id="propList"></div>
+        <button class="btn-add-prop" id="btnAddProp" onclick="showPropTypePopup(event)">＋ プロパティを追加</button>
 
         <!-- Markdownエリア -->
         <div class="md-section">
           <div class="md-toolbar-row">
-            <span class="md-label">📝 メモ（Markdown）</span>
-            <button class="md-toggle-btn" id="mdToggleBtn" onclick="toggleMdEdit()">編集</button>
+            <span class="md-label">📝 メモ</span>
+            <div class="md-mode-btns">
+              <button class="md-mode-btn active" id="mdBtnRich" onclick="setMdMode('rich')">リッチ</button>
+              <button class="md-mode-btn"        id="mdBtnRaw"  onclick="setMdMode('raw')">Markdown</button>
+            </div>
           </div>
-          <!-- プレビュー（クリックで編集モードへ） -->
-          <div class="md-preview empty" id="mdPreview" onclick="startMdEdit()"></div>
-          <!-- 編集テキストエリア（初期非表示） -->
-          <textarea class="md-textarea" id="mdTextarea"
-            placeholder="## 見出し&#10;- リスト&#10;**太字** *斜体*&#10;&#10;Markdownで自由に入力できます"></textarea>
+          <!-- リッチエディタ -->
+          <div class="rich-editor" id="richEditor"></div>
+          <div class="block-add-row">
+            <button class="btn-add-block" id="btnAddBlock" onclick="showBlockTypePopup(event)">＋ ブロックを追加</button>
+          </div>
+          <!-- Raw テキストエリア -->
+          <textarea class="md-raw-textarea" id="mdRawTextarea" style="display:none"
+            placeholder="## 見出し&#10;- リスト&#10;**太字** *斜体*&#10;&#10;Markdownをそのまま入力できます"></textarea>
         </div>
 
       </div>
     </div>
 
-    <!-- ========== キャンバス領域 ========== -->
+    <!-- 横長トグル -->
+    <button class="landscape-toggle" id="landscapeToggle" onclick="togglePanel()" style="display:none">
+      <span id="lsIcon">◀</span>
+    </button>
+
+    <!-- Canvas -->
     <div class="canvas-wrap" id="canvasWrap">
-
-      <!-- 横長専用パネルトグル（canvas-wrap の左端） -->
-      <button class="landscape-toggle" id="landscapeToggle" onclick="togglePanel()" style="display:none">
-        <span id="lsIcon">◀</span>
-      </button>
-
-      <!-- 図形ポップアップ -->
       <div class="shape-popup hidden" id="shapePopup">
-        <div class="shape-opt" id="shapeOptRect"     onclick="selectShape('rect')"     title="四角形">
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#a78bfa" stroke-width="2.5"><rect x="4" y="6" width="20" height="16" rx="2"/></svg>
-        </div>
-        <div class="shape-opt" id="shapeOptCircle"   onclick="selectShape('circle')"   title="楕円">
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#60a5fa" stroke-width="2.5"><ellipse cx="14" cy="14" rx="10" ry="8"/></svg>
-        </div>
-        <div class="shape-opt" id="shapeOptLine"     onclick="selectShape('line')"     title="直線">
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#34d399" stroke-width="2.5"><line x1="4" y1="24" x2="24" y2="4"/></svg>
-        </div>
-        <div class="shape-opt" id="shapeOptArrow"    onclick="selectShape('arrow')"    title="矢印">
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#f97316" stroke-width="2.5"><line x1="4" y1="24" x2="22" y2="6"/><polyline points="13,6 22,6 22,15"/></svg>
-        </div>
-        <div class="shape-opt" id="shapeOptTriangle" onclick="selectShape('triangle')" title="三角形">
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#fb7185" stroke-width="2.5"><polygon points="14,4 25,24 3,24"/></svg>
-        </div>
+        <div class="shape-opt" id="shapeOptRect"     onclick="selectShape('rect')"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#a78bfa" stroke-width="2.5"><rect x="4" y="6" width="20" height="16" rx="2"/></svg></div>
+        <div class="shape-opt" id="shapeOptCircle"   onclick="selectShape('circle')"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#60a5fa" stroke-width="2.5"><ellipse cx="14" cy="14" rx="10" ry="8"/></svg></div>
+        <div class="shape-opt" id="shapeOptLine"     onclick="selectShape('line')"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#34d399" stroke-width="2.5"><line x1="4" y1="24" x2="24" y2="4"/></svg></div>
+        <div class="shape-opt" id="shapeOptArrow"    onclick="selectShape('arrow')"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#f97316" stroke-width="2.5"><line x1="4" y1="24" x2="22" y2="6"/><polyline points="13,6 22,6 22,15"/></svg></div>
+        <div class="shape-opt" id="shapeOptTriangle" onclick="selectShape('triangle')"><svg width="26" height="26" viewBox="0 0 28 28" fill="none" stroke="#fb7185" stroke-width="2.5"><polygon points="14,4 25,24 3,24"/></svg></div>
       </div>
-
-      <!-- スタイルパネル -->
       <div class="style-panel hidden" id="stylePanel">
         <div class="sp-tabs">
           <button class="sp-tab active" id="spTabText"  onclick="switchSpTab('text')">テキスト</button>
           <button class="sp-tab"        id="spTabShape" onclick="switchSpTab('shape')">図形</button>
         </div>
-        <!-- テキストタブ -->
         <div class="sp-body" id="spBodyText">
           <div class="sp-row"><span class="sp-label">文字色</span><div class="sp-colors" id="spTextColor"></div></div>
           <div class="sp-row"><span class="sp-label">枠の色</span><div class="sp-colors" id="spTxtBorderColor"></div></div>
           <div class="sp-row"><span class="sp-label">背景色</span><div class="sp-colors" id="spTxtBgColor"></div></div>
-          <div class="sp-row">
-            <span class="sp-label">背景透明度</span>
-            <input type="range" class="sp-slider" id="spTxtBgOpacity" min="0" max="100" value="90">
-            <span class="sp-val" id="spTxtBgOpacityVal">90%</span>
-          </div>
-          <div class="sp-row">
-            <span class="sp-label">枠の太さ</span>
-            <input type="range" class="sp-slider" id="spTxtBorderWidth" min="0" max="10" value="2">
-            <span class="sp-val" id="spTxtBorderWidthVal">2px</span>
-          </div>
-          <div class="sp-row">
-            <span class="sp-label">文字サイズ</span>
-            <input type="range" class="sp-slider" id="spFontSize" min="10" max="72" value="18">
-            <span class="sp-val" id="spFontSizeVal">18px</span>
-          </div>
-          <div class="sp-row">
-            <span class="sp-label">フォント</span>
+          <div class="sp-row"><span class="sp-label">背景透明度</span><input type="range" class="sp-slider" id="spTxtBgOpacity" min="0" max="100" value="90"><span class="sp-val" id="spTxtBgOpacityVal">90%</span></div>
+          <div class="sp-row"><span class="sp-label">枠の太さ</span><input type="range" class="sp-slider" id="spTxtBorderWidth" min="0" max="10" value="2"><span class="sp-val" id="spTxtBorderWidthVal">2px</span></div>
+          <div class="sp-row"><span class="sp-label">文字サイズ</span><input type="range" class="sp-slider" id="spFontSize" min="10" max="72" value="18"><span class="sp-val" id="spFontSizeVal">18px</span></div>
+          <div class="sp-row"><span class="sp-label">フォント</span>
             <select class="sp-select" id="spFontFamily">
               <option value="-apple-system,BlinkMacSystemFont,sans-serif">システム</option>
               <option value="'Helvetica Neue',Arial,sans-serif">Helvetica</option>
@@ -728,39 +436,45 @@ body{
             </select>
           </div>
         </div>
-        <!-- 図形タブ -->
         <div class="sp-body hidden" id="spBodyShape">
           <div class="sp-row"><span class="sp-label">枠線色</span><div class="sp-colors" id="spShapeStrokeColor"></div></div>
           <div class="sp-row"><span class="sp-label">塗り色</span><div class="sp-colors" id="spShapeFillColor"></div></div>
-          <div class="sp-row">
-            <span class="sp-label">塗り透明度</span>
-            <input type="range" class="sp-slider" id="spShapeFillOpacity" min="0" max="100" value="0">
-            <span class="sp-val" id="spShapeFillOpacityVal">0%</span>
-          </div>
+          <div class="sp-row"><span class="sp-label">塗り透明度</span><input type="range" class="sp-slider" id="spShapeFillOpacity" min="0" max="100" value="0"><span class="sp-val" id="spShapeFillOpacityVal">0%</span></div>
         </div>
         <button class="sp-close" onclick="closeStylePanel()">✕ 閉じる</button>
       </div>
-
       <canvas id="mainCanvas"></canvas>
       <div class="mode-badge" id="modeBadge">ペン</div>
-    </div><!-- /canvas-wrap -->
-
-  </div><!-- /editor-body -->
-</div><!-- /editorScreen -->
+    </div>
+  </div>
+</div>
 
 <!-- プロパティ型ポップアップ -->
 <div class="prop-type-popup hidden" id="propTypePopup">
   <div class="prop-type-opt" onclick="addProp('text')">📝 テキスト</div>
   <div class="prop-type-opt" onclick="addProp('select')">🔽 セレクト</div>
   <div class="prop-type-opt" onclick="addProp('date')">📅 日付</div>
-  <div class="prop-type-opt" onclick="addProp('checkbox')">☑️ チェックボックス</div>
+  <div class="prop-type-opt" onclick="addProp('checklist')">✅ チェックリスト</div>
   <div class="prop-type-opt" onclick="addProp('number')">🔢 数値</div>
 </div>
 
-<!-- プロパティ設定モーダル -->
+<!-- ブロック型ポップアップ -->
+<div class="block-type-popup hidden" id="blockTypePopup">
+  <div class="block-type-opt" onclick="addBlock('p')">📄 テキスト <span class="block-type-shortcut">Enter</span></div>
+  <div class="block-type-opt" onclick="addBlock('h1')">H1 大見出し <span class="block-type-shortcut"># </span></div>
+  <div class="block-type-opt" onclick="addBlock('h2')">H2 中見出し <span class="block-type-shortcut">## </span></div>
+  <div class="block-type-opt" onclick="addBlock('h3')">H3 小見出し <span class="block-type-shortcut">### </span></div>
+  <div class="block-type-opt" onclick="addBlock('bullet')">• 箇条書き <span class="block-type-shortcut">- </span></div>
+  <div class="block-type-opt" onclick="addBlock('todo')">☑ ToDoリスト</div>
+  <div class="block-type-opt" onclick="addBlock('quote')">❝ 引用</div>
+  <div class="block-type-opt" onclick="addBlock('code')">💻 コード</div>
+  <div class="block-type-opt" onclick="addBlock('hr')">— 区切り線</div>
+</div>
+
+<!-- プロパティ名モーダル -->
 <div class="modal-overlay hidden" id="propModal">
   <div class="modal-card">
-    <h3 id="propModalTitle">プロパティ設定</h3>
+    <h3 id="propModalTitle">プロパティを追加</h3>
     <input class="modal-input" id="propModalName" placeholder="プロパティ名">
     <div class="modal-btns">
       <button class="modal-btn cancel" onclick="closePropModal()">キャンセル</button>
@@ -787,1474 +501,1227 @@ body{
 
 <script>
 /* =====================================================
-   FreePad — 完全版
-   プロパティパネル＋Markdownエリア＋キャンバス
+   FreePad — チェックリスト＋リッチMarkdownエディタ
 ===================================================== */
 
-// ---------- marked.js を動的ロード ----------
-var markedReady = false;
-(function(){
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
-  s.onload = function(){ markedReady = true; renderMdPreview(); };
-  s.onerror = function(){ markedReady = false; };
-  document.head.appendChild(s);
-})();
-
-// ---------- Base64 ----------
-function encodeBase64(str) {
-  var bytes = new TextEncoder().encode(str);
-  var bin = '';
-  bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+// ---- Base64 ----
+function encodeBase64(str){
+  var bytes=new TextEncoder().encode(str),bin='';
+  bytes.forEach(function(b){bin+=String.fromCharCode(b);});
   return btoa(bin);
 }
-function decodeBase64(b64) {
-  var bin = atob(b64.replace(/[\n\r]/g,''));
-  var bytes = new Uint8Array(bin.length);
-  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+function decodeBase64(b64){
+  var bin=atob(b64.replace(/[\n\r]/g,'')),bytes=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
   return new TextDecoder().decode(bytes);
 }
 
-// ---------- URL ハッシュ ----------
-var cfg = {};
-function parseHash() {
-  var map = {}, hash = location.hash.slice(1);
-  if (!hash) return map;
-  hash.split('&').forEach(function(pair){
-    var idx = pair.indexOf('=');
-    if (idx < 0) return;
-    map[pair.slice(0,idx)] = decodeURIComponent(pair.slice(idx+1));
-  });
+// ---- URLハッシュ ----
+var cfg={};
+function parseHash(){
+  var map={},hash=location.hash.slice(1);if(!hash)return map;
+  hash.split('&').forEach(function(pair){var idx=pair.indexOf('=');if(idx<0)return;map[pair.slice(0,idx)]=decodeURIComponent(pair.slice(idx+1));});
   return map;
 }
-function buildHashUrl(o,r,t) {
-  return location.href.split('#')[0] + '#owner=' + encodeURIComponent(o)
-    + '&repo=' + encodeURIComponent(r) + '&token=' + encodeURIComponent(t);
-}
-function loadConfig() {
-  var p = parseHash();
-  if (p.owner && p.repo && p.token) { cfg = p; return true; }
-  return false;
-}
+function buildHashUrl(o,r,t){return location.href.split('#')[0]+'#owner='+encodeURIComponent(o)+'&repo='+encodeURIComponent(r)+'&token='+encodeURIComponent(t);}
+function loadConfig(){var p=parseHash();if(p.owner&&p.repo&&p.token){cfg=p;return true;}return false;}
 
-// ---------- GitHub API ----------
-var GH = 'https://api.github.com';
-var DATA_PATH = 'data/boards.json';
-var fileSHA = null;
-
-function ghHeaders() {
-  return {
-    'Authorization': 'Bearer ' + cfg.token,
-    'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
+// ---- GitHub API ----
+var GH='https://api.github.com',DATA_PATH='data/boards.json',fileSHA=null;
+function ghHeaders(){return{'Authorization':'Bearer '+cfg.token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
+function ghGetFile(path){
+  return fetch(GH+'/repos/'+cfg.owner+'/'+cfg.repo+'/contents/'+path,{headers:ghHeaders(),cache:'no-store'})
+  .then(function(res){if(res.status===404)return null;if(!res.ok)throw new Error('GET '+res.status);return res.json();});
 }
-function ghGetFile(path) {
-  return fetch(GH + '/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + path,
-    { headers: ghHeaders(), cache: 'no-store' })
-  .then(function(res){
-    if (res.status === 404) return null;
-    if (!res.ok) throw new Error('GET ' + res.status);
-    return res.json();
-  });
-}
-function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
-
-async function ghPutFile(path, obj, msg) {
-  var b64 = encodeBase64(JSON.stringify(obj, null, 2));
-  for (var attempt = 1; attempt <= 3; attempt++) {
-    try { var cur = await ghGetFile(path); fileSHA = cur ? cur.sha : null; } catch(_) {}
-    var body = { message: msg, content: b64,
-      committer: { name: 'FreePad', email: 'freepad@app.local' } };
-    if (fileSHA) body.sha = fileSHA;
-    var res = await fetch(GH + '/repos/' + cfg.owner + '/' + cfg.repo + '/contents/' + path, {
-      method: 'PUT',
-      headers: Object.assign({}, ghHeaders(), { 'Content-Type': 'application/json' }),
-      body: JSON.stringify(body)
-    });
-    if (res.ok) {
-      var data = await res.json();
-      fileSHA = data.content.sha;
-      return data;
-    }
-    var eb = await res.json().catch(function(){ return {}; });
-    if (res.status === 409) { await sleep(700 * attempt); continue; }
-    throw new Error(eb.message || 'PUT ' + res.status);
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+async function ghPutFile(path,obj,msg){
+  var b64=encodeBase64(JSON.stringify(obj,null,2));
+  for(var attempt=1;attempt<=3;attempt++){
+    try{var cur=await ghGetFile(path);fileSHA=cur?cur.sha:null;}catch(_){}
+    var body={message:msg,content:b64,committer:{name:'FreePad',email:'freepad@app.local'}};
+    if(fileSHA)body.sha=fileSHA;
+    var res=await fetch(GH+'/repos/'+cfg.owner+'/'+cfg.repo+'/contents/'+path,
+      {method:'PUT',headers:Object.assign({},ghHeaders(),{'Content-Type':'application/json'}),body:JSON.stringify(body)});
+    if(res.ok){var data=await res.json();fileSHA=data.content.sha;return data;}
+    var eb=await res.json().catch(function(){return{};});
+    if(res.status===409){await sleep(700*attempt);continue;}
+    throw new Error(eb.message||'PUT '+res.status);
   }
   throw new Error('保存に3回失敗しました。再読み込みして再試行してください。');
 }
-
-async function loadBoardsFromGitHub() {
-  setSyncStatus('loading', '同期中...');
-  try {
-    var f = await ghGetFile(DATA_PATH);
-    if (!f) { fileSHA = null; boards = []; }
-    else { fileSHA = f.sha; boards = JSON.parse(decodeBase64(f.content)); }
-    setSyncStatus('ok', '同期済み');
-  } catch(e) {
-    setSyncStatus('error', 'エラー');
-    showToast('⚠️ 読み込み失敗: ' + e.message, 'error');
-  }
+async function loadBoardsFromGitHub(){
+  setSyncStatus('loading','同期中...');
+  try{var f=await ghGetFile(DATA_PATH);if(!f){fileSHA=null;boards=[];}else{fileSHA=f.sha;boards=JSON.parse(decodeBase64(f.content));}setSyncStatus('ok','同期済み');}
+  catch(e){setSyncStatus('error','エラー');showToast('⚠️ 読み込み失敗: '+e.message,'error');}
 }
-async function saveBoardsToGitHub() {
-  setSyncStatus('loading', '保存中...');
-  try {
-    await ghPutFile(DATA_PATH, boards, 'FreePad ' + new Date().toISOString());
-    setSyncStatus('ok', '同期済み');
-    return true;
-  } catch(e) {
-    setSyncStatus('error', 'エラー');
-    showToast('⚠️ ' + e.message, 'error');
-    return false;
-  }
+async function saveBoardsToGitHub(){
+  setSyncStatus('loading','保存中...');
+  try{await ghPutFile(DATA_PATH,boards,'FreePad '+new Date().toISOString());setSyncStatus('ok','同期済み');return true;}
+  catch(e){setSyncStatus('error','エラー');showToast('⚠️ '+e.message,'error');return false;}
 }
 
-// ---------- アプリ状態 ----------
-var boards = [];
-var currentId = null;
-var tool = 'pen';
-var selectedShape = 'rect';
-var currentColor = '#1c1c1e';
-var strokeWidth = 4;
-var canvas, ctx, canvasWrap;
-var undoStack = [], redoStack = [];
-var scale = 1, panX = 0, panY = 0;
-var activePointers = {}, lastPinchDist = null, lastPanPos = null;
-var strokes = [], textItems = [];
-var isDrawing = false, currentStroke = null, shapePreview = null;
-var selectedId = null, selectedType = null;
-var selBox = null, handles = [];
-var dragMode = null, dragStart = null, moveDragActive = false;
-var shiftDown = false;
-var lastTapTime = 0, lastTapPos = { x:0, y:0 };
-var editingTextId = null, floatInput = null, isComposing = false;
-var isSaving = false;
-var panelOpen = true;
+// ---- アプリ状態 ----
+var boards=[],currentId=null;
+var tool='pen',selectedShape='rect';
+var currentColor='#1c1c1e',strokeWidth=4;
+var canvas,ctx,canvasWrap;
+var undoStack=[],redoStack=[];
+var scale=1,panX=0,panY=0;
+var activePointers={},lastPinchDist=null,lastPanPos=null;
+var strokes=[],textItems=[];
+var isDrawing=false,currentStroke=null,shapePreview=null;
+var selectedId=null,selectedType=null;
+var selBox=null,handles=[];
+var dragMode=null,dragStart=null,moveDragActive=false;
+var shiftDown=false;
+var lastTapTime=0,lastTapPos={x:0,y:0};
+var editingTextId=null,floatInput=null,isComposing=false;
+var isSaving=false,panelOpen=true;
 
-// スタイル初期値
-var spTextColor = '#1c1c1e';
-var spTxtBorderColor = '#7c3aed';
-var spTxtBgColor = '#ffffff';
-var spTxtBgOpacity = 90;
-var spTxtBorderWidth = 2;
-var spFontSize = 18;
-var spFontFamily = '-apple-system,BlinkMacSystemFont,sans-serif';
-var spShapeStrokeColor = '#1c1c1e';
-var spShapeFillColor = '#ffffff';
-var spShapeFillOpacity = 0;
-var activeSpTab = 'text';
+var spTextColor='#1c1c1e',spTxtBorderColor='#7c3aed',spTxtBgColor='#ffffff';
+var spTxtBgOpacity=90,spTxtBorderWidth=2,spFontSize=18;
+var spFontFamily='-apple-system,BlinkMacSystemFont,sans-serif';
+var spShapeStrokeColor='#1c1c1e',spShapeFillColor='#ffffff',spShapeFillOpacity=0;
+var activeSpTab='text';
 
-// プロパティ・MD
-var currentProps = [];
-var currentMd = '';
-var mdEditing = false;
+var currentProps=[];
+// Markdownブロック配列: [{id,type,text,checked}]
+var mdBlocks=[];
+var mdMode='rich'; // 'rich' | 'raw'
 
-// モーダル
-var propModalCallback = null;
-var optionsModalPropId = null;
+var propModalCallback=null,optionsModalPropId=null;
+var propTypePopupOpen=false,blockTypePopupOpen=false;
+var COLORS=['#1c1c1e','#ff3b30','#ff9500','#ffcc00','#34c759','#007aff','#af52de','#ffffff'];
 
-var COLORS = ['#1c1c1e','#ff3b30','#ff9500','#ffcc00','#34c759','#007aff','#af52de','#ffffff'];
-
-// ---------- 初期化 ----------
-document.addEventListener('DOMContentLoaded', function() {
-  canvas = document.getElementById('mainCanvas');
-  ctx = canvas.getContext('2d');
-  canvasWrap = document.getElementById('canvasWrap');
-
+// =====================================================
+// 初期化
+// =====================================================
+document.addEventListener('DOMContentLoaded',function(){
+  canvas=document.getElementById('mainCanvas');
+  ctx=canvas.getContext('2d');
+  canvasWrap=document.getElementById('canvasWrap');
   buildColorPicker();
   buildStylePanel();
   setupCanvasEvents();
   setupKeyboard();
-
-  document.getElementById('strokeSize').addEventListener('input', function(e){
-    strokeWidth = +e.target.value;
+  document.getElementById('strokeSize').addEventListener('input',function(e){strokeWidth=+e.target.value;});
+  document.getElementById('boardTitle').addEventListener('input',function(e){
+    document.getElementById('propBoardTitle').value=e.target.value;
+    var b=boards.find(function(x){return x.id===currentId;});if(b)b.name=e.target.value;
   });
-
-  // タイトル同期（ツールバー ⇔ パネル）
-  document.getElementById('boardTitle').addEventListener('input', function(e){
-    document.getElementById('propBoardTitle').value = e.target.value;
-    var b = boards.find(function(x){ return x.id === currentId; });
-    if (b) b.name = e.target.value;
+  document.getElementById('propBoardTitle').addEventListener('input',function(e){
+    document.getElementById('boardTitle').value=e.target.value;
+    var b=boards.find(function(x){return x.id===currentId;});if(b)b.name=e.target.value;
   });
-  document.getElementById('propBoardTitle').addEventListener('input', function(e){
-    document.getElementById('boardTitle').value = e.target.value;
-    var b = boards.find(function(x){ return x.id === currentId; });
-    if (b) b.name = e.target.value;
-  });
-
-  // MD テキストエリア input
-  document.getElementById('mdTextarea').addEventListener('input', function(){
-    currentMd = this.value;
-    renderMdPreview(); // リアルタイムプレビュー更新（非表示だが値は更新）
-  });
-
-  // 向き検知
-  window.addEventListener('resize', function(){
-    applyOrientation();
-    resizeCanvas();
-    updateSelBox();
-  });
-
-  // 初回表示
-  if (loadConfig()) {
-    show('homeScreen');
-    showLoading(true);
-    loadBoardsFromGitHub().then(function(){
-      showLoading(false);
-      renderHome();
-    });
-  } else {
-    show('setupScreen');
-  }
-
+  window.addEventListener('resize',function(){applyOrientation();resizeCanvas();updateSelBox();});
+  if(loadConfig()){
+    show('homeScreen');showLoading(true);
+    loadBoardsFromGitHub().then(function(){showLoading(false);renderHome();});
+  }else{show('setupScreen');}
   applyOrientation();
 });
 
-// ---------- 向き・レイアウト ----------
-function isPortrait() { return window.innerHeight >= window.innerWidth; }
-
-function applyOrientation() {
-  var body = document.getElementById('editorBody');
-  var ptBtn = document.getElementById('portraitToggle');
-  var lsBtn = document.getElementById('landscapeToggle');
-  var panel = document.getElementById('sidePanel');
-
-  if (isPortrait()) {
-    body.classList.remove('landscape');
-    body.classList.add('portrait');
-    ptBtn.style.display = 'flex';
-    lsBtn.style.display = 'none';
-    // 縦長: 高さで制御
-    if (panelOpen) {
-      panel.style.height = '260px';
-      panel.style.width = '';
-    } else {
-      panel.style.height = '0';
-      panel.style.width = '';
-    }
-  } else {
-    body.classList.remove('portrait');
-    body.classList.add('landscape');
-    ptBtn.style.display = 'none';
-    lsBtn.style.display = 'flex';
-    // 横長: 幅で制御
-    if (panelOpen) {
-      panel.style.width = '300px';
-      panel.style.height = '';
-    } else {
-      panel.style.width = '0';
-      panel.style.height = '';
-    }
+// ---- 向き ----
+function isPortrait(){return window.innerHeight>=window.innerWidth;}
+function applyOrientation(){
+  var body=document.getElementById('editorBody');
+  var ptBtn=document.getElementById('portraitToggle');
+  var lsBtn=document.getElementById('landscapeToggle');
+  var panel=document.getElementById('sidePanel');
+  if(isPortrait()){
+    body.classList.remove('landscape');body.classList.add('portrait');
+    ptBtn.style.display='flex';lsBtn.style.display='none';
+    panel.style.height=panelOpen?'280px':'0';panel.style.width='';
+  }else{
+    body.classList.remove('portrait');body.classList.add('landscape');
+    ptBtn.style.display='none';lsBtn.style.display='flex';
+    panel.style.width=panelOpen?'300px':'0';panel.style.height='';
   }
   updatePanelToggleIcon();
 }
-
-function togglePanel() {
-  panelOpen = !panelOpen;
-  var panel = document.getElementById('sidePanel');
-  panel.style.transition = 'height .3s ease, width .3s ease';
+function togglePanel(){
+  panelOpen=!panelOpen;
+  var panel=document.getElementById('sidePanel');
+  panel.style.transition='height .3s ease,width .3s ease';
   applyOrientation();
-  setTimeout(function(){
-    panel.style.transition = '';
-    resizeCanvas();
-    updateSelBox();
-  }, 320);
+  setTimeout(function(){panel.style.transition='';resizeCanvas();updateSelBox();},320);
+}
+function updatePanelToggleIcon(){
+  var ptIcon=document.getElementById('ptIcon'),lsIcon=document.getElementById('lsIcon');
+  if(ptIcon)ptIcon.textContent=panelOpen?'▲':'▼';
+  if(lsIcon)lsIcon.textContent=panelOpen?'◀':'▶';
 }
 
-function updatePanelToggleIcon() {
-  var ptIcon = document.getElementById('ptIcon');
-  var lsIcon = document.getElementById('lsIcon');
-  if (ptIcon) ptIcon.textContent = panelOpen ? '▲' : '▼';
-  if (lsIcon) lsIcon.textContent = panelOpen ? '◀' : '▶';
-}
-
-// ---------- セットアップ ----------
-var verifiedUrl = '';
-async function setupSave() {
-  var owner = document.getElementById('cfgOwner').value.trim();
-  var repo  = document.getElementById('cfgRepo').value.trim();
-  var token = document.getElementById('cfgToken').value.trim();
-  var errEl = document.getElementById('setupError');
-  errEl.style.display = 'none';
-  if (!owner || !repo || !token) {
-    errEl.textContent = 'すべての項目を入力してください';
-    errEl.style.display = 'block';
-    return;
-  }
+// =====================================================
+// セットアップ・ホーム
+// =====================================================
+var verifiedUrl='';
+async function setupSave(){
+  var owner=document.getElementById('cfgOwner').value.trim();
+  var repo=document.getElementById('cfgRepo').value.trim();
+  var token=document.getElementById('cfgToken').value.trim();
+  var errEl=document.getElementById('setupError');errEl.style.display='none';
+  if(!owner||!repo||!token){errEl.textContent='すべての項目を入力してください';errEl.style.display='block';return;}
   showLoading(true);
-  try {
-    var r = await fetch(GH + '/repos/' + owner + '/' + repo, {
-      headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json' }
-    });
-    if (!r.ok) throw new Error('リポジトリにアクセスできません（ステータス: ' + r.status + '）');
-    verifiedUrl = buildHashUrl(owner, repo, token);
-    document.getElementById('urlText').textContent = verifiedUrl;
-    document.getElementById('urlBox').style.display = 'block';
-    document.getElementById('btnCopy').style.display = 'inline-block';
-    document.getElementById('btnGo').style.display = 'block';
-  } catch(e) {
-    errEl.textContent = e.message;
-    errEl.style.display = 'block';
-  } finally {
-    showLoading(false);
-  }
+  try{
+    var r=await fetch(GH+'/repos/'+owner+'/'+repo,{headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+    if(!r.ok)throw new Error('リポジトリにアクセスできません（'+r.status+'）');
+    verifiedUrl=buildHashUrl(owner,repo,token);
+    document.getElementById('urlText').textContent=verifiedUrl;
+    document.getElementById('urlBox').style.display='block';
+    document.getElementById('btnCopy').style.display='inline-block';
+    document.getElementById('btnGo').style.display='block';
+  }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
+  finally{showLoading(false);}
 }
-function copyUrl() {
-  if (!verifiedUrl) return;
-  navigator.clipboard.writeText(verifiedUrl)
-    .then(function(){ showToast('📋 コピーしました', 'success'); })
-    .catch(function(){
-      var ta = document.createElement('textarea');
-      ta.value = verifiedUrl; ta.style.cssText = 'position:fixed;opacity:0';
-      document.body.appendChild(ta); ta.focus(); ta.select();
-      document.execCommand('copy'); ta.remove();
-      showToast('📋 コピーしました', 'success');
-    });
+function copyUrl(){
+  if(!verifiedUrl)return;
+  navigator.clipboard.writeText(verifiedUrl).then(function(){showToast('📋 コピーしました','success');})
+  .catch(function(){var ta=document.createElement('textarea');ta.value=verifiedUrl;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');ta.remove();showToast('📋 コピーしました','success');});
 }
-function goToApp() { location.href = verifiedUrl; }
-function showSetup() {
-  document.getElementById('cfgOwner').value = cfg.owner || '';
-  document.getElementById('cfgRepo').value  = cfg.repo  || '';
-  document.getElementById('cfgToken').value = cfg.token || '';
-  ['urlBox','btnCopy','setupError'].forEach(function(id){
-    document.getElementById(id).style.display = 'none';
-  });
-  document.getElementById('btnGo').style.display = 'none';
-  hide('homeScreen');
-  show('setupScreen');
+function goToApp(){location.href=verifiedUrl;}
+function showSetup(){
+  document.getElementById('cfgOwner').value=cfg.owner||'';
+  document.getElementById('cfgRepo').value=cfg.repo||'';
+  document.getElementById('cfgToken').value=cfg.token||'';
+  ['urlBox','btnCopy','setupError'].forEach(function(id){document.getElementById(id).style.display='none';});
+  document.getElementById('btnGo').style.display='none';
+  hide('homeScreen');show('setupScreen');
 }
-
-// ---------- ホーム ----------
-function renderHome() {
-  var grid = document.getElementById('boardsGrid');
-  grid.innerHTML = '';
-  if (!boards.length) {
-    grid.innerHTML = '<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>';
-    return;
-  }
+function renderHome(){
+  var grid=document.getElementById('boardsGrid');grid.innerHTML='';
+  if(!boards.length){grid.innerHTML='<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>';return;}
   boards.slice().reverse().forEach(function(b){
-    var card = document.createElement('div');
-    card.className = 'board-card';
-    var thumb = document.createElement('canvas');
-    thumb.className = 'board-thumb';
-    thumb.width = 360; thumb.height = 270;
-    if (b.thumb) {
-      var img = new Image();
-      img.onload = function(){ thumb.getContext('2d').drawImage(img,0,0,360,270); };
-      img.src = b.thumb;
-    } else {
-      var tc = thumb.getContext('2d');
-      tc.fillStyle = '#f5f4ef'; tc.fillRect(0,0,360,270);
-    }
-    // バッジ
-    var propBadges = '';
-    if (b.properties && b.properties.length) {
+    var card=document.createElement('div');card.className='board-card';
+    var thumb=document.createElement('canvas');thumb.className='board-thumb';thumb.width=360;thumb.height=270;
+    if(b.thumb){var img=new Image();img.onload=function(){thumb.getContext('2d').drawImage(img,0,0,360,270);};img.src=b.thumb;}
+    else{var tc=thumb.getContext('2d');tc.fillStyle='#f5f4ef';tc.fillRect(0,0,360,270);}
+    var propBadges='';
+    if(b.properties&&b.properties.length){
       b.properties.slice(0,3).forEach(function(p){
-        var v = p.value;
-        if (v !== '' && v !== null && v !== undefined && v !== false) {
-          var disp = p.type === 'checkbox'
-            ? (v ? '✓ ' + p.name : null)
-            : (p.name + ': ' + v);
-          if (disp) propBadges += '<span class="prop-badge">' + esc(disp) + '</span>';
+        if(p.type==='checklist'){
+          var done=(p.items||[]).filter(function(i){return i.checked;}).length;
+          var total=(p.items||[]).length;
+          if(total>0)propBadges+='<span class="prop-badge">'+esc(p.name)+': '+done+'/'+total+'</span>';
+        }else{
+          var v=p.value;
+          if(v!==''&&v!==null&&v!==undefined){
+            propBadges+='<span class="prop-badge">'+esc(p.name+': '+v)+'</span>';
+          }
         }
       });
     }
-    var info = document.createElement('div');
-    info.className = 'board-info';
-    info.innerHTML = '<div class="board-name">' + esc(b.name) + '</div>'
-      + '<div class="board-date">' + fmtDate(b.date) + '</div>'
-      + (propBadges ? '<div class="board-props">' + propBadges + '</div>' : '');
-    var del = document.createElement('button');
-    del.className = 'board-del'; del.textContent = '✕';
-    del.onclick = function(e){ e.stopPropagation(); deleteBoard(b.id); };
-    card.appendChild(thumb);
-    card.appendChild(info);
-    card.appendChild(del);
-    card.onclick = function(){ openBoard(b.id); };
+    var info=document.createElement('div');info.className='board-info';
+    info.innerHTML='<div class="board-name">'+esc(b.name)+'</div><div class="board-date">'+fmtDate(b.date)+'</div>'+(propBadges?'<div class="board-props">'+propBadges+'</div>':'');
+    var del=document.createElement('button');del.className='board-del';del.textContent='✕';
+    del.onclick=function(e){e.stopPropagation();deleteBoard(b.id);};
+    card.appendChild(thumb);card.appendChild(info);card.appendChild(del);
+    card.onclick=function(){openBoard(b.id);};
     grid.appendChild(card);
   });
 }
-function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function fmtDate(iso){
-  if (!iso) return '';
-  var d = new Date(iso);
-  return d.getFullYear() + '/' + String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0');
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(iso){if(!iso)return'';var d=new Date(iso);return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');}
+async function newBoard(){
+  var id='board_'+Date.now();
+  boards.push({id:id,name:'新しいボード',date:new Date().toISOString(),properties:[],mdBlocks:[],strokes:[],texts:[],thumb:null});
+  showLoading(true);await saveBoardsToGitHub();showLoading(false);openBoard(id);
 }
-
-async function newBoard() {
-  var id = 'board_' + Date.now();
-  boards.push({ id:id, name:'新しいボード', date:new Date().toISOString(),
-    properties:[], markdown:'', strokes:[], texts:[], thumb:null });
-  showLoading(true);
-  await saveBoardsToGitHub();
-  showLoading(false);
-  openBoard(id);
-}
-
-function openBoard(id) {
-  currentId = id;
-  var b = boards.find(function(x){ return x.id === id; });
-  if (!b) return;
-  document.getElementById('boardTitle').value = b.name;
-  document.getElementById('propBoardTitle').value = b.name;
-  strokes    = JSON.parse(JSON.stringify(b.strokes    || []));
-  textItems  = JSON.parse(JSON.stringify(b.texts      || []));
-  currentProps = JSON.parse(JSON.stringify(b.properties || []));
-  currentMd  = b.markdown || '';
-  undoStack = []; redoStack = [];
-  scale = 1; panX = 0; panY = 0;
-  clearSelection(); closeTextEdit(); mdEditing = false;
-
+function openBoard(id){
+  currentId=id;
+  var b=boards.find(function(x){return x.id===id;});if(!b)return;
+  document.getElementById('boardTitle').value=b.name;
+  document.getElementById('propBoardTitle').value=b.name;
+  strokes=JSON.parse(JSON.stringify(b.strokes||[]));
+  textItems=JSON.parse(JSON.stringify(b.texts||[]));
+  currentProps=JSON.parse(JSON.stringify(b.properties||[]));
+  // 旧形式互換: markdownがある場合はブロックに変換
+  if(b.mdBlocks){mdBlocks=JSON.parse(JSON.stringify(b.mdBlocks));}
+  else if(b.markdown){mdBlocks=markdownToBlocks(b.markdown);}
+  else{mdBlocks=[];}
+  undoStack=[];redoStack=[];scale=1;panX=0;panY=0;
+  clearSelection();closeTextEdit();
   renderPropList();
-  renderMdPreview();
-
-  // MDエリアを必ずプレビューモードで開く
-  document.getElementById('mdTextarea').style.display = 'none';
-  document.getElementById('mdPreview').style.display  = 'block';
-  document.getElementById('mdToggleBtn').textContent  = '編集';
-  mdEditing = false;
-
-  hide('homeScreen');
-  show('editorScreen');
-  setTool('pen');
-  panelOpen = true;
-  applyOrientation();
-  requestAnimationFrame(function(){ resizeCanvas(); redraw(); });
+  mdMode='rich';
+  setMdMode('rich',true);
+  hide('homeScreen');show('editorScreen');setTool('pen');
+  panelOpen=true;applyOrientation();
+  requestAnimationFrame(function(){resizeCanvas();redraw();});
 }
-
-async function goHome() {
-  clearSelection(); closeTextEdit(); closeMdEdit();
+async function goHome(){
+  clearSelection();closeTextEdit();
   await saveBoard(false);
-  hide('editorScreen');
-  show('homeScreen');
-  renderHome();
+  hide('editorScreen');show('homeScreen');renderHome();
+}
+async function deleteBoard(id){
+  if(!confirm('このボードを削除しますか？'))return;
+  boards=boards.filter(function(b){return b.id!==id;});
+  showLoading(true);await saveBoardsToGitHub();showLoading(false);renderHome();
+}
+function clearBoard(){
+  if(!confirm('キャンバス上の全オブジェクトを削除しますか？'))return;
+  pushUndo();strokes=[];textItems=[];clearSelection();closeTextEdit();redraw();
 }
 
-async function deleteBoard(id) {
-  if (!confirm('このボードを削除しますか？')) return;
-  boards = boards.filter(function(b){ return b.id !== id; });
-  showLoading(true);
-  await saveBoardsToGitHub();
-  showLoading(false);
-  renderHome();
+// ---- 保存 ----
+async function saveBoard(showMsg){
+  if(isSaving){if(showMsg)showToast('⏳ 保存中...','info');return;}
+  isSaving=true;
+  var b=boards.find(function(x){return x.id===currentId;});if(!b){isSaving=false;return;}
+  b.name=document.getElementById('boardTitle').value||'無題';
+  b.date=new Date().toISOString();
+  b.strokes=JSON.parse(JSON.stringify(strokes));
+  b.texts=JSON.parse(JSON.stringify(textItems));
+  b.properties=JSON.parse(JSON.stringify(currentProps));
+  b.mdBlocks=JSON.parse(JSON.stringify(mdBlocks));
+  b.markdown=blocksToMarkdown(mdBlocks); // 互換用
+  b.thumb=canvas.toDataURL('image/jpeg',.4);
+  if(showMsg)showLoading(true);
+  var ok=await saveBoardsToGitHub();
+  if(showMsg){showLoading(false);if(ok)showToast('💾 保存しました','success');}
+  isSaving=false;
 }
+setInterval(function(){var es=document.getElementById('editorScreen');if(es&&!es.classList.contains('hidden'))saveBoard(false);},90000);
 
-function clearBoard() {
-  if (!confirm('キャンバス上の全オブジェクトを削除しますか？')) return;
+// ---- 削除 ----
+function deleteSelected(){
+  if(!selectedId){showToast('オブジェクトを選択してください','info');return;}
   pushUndo();
-  strokes = []; textItems = [];
-  clearSelection(); closeTextEdit(); redraw();
+  if(selectedType==='text')textItems=textItems.filter(function(t){return t.id!==selectedId;});
+  if(selectedType==='stroke')strokes=strokes.filter(function(s){return s.id!==selectedId;});
+  clearSelection();redraw();updateDeleteBtn();showToast('🗑️ 削除しました','info');
 }
-
-// ---------- 保存 ----------
-async function saveBoard(showMsg) {
-  if (isSaving) { if (showMsg) showToast('⏳ 保存中...', 'info'); return; }
-  isSaving = true;
-  var b = boards.find(function(x){ return x.id === currentId; });
-  if (!b) { isSaving = false; return; }
-  b.name       = document.getElementById('boardTitle').value || '無題';
-  b.date       = new Date().toISOString();
-  b.strokes    = JSON.parse(JSON.stringify(strokes));
-  b.texts      = JSON.parse(JSON.stringify(textItems));
-  b.properties = JSON.parse(JSON.stringify(currentProps));
-  b.markdown   = currentMd;
-  b.thumb      = canvas.toDataURL('image/jpeg', 0.4);
-  if (showMsg) showLoading(true);
-  var ok = await saveBoardsToGitHub();
-  if (showMsg) { showLoading(false); if (ok) showToast('💾 保存しました', 'success'); }
-  isSaving = false;
-}
-setInterval(function(){
-  var es = document.getElementById('editorScreen');
-  if (es && !es.classList.contains('hidden')) saveBoard(false);
-}, 90000);
-
-// ---------- 削除 ----------
-function deleteSelected() {
-  if (!selectedId) { showToast('オブジェクトを選択してください', 'info'); return; }
-  pushUndo();
-  if (selectedType === 'text')   textItems = textItems.filter(function(t){ return t.id !== selectedId; });
-  if (selectedType === 'stroke') strokes   = strokes.filter(function(s){ return s.id !== selectedId; });
-  clearSelection(); redraw(); updateDeleteBtn();
-  showToast('🗑️ 削除しました', 'info');
-}
-function updateDeleteBtn() {
-  var btn = document.getElementById('btnDeleteObj');
-  if (!btn) return;
-  if (selectedId) btn.classList.add('has-selection');
-  else btn.classList.remove('has-selection');
-}
+function updateDeleteBtn(){var btn=document.getElementById('btnDeleteObj');if(!btn)return;if(selectedId)btn.classList.add('has-selection');else btn.classList.remove('has-selection');}
 
 // =====================================================
-// プロパティ管理
+// プロパティ
 // =====================================================
-function genId() { return 'p' + Date.now() + Math.random().toString(36).slice(2); }
+function genId(){return 'p'+Date.now()+Math.random().toString(36).slice(2);}
 
-function renderPropList() {
-  var list = document.getElementById('propList');
-  list.innerHTML = '';
-  if (!currentProps.length) {
-    list.innerHTML = '<div style="font-size:12px;color:#c7c7cc;padding:4px 2px">まだプロパティがありません</div>';
-    return;
+function renderPropList(){
+  var list=document.getElementById('propList');list.innerHTML='';
+  if(!currentProps.length){
+    list.innerHTML='<div style="font-size:12px;color:#c7c7cc;padding:4px 2px">まだプロパティがありません</div>';return;
   }
   currentProps.forEach(function(p){
-    var row = document.createElement('div');
-    row.className = 'prop-row';
-
-    var nameEl = document.createElement('div');
-    nameEl.className = 'prop-name';
-    nameEl.textContent = p.name;
-    nameEl.title = p.name;
-
-    var valWrap = document.createElement('div');
-    valWrap.className = 'prop-value-wrap';
-
-    if (p.type === 'text' || p.type === 'number') {
-      var inp = document.createElement('input');
-      inp.className = 'prop-input';
-      inp.type = p.type === 'number' ? 'number' : 'text';
-      inp.value = p.value || '';
-      inp.placeholder = '値を入力';
-      inp.addEventListener('input', (function(prop){ return function(){ prop.value = inp.value; }; })(p));
-      valWrap.appendChild(inp);
-      row.appendChild(nameEl);
-      row.appendChild(valWrap);
-
-    } else if (p.type === 'select') {
-      var sel = document.createElement('select');
-      sel.className = 'prop-select';
-      (p.options || []).forEach(function(opt){
-        var o = document.createElement('option');
-        o.value = opt; o.textContent = opt;
-        if (p.value === opt) o.selected = true;
-        sel.appendChild(o);
-      });
-      sel.addEventListener('change', (function(prop){ return function(){ prop.value = sel.value; }; })(p));
+    if(p.type==='checklist'){renderChecklistProp(p,list);return;}
+    var row=document.createElement('div');row.className='prop-row';
+    var nameEl=document.createElement('div');nameEl.className='prop-name';nameEl.textContent=p.name;nameEl.title=p.name;
+    var valWrap=document.createElement('div');valWrap.className='prop-value-wrap';
+    if(p.type==='text'||p.type==='number'){
+      var inp=document.createElement('input');inp.className='prop-input';
+      inp.type=p.type==='number'?'number':'text';inp.value=p.value||'';inp.placeholder='値を入力';
+      inp.addEventListener('input',(function(prop){return function(){prop.value=inp.value;};})(p));
+      valWrap.appendChild(inp);row.appendChild(nameEl);row.appendChild(valWrap);
+    }else if(p.type==='select'){
+      var sel=document.createElement('select');sel.className='prop-select';
+      (p.options||[]).forEach(function(opt){var o=document.createElement('option');o.value=opt;o.textContent=opt;if(p.value===opt)o.selected=true;sel.appendChild(o);});
+      sel.addEventListener('change',(function(prop){return function(){prop.value=sel.value;};})(p));
       valWrap.appendChild(sel);
-      var editBtn = document.createElement('button');
-      editBtn.className = 'prop-options-edit';
-      editBtn.textContent = '選択肢';
-      editBtn.onclick = (function(pid){ return function(){ openOptionsModal(pid); }; })(p.id);
-      row.appendChild(nameEl);
-      row.appendChild(valWrap);
-      row.appendChild(editBtn);
-
-    } else if (p.type === 'date') {
-      var di = document.createElement('input');
-      di.className = 'prop-input';
-      di.type = 'date';
-      di.value = p.value || '';
-      di.style.touchAction = 'auto';
-      di.addEventListener('change', (function(prop){ return function(){ prop.value = di.value; }; })(p));
-      valWrap.appendChild(di);
-      row.appendChild(nameEl);
-      row.appendChild(valWrap);
-
-    } else if (p.type === 'checkbox') {
-      var cb = document.createElement('input');
-      cb.className = 'prop-checkbox';
-      cb.type = 'checkbox';
-      cb.checked = !!p.value;
-      cb.addEventListener('change', (function(prop){ return function(){ prop.value = cb.checked; }; })(p));
-      valWrap.appendChild(cb);
-      row.appendChild(nameEl);
-      row.appendChild(valWrap);
+      var editBtn=document.createElement('button');editBtn.className='prop-options-edit';editBtn.textContent='選択肢';
+      editBtn.onclick=(function(pid){return function(){openOptionsModal(pid);};})(p.id);
+      row.appendChild(nameEl);row.appendChild(valWrap);row.appendChild(editBtn);
+    }else if(p.type==='date'){
+      var di=document.createElement('input');di.className='prop-input';di.type='date';di.value=p.value||'';di.style.touchAction='auto';
+      di.addEventListener('change',(function(prop){return function(){prop.value=di.value;};})(p));
+      valWrap.appendChild(di);row.appendChild(nameEl);row.appendChild(valWrap);
     }
-
-    var delBtn = document.createElement('button');
-    delBtn.className = 'prop-del-btn';
-    delBtn.textContent = '✕';
-    delBtn.onclick = (function(pid){ return function(){ deleteProp(pid); }; })(p.id);
-    row.appendChild(delBtn);
-    list.appendChild(row);
+    var delBtn=document.createElement('button');delBtn.className='prop-del-btn';delBtn.textContent='✕';
+    delBtn.onclick=(function(pid){return function(){deleteProp(pid);};})(p.id);
+    row.appendChild(delBtn);list.appendChild(row);
   });
 }
 
-function deleteProp(id) {
-  currentProps = currentProps.filter(function(p){ return p.id !== id; });
-  renderPropList();
-}
+// チェックリストプロパティの描画
+function renderChecklistProp(p, list) {
+  // ヘッダー行
+  var headerRow=document.createElement('div');headerRow.className='prop-row';headerRow.style.flexDirection='column';headerRow.style.alignItems='flex-start';headerRow.style.gap='6px';
+  var titleLine=document.createElement('div');titleLine.style.cssText='display:flex;align-items:center;gap:6px;width:100%';
+  var nameEl=document.createElement('div');nameEl.className='prop-name';nameEl.textContent=p.name;nameEl.style.flexShrink='0';
+  var items=p.items||[];
+  var doneCount=items.filter(function(i){return i.checked;}).length;
+  var progress=document.createElement('span');progress.className='checklist-progress';
+  progress.textContent=items.length>0?doneCount+'/'+items.length:'';
+  var delBtn=document.createElement('button');delBtn.className='prop-del-btn';delBtn.textContent='✕';delBtn.style.marginLeft='auto';
+  delBtn.onclick=(function(pid){return function(){deleteProp(pid);};})(p.id);
+  titleLine.appendChild(nameEl);titleLine.appendChild(progress);titleLine.appendChild(delBtn);
 
-// 型ポップアップ
-var propTypePopupOpen = false;
-function showPropTypePopup(e) {
-  e.stopPropagation();
-  var popup = document.getElementById('propTypePopup');
-  var rect  = e.currentTarget.getBoundingClientRect();
-  // ポップアップを上に出す（場所によって下が見切れる対策）
-  popup.style.left = rect.left + 'px';
-  popup.style.top  = (rect.top - 180) + 'px';
-  popup.classList.toggle('hidden');
-  propTypePopupOpen = !popup.classList.contains('hidden');
-}
-function closePropTypePopup() {
-  document.getElementById('propTypePopup').classList.add('hidden');
-  propTypePopupOpen = false;
-}
-document.addEventListener('click', function(e){
-  if (propTypePopupOpen
-    && !e.target.closest('#propTypePopup')
-    && !e.target.closest('#btnAddProp'))
-    closePropTypePopup();
-});
-
-function addProp(type) {
-  closePropTypePopup();
-  var defaultNames = { text:'テキスト', select:'ステータス', date:'日付', checkbox:'チェック', number:'数値' };
-  openPropModal(type, defaultNames[type] || 'プロパティ', function(name){
-    var p = {
-      id: genId(), name: name, type: type,
-      value: type === 'checkbox' ? false : '',
-      options: type === 'select' ? ['未着手','進行中','完了'] : undefined
-    };
-    currentProps.push(p);
+  // チェックリスト本体
+  var clContainer=document.createElement('div');clContainer.className='checklist-container';clContainer.style.width='100%';
+  (p.items||[]).forEach(function(item,idx){
+    clContainer.appendChild(makeChecklistItemEl(p,item,idx,progress));
+  });
+  // 追加ボタン
+  var addBtn=document.createElement('button');addBtn.className='btn-add-checklist-item';addBtn.innerHTML='＋ 項目を追加';
+  addBtn.onclick=function(){
+    if(!p.items)p.items=[];
+    p.items.push({id:genId(),text:'',checked:false});
     renderPropList();
-  });
+    // 追加後にフォーカス
+    setTimeout(function(){
+      var inputs=list.querySelectorAll('.checklist-item-text');
+      if(inputs.length)inputs[inputs.length-1].focus();
+    },30);
+  };
+  headerRow.appendChild(titleLine);headerRow.appendChild(clContainer);headerRow.appendChild(addBtn);
+  list.appendChild(headerRow);
 }
 
-// プロパティ名設定モーダル
-function openPropModal(type, defaultName, callback) {
-  propModalCallback = callback;
-  var labels = { text:'テキスト', select:'セレクト', date:'日付', checkbox:'チェックボックス', number:'数値' };
-  document.getElementById('propModalTitle').textContent = (labels[type] || type) + 'プロパティを追加';
-  document.getElementById('propModalName').value = defaultName;
-  show('propModal');
-  setTimeout(function(){ document.getElementById('propModalName').focus(); }, 80);
-}
-function closePropModal() { hide('propModal'); propModalCallback = null; }
-function confirmPropModal() {
-  var name = document.getElementById('propModalName').value.trim();
-  if (!name) { showToast('プロパティ名を入力してください', 'error'); return; }
-  if (propModalCallback) propModalCallback(name);
-  closePropModal();
-}
-// Enter キーで確定
-document.addEventListener('keydown', function(e){
-  if (e.key === 'Enter') {
-    var propModal = document.getElementById('propModal');
-    if (propModal && !propModal.classList.contains('hidden')) {
-      confirmPropModal();
+function makeChecklistItemEl(p,item,idx,progressEl){
+  var row=document.createElement('div');row.className='checklist-item';
+  var cb=document.createElement('input');cb.type='checkbox';cb.checked=!!item.checked;
+  var textInp=document.createElement('input');textInp.type='text';textInp.className='checklist-item-text';
+  textInp.value=item.text||'';textInp.placeholder='項目を入力';
+  if(item.checked)textInp.classList.add('done');
+  var delBtn=document.createElement('button');delBtn.className='checklist-item-del';delBtn.textContent='✕';
+  cb.addEventListener('change',function(){
+    item.checked=cb.checked;
+    textInp.classList.toggle('done',cb.checked);
+    // progressEl更新
+    var total=(p.items||[]).length;
+    var done=(p.items||[]).filter(function(i){return i.checked;}).length;
+    if(progressEl)progressEl.textContent=total>0?done+'/'+total:'';
+  });
+  textInp.addEventListener('input',function(){item.text=textInp.value;});
+  textInp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      e.preventDefault();
+      if(!p.items)p.items=[];
+      var newItem={id:genId(),text:'',checked:false};
+      p.items.splice(idx+1,0,newItem);
+      renderPropList();
+      setTimeout(function(){
+        var allInputs=document.querySelectorAll('.checklist-item-text');
+        if(allInputs[idx+1])allInputs[idx+1].focus();
+      },30);
     }
+    if(e.key==='Backspace'&&textInp.value===''&&p.items&&p.items.length>1){
+      e.preventDefault();
+      p.items.splice(idx,1);
+      renderPropList();
+      setTimeout(function(){
+        var allInputs=document.querySelectorAll('.checklist-item-text');
+        if(allInputs[Math.max(0,idx-1)])allInputs[Math.max(0,idx-1)].focus();
+      },30);
+    }
+  });
+  delBtn.onclick=function(){
+    if(!p.items)return;
+    p.items.splice(idx,1);
+    renderPropList();
+  };
+  row.appendChild(cb);row.appendChild(textInp);row.appendChild(delBtn);
+  return row;
+}
+
+function deleteProp(id){currentProps=currentProps.filter(function(p){return p.id!==id;});renderPropList();}
+
+function showPropTypePopup(e){
+  e.stopPropagation();
+  var popup=document.getElementById('propTypePopup');
+  var rect=e.currentTarget.getBoundingClientRect();
+  popup.style.left=rect.left+'px';popup.style.top=(rect.top-220)+'px';
+  popup.classList.toggle('hidden');
+  propTypePopupOpen=!popup.classList.contains('hidden');
+}
+function closePropTypePopup(){document.getElementById('propTypePopup').classList.add('hidden');propTypePopupOpen=false;}
+document.addEventListener('click',function(e){
+  if(propTypePopupOpen&&!e.target.closest('#propTypePopup')&&!e.target.closest('#btnAddProp'))closePropTypePopup();
+  if(blockTypePopupOpen&&!e.target.closest('#blockTypePopup')&&!e.target.closest('#btnAddBlock'))closeBlockTypePopup();
+});
+
+function addProp(type){
+  closePropTypePopup();
+  var names={text:'テキスト',select:'ステータス',date:'日付',checklist:'チェックリスト',number:'数値'};
+  openPropModal(type,names[type]||'プロパティ',function(name){
+    var p={id:genId(),name:name,type:type,value:'',
+      options:type==='select'?['未着手','進行中','完了']:undefined,
+      items:type==='checklist'?[]:undefined};
+    currentProps.push(p);renderPropList();
+  });
+}
+function openPropModal(type,defaultName,callback){
+  propModalCallback=callback;
+  var labels={text:'テキスト',select:'セレクト',date:'日付',checklist:'チェックリスト',number:'数値'};
+  document.getElementById('propModalTitle').textContent=(labels[type]||type)+'プロパティを追加';
+  document.getElementById('propModalName').value=defaultName;
+  show('propModal');
+  setTimeout(function(){document.getElementById('propModalName').focus();},80);
+}
+function closePropModal(){hide('propModal');propModalCallback=null;}
+function confirmPropModal(){
+  var name=document.getElementById('propModalName').value.trim();
+  if(!name){showToast('プロパティ名を入力してください','error');return;}
+  if(propModalCallback)propModalCallback(name);closePropModal();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    if(!document.getElementById('propModal').classList.contains('hidden'))confirmPropModal();
   }
 });
 
-// 選択肢編集モーダル
-function openOptionsModal(propId) {
-  optionsModalPropId = propId;
-  var p = currentProps.find(function(x){ return x.id === propId; });
-  if (!p) return;
-  renderOptionsList(p.options || []);
-  show('optionsModal');
+// 選択肢モーダル
+function openOptionsModal(propId){
+  optionsModalPropId=propId;
+  var p=currentProps.find(function(x){return x.id===propId;});if(!p)return;
+  renderOptionsList(p.options||[]);show('optionsModal');
 }
-function renderOptionsList(options) {
-  var list = document.getElementById('optionsList');
-  list.innerHTML = '';
-  options.forEach(function(opt, i){
-    var row = document.createElement('div');
-    row.className = 'option-row';
-    var inp = document.createElement('input');
-    inp.type = 'text'; inp.value = opt;
-    var del = document.createElement('button');
-    del.className = 'option-del'; del.textContent = '✕';
-    del.onclick = function(){
-      var opts = getOptionsFromDOM();
-      opts.splice(i, 1);
-      renderOptionsList(opts);
-    };
-    row.appendChild(inp); row.appendChild(del);
-    list.appendChild(row);
+function renderOptionsList(options){
+  var list=document.getElementById('optionsList');list.innerHTML='';
+  options.forEach(function(opt,i){
+    var row=document.createElement('div');row.className='option-row';
+    var inp=document.createElement('input');inp.type='text';inp.value=opt;
+    var del=document.createElement('button');del.className='option-del';del.textContent='✕';
+    del.onclick=function(){var opts=getOptionsFromDOM();opts.splice(i,1);renderOptionsList(opts);};
+    row.appendChild(inp);row.appendChild(del);list.appendChild(row);
   });
 }
-function getOptionsFromDOM() {
-  return Array.from(document.querySelectorAll('#optionsList input'))
-    .map(function(i){ return i.value.trim(); })
-    .filter(function(v){ return v; });
+function getOptionsFromDOM(){return Array.from(document.querySelectorAll('#optionsList input')).map(function(i){return i.value.trim();}).filter(function(v){return v;});}
+function addOptionRow(){var opts=getOptionsFromDOM();opts.push('');renderOptionsList(opts);var inputs=document.querySelectorAll('#optionsList input');if(inputs.length)inputs[inputs.length-1].focus();}
+function closeOptionsModal(){hide('optionsModal');optionsModalPropId=null;}
+function confirmOptionsModal(){
+  var opts=getOptionsFromDOM();
+  var p=currentProps.find(function(x){return x.id===optionsModalPropId;});
+  if(p){p.options=opts;if(!opts.includes(p.value))p.value=opts[0]||'';}
+  closeOptionsModal();renderPropList();
 }
-function addOptionRow() {
-  var opts = getOptionsFromDOM();
-  opts.push('');
-  renderOptionsList(opts);
-  var inputs = document.querySelectorAll('#optionsList input');
-  if (inputs.length) inputs[inputs.length-1].focus();
+
+// =====================================================
+// Markdownブロックエディタ
+// =====================================================
+
+// ---- ブロック⇔Markdown変換 ----
+function blocksToMarkdown(blocks){
+  return (blocks||[]).map(function(b){
+    switch(b.type){
+      case 'h1':    return '# '+b.text;
+      case 'h2':    return '## '+b.text;
+      case 'h3':    return '### '+b.text;
+      case 'bullet':return '- '+b.text;
+      case 'todo':  return (b.checked?'- [x] ':'- [ ] ')+b.text;
+      case 'quote': return '> '+b.text;
+      case 'code':  return '```\n'+b.text+'\n```';
+      case 'hr':    return '---';
+      default:      return b.text||'';
+    }
+  }).join('\n');
 }
-function closeOptionsModal() { hide('optionsModal'); optionsModalPropId = null; }
-function confirmOptionsModal() {
-  var opts = getOptionsFromDOM();
-  var p = currentProps.find(function(x){ return x.id === optionsModalPropId; });
-  if (p) {
-    p.options = opts;
-    if (!opts.includes(p.value)) p.value = opts[0] || '';
+
+function markdownToBlocks(md){
+  if(!md||!md.trim())return[];
+  var lines=md.split('\n');
+  var blocks=[];
+  var inCode=false,codeLines=[];
+  lines.forEach(function(line){
+    if(line.startsWith('```')){
+      if(inCode){blocks.push({id:genId(),type:'code',text:codeLines.join('\n')});codeLines=[];inCode=false;}
+      else inCode=true;
+      return;
+    }
+    if(inCode){codeLines.push(line);return;}
+    if(line==='---'||line==='***'||line==='___'){blocks.push({id:genId(),type:'hr',text:''});return;}
+    if(/^# /.test(line)){blocks.push({id:genId(),type:'h1',text:line.slice(2)});return;}
+    if(/^## /.test(line)){blocks.push({id:genId(),type:'h2',text:line.slice(3)});return;}
+    if(/^### /.test(line)){blocks.push({id:genId(),type:'h3',text:line.slice(4)});return;}
+    if(/^- \[x\] /i.test(line)){blocks.push({id:genId(),type:'todo',text:line.slice(6),checked:true});return;}
+    if(/^- \[ \] /.test(line)){blocks.push({id:genId(),type:'todo',text:line.slice(6),checked:false});return;}
+    if(/^- /.test(line)){blocks.push({id:genId(),type:'bullet',text:line.slice(2)});return;}
+    if(/^> /.test(line)){blocks.push({id:genId(),type:'quote',text:line.slice(2)});return;}
+    blocks.push({id:genId(),type:'p',text:line});
+  });
+  if(inCode&&codeLines.length)blocks.push({id:genId(),type:'code',text:codeLines.join('\n')});
+  return blocks.filter(function(b){return !(b.type==='p'&&b.text==='');});
+}
+
+// ---- モード切替 ----
+function setMdMode(mode, skipSync) {
+  if(!skipSync)syncMdFromCurrentMode();
+  mdMode=mode;
+  var richEditor=document.getElementById('richEditor');
+  var rawTextarea=document.getElementById('mdRawTextarea');
+  var addRow=document.getElementById('btnAddBlock').parentElement;
+  var btnRich=document.getElementById('mdBtnRich');
+  var btnRaw=document.getElementById('mdBtnRaw');
+  if(mode==='rich'){
+    richEditor.style.display='flex';addRow.style.display='flex';
+    rawTextarea.style.display='none';
+    btnRich.classList.add('active');btnRaw.classList.remove('active');
+    renderRichEditor();
+  }else{
+    rawTextarea.style.display='block';richEditor.style.display='none';addRow.style.display='none';
+    btnRich.classList.remove('active');btnRaw.classList.add('active');
+    rawTextarea.value=blocksToMarkdown(mdBlocks);
+    // rawからの入力を監視
+    rawTextarea.oninput=function(){
+      mdBlocks=markdownToBlocks(rawTextarea.value);
+    };
   }
-  closeOptionsModal();
-  renderPropList();
 }
 
-// =====================================================
-// Markdown
-// =====================================================
-function renderMdPreview() {
-  var el = document.getElementById('mdPreview');
-  if (!el) return;
-  if (!currentMd || !currentMd.trim()) {
-    el.classList.add('empty');
-    el.innerHTML = '';
-    return;
+function syncMdFromCurrentMode(){
+  if(mdMode==='raw'){
+    var ta=document.getElementById('mdRawTextarea');
+    if(ta)mdBlocks=markdownToBlocks(ta.value);
   }
-  el.classList.remove('empty');
-  if (markedReady && typeof marked !== 'undefined') {
-    try { el.innerHTML = marked.parse(currentMd); }
-    catch(e) { el.textContent = currentMd; }
-  } else {
-    // marked未ロードの場合は改行のみ対応した簡易表示
-    el.textContent = currentMd;
+  // richモードはブロックが直接更新される
+}
+
+// ---- リッチエディタ描画 ----
+function renderRichEditor(){
+  var editor=document.getElementById('richEditor');
+  editor.innerHTML='';
+  if(!mdBlocks.length){
+    mdBlocks=[{id:genId(),type:'p',text:''}];
   }
+  mdBlocks.forEach(function(block,idx){
+    editor.appendChild(makeBlockEl(block,idx));
+  });
 }
 
-function toggleMdEdit() {
-  if (mdEditing) closeMdEdit();
-  else startMdEdit();
+function makeBlockEl(block,idx){
+  var div=document.createElement('div');
+  div.className='block';div.dataset.id=block.id;div.dataset.type=block.type;
+
+  // 区切り線
+  if(block.type==='hr'){
+    div.style.cssText='border-top:1.5px solid #e0e0e0;padding:0;margin:6px 0;min-height:1px';
+    return div;
+  }
+
+  // ドラッグハンドル
+  var handle=document.createElement('div');handle.className='block-handle';handle.textContent='⠿';
+  handle.draggable=true;
+  handle.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',block.id);div.style.opacity='.4';});
+  handle.addEventListener('dragend',function(){div.style.opacity='1';});
+  div.addEventListener('dragover',function(e){e.preventDefault();div.style.background='#f0ebff';});
+  div.addEventListener('dragleave',function(){div.style.background='';});
+  div.addEventListener('drop',function(e){
+    e.preventDefault();div.style.background='';
+    var fromId=e.dataTransfer.getData('text/plain');
+    var fromIdx=mdBlocks.findIndex(function(b){return b.id===fromId;});
+    var toIdx=mdBlocks.findIndex(function(b){return b.id===block.id;});
+    if(fromIdx<0||toIdx<0||fromIdx===toIdx)return;
+    var moved=mdBlocks.splice(fromIdx,1)[0];
+    mdBlocks.splice(toIdx,0,moved);
+    renderRichEditor();
+  });
+
+  // ToDo チェックボックス
+  if(block.type==='todo'){
+    var cb=document.createElement('input');
+    cb.type='checkbox';cb.className='block-check';cb.checked=!!block.checked;
+    cb.addEventListener('change',function(){
+      block.checked=cb.checked;
+      div.classList.toggle('done',cb.checked);
+    });
+    if(block.checked)div.classList.add('done');
+    div.appendChild(handle);div.appendChild(cb);
+  }else if(block.type==='bullet'){
+    var bullet=document.createElement('div');bullet.className='block-bullet';bullet.textContent='•';
+    div.appendChild(handle);div.appendChild(bullet);
+  }else{
+    div.appendChild(handle);
+  }
+
+  // コンテンツ（contenteditable）
+  var content=document.createElement('div');
+  content.className='block-content';
+  content.contentEditable='true';
+  content.setAttribute('data-placeholder', getPlaceholder(block.type));
+  content.spellcheck=false;
+  content.autocorrect='off';
+  content.autocapitalize='none';
+  content.style.setProperty('--ph-color','#c7c7cc');
+  // placeholderスタイル
+  content.setAttribute('aria-label', getPlaceholder(block.type));
+
+  // テキスト表示（インラインMarkdown装飾）
+  content.innerHTML = renderInlineMarkdown(block.text||'');
+
+  content.addEventListener('focus',function(){
+    // フォーカス時はプレーンテキストに切り替え（編集しやすくする）
+    if(content.dataset.editing)return;
+    content.dataset.editing='1';
+    content.textContent=block.text||'';
+    // カーソルを末尾へ
+    var range=document.createRange(),sel=window.getSelection();
+    range.selectNodeContents(content);range.collapse(false);
+    sel.removeAllRanges();sel.addRange(range);
+  });
+
+  content.addEventListener('blur',function(){
+    delete content.dataset.editing;
+    block.text=content.textContent||'';
+    content.innerHTML=renderInlineMarkdown(block.text);
+  });
+
+  content.addEventListener('input',function(){
+    block.text=content.textContent||'';
+    // Markdown記法の自動変換（スペース押下で）
+    var text=content.textContent;
+    var converted=checkInlineConvert(text,block,idx);
+    if(converted){renderRichEditor();setTimeout(function(){focusBlock(converted);},10);}
+  });
+
+  content.addEventListener('keydown',function(e){
+    if(isComposing)return;
+
+    // Enterで新ブロック追加
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      block.text=content.textContent||'';
+      var newType=(block.type==='bullet'||block.type==='todo')?block.type:'p';
+      // bulletやtodoで空テキストの場合はpに戻す
+      if((block.type==='bullet'||block.type==='todo')&&!block.text){
+        block.type='p';block.text='';
+        renderRichEditor();setTimeout(function(){focusBlock(block.id);},10);return;
+      }
+      var newBlock={id:genId(),type:newType,text:'',checked:false};
+      mdBlocks.splice(idx+1,0,newBlock);
+      renderRichEditor();
+      setTimeout(function(){focusBlock(newBlock.id);},10);
+      return;
+    }
+
+    // Backspaceで空ブロック削除
+    if(e.key==='Backspace'){
+      block.text=content.textContent||'';
+      if(!block.text&&mdBlocks.length>1){
+        e.preventDefault();
+        var prevId=mdBlocks[Math.max(0,idx-1)].id;
+        mdBlocks.splice(idx,1);
+        renderRichEditor();setTimeout(function(){focusBlock(prevId,true);},10);
+        return;
+      }
+      // 見出しなどをpに戻す
+      if(!block.text&&block.type!=='p'){
+        e.preventDefault();block.type='p';
+        renderRichEditor();setTimeout(function(){focusBlock(block.id);},10);
+      }
+    }
+
+    // Tab でインデント（bullet のみ）
+    if(e.key==='Tab'){
+      e.preventDefault();
+      // 将来の入れ子対応用にとりあえず無視
+    }
+
+    // ↑↓ キーで前後ブロックへ移動
+    if(e.key==='ArrowUp'&&idx>0){
+      var prev=mdBlocks[idx-1];
+      if(getCaretLine(content)===0){e.preventDefault();focusBlock(prev.id,true);}
+    }
+    if(e.key==='ArrowDown'&&idx<mdBlocks.length-1){
+      var next=mdBlocks[idx+1];
+      if(getCaretLine(content,true)){ e.preventDefault();focusBlock(next.id);}
+    }
+  });
+
+  // IME
+  content.addEventListener('compositionstart',function(){isComposing=true;});
+  content.addEventListener('compositionend',function(){
+    isComposing=false;
+    block.text=content.textContent||'';
+  });
+
+  div.appendChild(content);
+  return div;
 }
 
-function startMdEdit() {
-  if (mdEditing) return;
-  mdEditing = true;
-  var ta  = document.getElementById('mdTextarea');
-  var btn = document.getElementById('mdToggleBtn');
-  var pre = document.getElementById('mdPreview');
-  ta.value = currentMd;
-  ta.style.display  = 'block';
-  pre.style.display = 'none';
-  btn.textContent   = '確定';
-  ta.focus();
+function getPlaceholder(type){
+  var ph={p:'テキストを入力、または / でブロック追加',h1:'大見出し',h2:'中見出し',h3:'小見出し',
+    bullet:'リスト',todo:'ToDo',quote:'引用',code:'コード'};
+  return ph[type]||'';
 }
 
-function closeMdEdit() {
-  if (!mdEditing) return;
-  mdEditing = false;
-  var ta  = document.getElementById('mdTextarea');
-  var btn = document.getElementById('mdToggleBtn');
-  var pre = document.getElementById('mdPreview');
-  currentMd = ta.value;
-  ta.style.display  = 'none';
-  pre.style.display = 'block';
-  btn.textContent   = '編集';
-  renderMdPreview();
+// カーソルが最初/最後の行にいるか
+function getCaretLine(el,last){
+  try{
+    var sel=window.getSelection();if(!sel.rangeCount)return false;
+    var range=sel.getRangeAt(0).cloneRange();
+    var rect=range.getBoundingClientRect();
+    var elRect=el.getBoundingClientRect();
+    if(last)return rect.bottom>elRect.bottom-4;
+    return rect.top<elRect.top+4;
+  }catch(_){return false;}
+}
+
+function focusBlock(id,atEnd){
+  var el=document.querySelector('.block[data-id="'+id+'"] .block-content');
+  if(!el)return;
+  el.focus();
+  try{
+    var range=document.createRange(),sel=window.getSelection();
+    range.selectNodeContents(el);
+    range.collapse(!atEnd);
+    sel.removeAllRanges();sel.addRange(range);
+  }catch(_){}
+}
+
+// 先頭入力でブロック型変換
+function checkInlineConvert(text,block,idx){
+  var convMap=[
+    {prefix:'# ',  type:'h1'},
+    {prefix:'## ', type:'h2'},
+    {prefix:'### ',type:'h3'},
+    {prefix:'- ',  type:'bullet'},
+    {prefix:'> ',  type:'quote'},
+  ];
+  for(var i=0;i<convMap.length;i++){
+    if(text===convMap[i].prefix){
+      block.type=convMap[i].type;block.text='';return block.id;
+    }
+  }
+  if(text==='---'||text==='***'){
+    block.type='hr';block.text='';
+    var nb={id:genId(),type:'p',text:''};
+    mdBlocks.splice(idx+1,0,nb);
+    return nb.id;
+  }
+  return null;
+}
+
+// インラインMarkdown装飾
+function renderInlineMarkdown(text){
+  if(!text)return '';
+  // エスケープ
+  var s=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // **bold**
+  s=s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  // *italic*
+  s=s.replace(/\*(.*?)\*/g,'<em>$1</em>');
+  // `code`
+  s=s.replace(/`([^`]+)`/g,'<code style="background:#f0f0f5;padding:1px 4px;border-radius:3px;font-size:.9em">$1</code>');
+  // ~~strike~~
+  s=s.replace(/~~(.*?)~~/g,'<del>$1</del>');
+  // [text](url)
+  s=s.replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" style="color:#7c3aed" target="_blank">$1</a>');
+  return s;
+}
+
+// ブロック追加ポップアップ
+function showBlockTypePopup(e){
+  e.stopPropagation();
+  var popup=document.getElementById('blockTypePopup');
+  var rect=e.currentTarget.getBoundingClientRect();
+  popup.style.left=rect.left+'px';popup.style.top=(rect.top-300)+'px';
+  popup.classList.toggle('hidden');
+  blockTypePopupOpen=!popup.classList.contains('hidden');
+}
+function closeBlockTypePopup(){document.getElementById('blockTypePopup').classList.add('hidden');blockTypePopupOpen=false;}
+function addBlock(type){
+  closeBlockTypePopup();
+  var b={id:genId(),type:type,text:'',checked:false};
+  mdBlocks.push(b);
+  renderRichEditor();
+  setTimeout(function(){if(type!=='hr')focusBlock(b.id);},10);
 }
 
 // =====================================================
-// Canvas
+// Canvas / Drawing
 // =====================================================
-function resizeCanvas() {
-  if (!canvasWrap || !canvas || !ctx) return;
-  var rect = canvasWrap.getBoundingClientRect();
-  var dpr  = window.devicePixelRatio || 1;
-  canvas.width  = rect.width  * dpr;
-  canvas.height = rect.height * dpr;
-  canvas.style.width  = rect.width  + 'px';
-  canvas.style.height = rect.height + 'px';
-  ctx.scale(dpr, dpr);
-  redraw();
+function resizeCanvas(){
+  if(!canvasWrap||!canvas||!ctx)return;
+  var rect=canvasWrap.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
+  canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';
+  ctx.scale(dpr,dpr);redraw();
 }
-
-function redraw() {
-  if (!ctx || !canvas) return;
-  var dpr = window.devicePixelRatio || 1;
-  var W = canvas.width / dpr;
-  var H = canvas.height / dpr;
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#f5f4ef';
-  ctx.fillRect(0, 0, W, H);
-  drawGrid(W, H);
-  ctx.save();
-  ctx.translate(panX, panY);
-  ctx.scale(scale, scale);
-  textItems.forEach(function(t){ drawTextItem(t); });
-  strokes.forEach(function(s){ drawStroke(s); });
-  if (currentStroke) drawStroke(currentStroke);
-  if (shapePreview)  drawShapePreview();
+function redraw(){
+  if(!ctx||!canvas)return;
+  var dpr=window.devicePixelRatio||1,W=canvas.width/dpr,H=canvas.height/dpr;
+  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f5f4ef';ctx.fillRect(0,0,W,H);
+  drawGrid(W,H);
+  ctx.save();ctx.translate(panX,panY);ctx.scale(scale,scale);
+  textItems.forEach(function(t){drawTextItem(t);});
+  strokes.forEach(function(s){drawStroke(s);});
+  if(currentStroke)drawStroke(currentStroke);
+  if(shapePreview)drawShapePreview();
   ctx.restore();
 }
-
-function drawGrid(W, H) {
-  var sp = 24 * scale;
-  var ox = ((panX % sp) + sp) % sp;
-  var oy = ((panY % sp) + sp) % sp;
-  ctx.fillStyle = 'rgba(0,0,0,.06)';
-  for (var x = ox; x < W; x += sp) {
-    for (var y = oy; y < H; y += sp) {
-      ctx.beginPath();
-      ctx.arc(x, y, 1.2, 0, Math.PI*2);
-      ctx.fill();
-    }
-  }
+function drawGrid(W,H){
+  var sp=24*scale,ox=((panX%sp)+sp)%sp,oy=((panY%sp)+sp)%sp;
+  ctx.fillStyle='rgba(0,0,0,.06)';
+  for(var x=ox;x<W;x+=sp)for(var y=oy;y<H;y+=sp){ctx.beginPath();ctx.arc(x,y,1.2,0,Math.PI*2);ctx.fill();}
 }
-
-function drawTextItem(t) {
-  var x = t.x, y = t.y, w = t.w || 200, h = t.h || 80;
-  var rgb   = hexToRgb(t.bgColor || '#ffffff');
-  var alpha = (t.bgOpacity != null ? t.bgOpacity : 90) / 100;
-  ctx.fillStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + alpha + ')';
-  ctx.beginPath(); roundRect(ctx, x, y, w, h, 8); ctx.fill();
-  var bw = t.borderWidth != null ? t.borderWidth : 2;
-  if (bw > 0 && t.borderColor && t.borderColor !== 'transparent') {
-    ctx.strokeStyle = t.borderColor;
-    ctx.lineWidth   = bw;
-    ctx.beginPath(); roundRect(ctx, x, y, w, h, 8); ctx.stroke();
+function drawTextItem(t){
+  var x=t.x,y=t.y,w=t.w||200,h=t.h||80;
+  var rgb=hexToRgb(t.bgColor||'#ffffff'),alpha=(t.bgOpacity!=null?t.bgOpacity:90)/100;
+  ctx.fillStyle='rgba('+rgb.r+','+rgb.g+','+rgb.b+','+alpha+')';
+  ctx.beginPath();roundRect(ctx,x,y,w,h,8);ctx.fill();
+  var bw=t.borderWidth!=null?t.borderWidth:2;
+  if(bw>0&&t.borderColor&&t.borderColor!=='transparent'){
+    ctx.strokeStyle=t.borderColor;ctx.lineWidth=bw;ctx.beginPath();roundRect(ctx,x,y,w,h,8);ctx.stroke();
   }
-  ctx.fillStyle   = t.textColor || '#1c1c1e';
-  ctx.font        = (t.fontSize || 18) + 'px ' + (t.fontFamily || '-apple-system,sans-serif');
-  ctx.textBaseline = 'top';
-  wrapText(ctx, t.text || '', x+10, y+8, w-20, (t.fontSize||18)*1.5);
+  ctx.fillStyle=t.textColor||'#1c1c1e';
+  ctx.font=(t.fontSize||18)+'px '+(t.fontFamily||'-apple-system,sans-serif');
+  ctx.textBaseline='top';
+  wrapText(ctx,t.text||'',x+10,y+8,w-20,(t.fontSize||18)*1.5);
 }
-
-function wrapText(ctx, text, x, y, maxW, lineH) {
+function wrapText(ctx,text,x,y,maxW,lineH){
   text.split('\n').forEach(function(line){
-    var words = line.split(' '), cur = '';
+    var words=line.split(' '),cur='';
     words.forEach(function(word){
-      var test = cur ? cur + ' ' + word : word;
-      if (ctx.measureText(test).width > maxW && cur) {
-        ctx.fillText(cur, x, y); cur = word; y += lineH;
-      } else { cur = test; }
+      var test=cur?cur+' '+word:word;
+      if(ctx.measureText(test).width>maxW&&cur){ctx.fillText(cur,x,y);cur=word;y+=lineH;}
+      else cur=test;
     });
-    ctx.fillText(cur, x, y); y += lineH;
+    ctx.fillText(cur,x,y);y+=lineH;
   });
 }
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.moveTo(x+r, y); ctx.lineTo(x+w-r, y); ctx.arcTo(x+w, y, x+w, y+r, r);
-  ctx.lineTo(x+w, y+h-r); ctx.arcTo(x+w, y+h, x+w-r, y+h, r);
-  ctx.lineTo(x+r, y+h); ctx.arcTo(x, y+h, x, y+h-r, r);
-  ctx.lineTo(x, y+r); ctx.arcTo(x, y, x+r, y, r);
-  ctx.closePath();
+function roundRect(ctx,x,y,w,h,r){
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
 }
-
-function drawStroke(s) {
-  if (!s.points || s.points.length < 2) return;
-  ctx.globalCompositeOperation = 'source-over';
-  // ペン太さをズームに連動（screenSizeを保持）
-  var lw = (s.screenSize != null) ? s.screenSize / scale : (s.size || 4);
-  ctx.strokeStyle = s.strokeColor || s.color || '#1c1c1e';
-  ctx.lineWidth   = lw;
-  ctx.lineCap     = 'round';
-  ctx.lineJoin    = 'round';
-  if (s.shape && s.shape !== 'pen') { drawShape(s, lw); return; }
-  ctx.beginPath();
-  ctx.moveTo(s.points[0].x, s.points[0].y);
-  for (var i = 1; i < s.points.length; i++) {
-    var p0 = s.points[i-1], p1 = s.points[i];
-    ctx.quadraticCurveTo(p0.x, p0.y, (p0.x+p1.x)/2, (p0.y+p1.y)/2);
+function drawStroke(s){
+  if(!s.points||s.points.length<2)return;
+  ctx.globalCompositeOperation='source-over';
+  var lw=(s.screenSize!=null)?s.screenSize/scale:(s.size||4);
+  ctx.strokeStyle=s.strokeColor||s.color||'#1c1c1e';
+  ctx.lineWidth=lw;ctx.lineCap='round';ctx.lineJoin='round';
+  if(s.shape&&s.shape!=='pen'){drawShape(s,lw);return;}
+  ctx.beginPath();ctx.moveTo(s.points[0].x,s.points[0].y);
+  for(var i=1;i<s.points.length;i++){
+    var p0=s.points[i-1],p1=s.points[i];
+    ctx.quadraticCurveTo(p0.x,p0.y,(p0.x+p1.x)/2,(p0.y+p1.y)/2);
   }
   ctx.stroke();
 }
-
-function drawShape(s, lw) {
-  var pts = s.points;
-  var x1 = pts[0].x, y1 = pts[0].y;
-  var x2 = pts[pts.length-1].x, y2 = pts[pts.length-1].y;
-  ctx.strokeStyle = s.strokeColor || s.color || '#1c1c1e';
-  ctx.lineWidth   = lw != null ? lw : (s.size || 4);
-  ctx.lineCap     = 'round';
-  var fr = hexToRgb(s.fillColor || '#ffffff');
-  var fa = (s.fillOpacity != null ? s.fillOpacity : 0) / 100;
-  ctx.fillStyle = 'rgba(' + fr.r + ',' + fr.g + ',' + fr.b + ',' + fa + ')';
-  switch (s.shape) {
+function drawShape(s,lw){
+  var pts=s.points,x1=pts[0].x,y1=pts[0].y,x2=pts[pts.length-1].x,y2=pts[pts.length-1].y;
+  ctx.strokeStyle=s.strokeColor||s.color||'#1c1c1e';
+  ctx.lineWidth=lw!=null?lw:(s.size||4);ctx.lineCap='round';
+  var fr=hexToRgb(s.fillColor||'#ffffff'),fa=(s.fillOpacity!=null?s.fillOpacity:0)/100;
+  ctx.fillStyle='rgba('+fr.r+','+fr.g+','+fr.b+','+fa+')';
+  switch(s.shape){
     case 'rect':
-      ctx.beginPath();
-      roundRect(ctx, Math.min(x1,x2), Math.min(y1,y2), Math.abs(x2-x1), Math.abs(y2-y1), 4);
-      if (fa > 0) ctx.fill(); ctx.stroke(); break;
+      ctx.beginPath();roundRect(ctx,Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1),4);
+      if(fa>0)ctx.fill();ctx.stroke();break;
     case 'circle':
-      var rx=(x2-x1)/2, ry=(y2-y1)/2;
-      ctx.beginPath();
-      ctx.ellipse(x1+rx, y1+ry, Math.abs(rx), Math.abs(ry), 0, 0, Math.PI*2);
-      if (fa > 0) ctx.fill(); ctx.stroke(); break;
-    case 'line':
-      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); break;
-    case 'arrow':
-      drawArrow(x1, y1, x2, y2, ctx.lineWidth); break;
+      var rx=(x2-x1)/2,ry=(y2-y1)/2;
+      ctx.beginPath();ctx.ellipse(x1+rx,y1+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2);
+      if(fa>0)ctx.fill();ctx.stroke();break;
+    case 'line':ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();break;
+    case 'arrow':drawArrow(x1,y1,x2,y2,ctx.lineWidth);break;
     case 'triangle':
-      ctx.beginPath();
-      ctx.moveTo((x1+x2)/2, y1); ctx.lineTo(x2, y2); ctx.lineTo(x1, y2);
-      ctx.closePath(); if (fa > 0) ctx.fill(); ctx.stroke(); break;
+      ctx.beginPath();ctx.moveTo((x1+x2)/2,y1);ctx.lineTo(x2,y2);ctx.lineTo(x1,y2);
+      ctx.closePath();if(fa>0)ctx.fill();ctx.stroke();break;
   }
 }
-
-function drawArrow(x1, y1, x2, y2, lw) {
-  var angle = Math.atan2(y2-y1, x2-x1);
-  var hl    = Math.max(lw*4, 16);
-  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(x2 - hl*Math.cos(angle-Math.PI/7), y2 - hl*Math.sin(angle-Math.PI/7));
-  ctx.lineTo(x2 - hl*Math.cos(angle+Math.PI/7), y2 - hl*Math.sin(angle+Math.PI/7));
-  ctx.closePath();
-  ctx.fillStyle = ctx.strokeStyle;
-  ctx.fill();
+function drawArrow(x1,y1,x2,y2,lw){
+  var angle=Math.atan2(y2-y1,x2-x1),hl=Math.max(lw*4,16);
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(angle-Math.PI/7),y2-hl*Math.sin(angle-Math.PI/7));
+  ctx.lineTo(x2-hl*Math.cos(angle+Math.PI/7),y2-hl*Math.sin(angle+Math.PI/7));
+  ctx.closePath();ctx.fillStyle=ctx.strokeStyle;ctx.fill();
 }
-
-function drawShapePreview() {
+function drawShapePreview(){
   ctx.setLineDash([6,4]);
-  drawShape({
-    strokeColor: spShapeStrokeColor, color: spShapeStrokeColor,
-    fillColor: spShapeFillColor, fillOpacity: spShapeFillOpacity,
-    size: strokeWidth/scale, shape: selectedShape,
-    points: [{ x:shapePreview.x1, y:shapePreview.y1 }, { x:shapePreview.x2, y:shapePreview.y2 }]
-  }, strokeWidth/scale);
+  drawShape({strokeColor:spShapeStrokeColor,color:spShapeStrokeColor,fillColor:spShapeFillColor,fillOpacity:spShapeFillOpacity,size:strokeWidth/scale,shape:selectedShape,points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]},strokeWidth/scale);
   ctx.setLineDash([]);
 }
 
-// ---------- 選択ボックス ----------
-function clearSelection() {
-  selectedId = null; selectedType = null;
-  dragMode = null; moveDragActive = false;
-  if (selBox) { selBox.remove(); selBox = null; }
-  handles.forEach(function(h){ h.remove(); }); handles = [];
-  updateDeleteBtn();
+// 選択
+function clearSelection(){
+  selectedId=null;selectedType=null;dragMode=null;moveDragActive=false;
+  if(selBox){selBox.remove();selBox=null;}
+  handles.forEach(function(h){h.remove();});handles=[];updateDeleteBtn();
 }
-function getObjectBounds(id, type) {
-  if (type === 'text') {
-    var t = textItems.find(function(x){ return x.id === id; });
-    if (!t) return null;
-    return { x:t.x, y:t.y, w:t.w||200, h:t.h||80 };
-  }
-  if (type === 'stroke') {
-    var s = strokes.find(function(x){ return x.id === id; });
-    if (!s || !s.points || !s.points.length) return null;
-    var minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
-    s.points.forEach(function(p){ minX=Math.min(minX,p.x); minY=Math.min(minY,p.y); maxX=Math.max(maxX,p.x); maxY=Math.max(maxY,p.y); });
-    var pad = (s.size||4)/2;
-    return { x:minX-pad, y:minY-pad, w:maxX-minX+pad*2, h:maxY-minY+pad*2 };
+function getObjectBounds(id,type){
+  if(type==='text'){var t=textItems.find(function(x){return x.id===id;});if(!t)return null;return{x:t.x,y:t.y,w:t.w||200,h:t.h||80};}
+  if(type==='stroke'){
+    var s=strokes.find(function(x){return x.id===id;});if(!s||!s.points||!s.points.length)return null;
+    var minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    s.points.forEach(function(p){minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);});
+    var pad=(s.size||4)/2;return{x:minX-pad,y:minY-pad,w:maxX-minX+pad*2,h:maxY-minY+pad*2};
   }
   return null;
 }
-function showSelBox(id, type) {
-  clearSelection();
-  selectedId = id; selectedType = type;
-  selBox = document.createElement('div');
-  selBox.className = 'sel-box';
-  canvasWrap.appendChild(selBox);
+function showSelBox(id,type){
+  clearSelection();selectedId=id;selectedType=type;
+  selBox=document.createElement('div');selBox.className='sel-box';canvasWrap.appendChild(selBox);
   ['nw','ne','se','sw'].forEach(function(pos){
-    var h = document.createElement('div');
-    h.className = 'sel-handle'; h.dataset.pos = pos;
-    h.style.cursor = { nw:'nw-resize', ne:'ne-resize', se:'se-resize', sw:'sw-resize' }[pos];
-    canvasWrap.appendChild(h); handles.push(h);
-    h.addEventListener('pointerdown', onHandleDown, { passive:false });
+    var h=document.createElement('div');h.className='sel-handle';h.dataset.pos=pos;
+    h.style.cursor={nw:'nw-resize',ne:'ne-resize',se:'se-resize',sw:'sw-resize'}[pos];
+    canvasWrap.appendChild(h);handles.push(h);
+    h.addEventListener('pointerdown',onHandleDown,{passive:false});
   });
-  updateSelBox(); updateDeleteBtn();
+  updateSelBox();updateDeleteBtn();
 }
-function updateSelBox() {
-  if (!selectedId || !selBox) return;
-  var b = getObjectBounds(selectedId, selectedType);
-  if (!b) return;
-  var sx=b.x*scale+panX, sy=b.y*scale+panY, sw=b.w*scale, sh=b.h*scale;
-  selBox.style.left=sx+'px'; selBox.style.top=sy+'px';
-  selBox.style.width=sw+'px'; selBox.style.height=sh+'px';
-  var pos = { nw:{x:sx,y:sy}, ne:{x:sx+sw,y:sy}, se:{x:sx+sw,y:sy+sh}, sw:{x:sx,y:sy+sh} };
-  handles.forEach(function(h){
-    var p = pos[h.dataset.pos];
-    if (p) { h.style.left=p.x+'px'; h.style.top=p.y+'px'; }
-  });
+function updateSelBox(){
+  if(!selectedId||!selBox)return;
+  var b=getObjectBounds(selectedId,selectedType);if(!b)return;
+  var sx=b.x*scale+panX,sy=b.y*scale+panY,sw=b.w*scale,sh=b.h*scale;
+  selBox.style.left=sx+'px';selBox.style.top=sy+'px';selBox.style.width=sw+'px';selBox.style.height=sh+'px';
+  var pos={nw:{x:sx,y:sy},ne:{x:sx+sw,y:sy},se:{x:sx+sw,y:sy+sh},sw:{x:sx,y:sy+sh}};
+  handles.forEach(function(h){var p=pos[h.dataset.pos];if(p){h.style.left=p.x+'px';h.style.top=p.y+'px';}});
 }
-function onHandleDown(e) {
-  e.preventDefault(); e.stopPropagation();
-  dragMode = 'resize-' + e.currentTarget.dataset.pos;
-  var b = getObjectBounds(selectedId, selectedType);
-  dragStart = { px:e.clientX, py:e.clientY, ox:b.x, oy:b.y, ow:b.w, oh:b.h, aspect:b.w/(b.h||1) };
+function onHandleDown(e){
+  e.preventDefault();e.stopPropagation();
+  dragMode='resize-'+e.currentTarget.dataset.pos;
+  var b=getObjectBounds(selectedId,selectedType);
+  dragStart={px:e.clientX,py:e.clientY,ox:b.x,oy:b.y,ow:b.w,oh:b.h,aspect:b.w/(b.h||1)};
   e.currentTarget.setPointerCapture(e.pointerId);
-  e.currentTarget.addEventListener('pointermove', onHandleMove, { passive:false });
-  e.currentTarget.addEventListener('pointerup',   onHandleUp,   { passive:false });
+  e.currentTarget.addEventListener('pointermove',onHandleMove,{passive:false});
+  e.currentTarget.addEventListener('pointerup',onHandleUp,{passive:false});
 }
-function onHandleMove(e) {
-  e.preventDefault(); if (!dragStart) return;
-  var dx=(e.clientX-dragStart.px)/scale, dy=(e.clientY-dragStart.py)/scale;
+function onHandleMove(e){
+  e.preventDefault();if(!dragStart)return;
+  var dx=(e.clientX-dragStart.px)/scale,dy=(e.clientY-dragStart.py)/scale;
   var pos=dragMode.replace('resize-','');
-  var ox=dragStart.ox, oy=dragStart.oy, ow=dragStart.ow, oh=dragStart.oh, asp=dragStart.aspect;
-  var nx=ox, ny=oy, nw=ow, nh=oh;
-  if (pos==='se'){ nw=Math.max(40,ow+dx); nh=Math.max(20,oh+dy); }
-  else if (pos==='sw'){ nx=ox+dx; nw=Math.max(40,ow-dx); nh=Math.max(20,oh+dy); }
-  else if (pos==='ne'){ nw=Math.max(40,ow+dx); ny=oy+dy; nh=Math.max(20,oh-dy); }
-  else if (pos==='nw'){ nx=ox+dx; ny=oy+dy; nw=Math.max(40,ow-dx); nh=Math.max(20,oh-dy); }
-  if (shiftDown) { nh=nw/asp; if(pos==='ne'||pos==='nw') ny=oy+(oh-nh); }
-  applyBounds(nx, ny, nw, nh);
-  updateSelBox(); redraw();
+  var ox=dragStart.ox,oy=dragStart.oy,ow=dragStart.ow,oh=dragStart.oh,asp=dragStart.aspect;
+  var nx=ox,ny=oy,nw=ow,nh=oh;
+  if(pos==='se'){nw=Math.max(40,ow+dx);nh=Math.max(20,oh+dy);}
+  else if(pos==='sw'){nx=ox+dx;nw=Math.max(40,ow-dx);nh=Math.max(20,oh+dy);}
+  else if(pos==='ne'){nw=Math.max(40,ow+dx);ny=oy+dy;nh=Math.max(20,oh-dy);}
+  else if(pos==='nw'){nx=ox+dx;ny=oy+dy;nw=Math.max(40,ow-dx);nh=Math.max(20,oh-dy);}
+  if(shiftDown){nh=nw/asp;if(pos==='ne'||pos==='nw')ny=oy+(oh-nh);}
+  applyBounds(nx,ny,nw,nh);updateSelBox();redraw();
 }
-function onHandleUp(e) {
-  e.currentTarget.removeEventListener('pointermove', onHandleMove);
-  e.currentTarget.removeEventListener('pointerup',   onHandleUp);
-  dragMode = null;
+function onHandleUp(e){e.currentTarget.removeEventListener('pointermove',onHandleMove);e.currentTarget.removeEventListener('pointerup',onHandleUp);dragMode=null;}
+function applyBounds(x,y,w,h){
+  if(selectedType==='text'){var t=textItems.find(function(t){return t.id===selectedId;});if(!t)return;t.x=x;t.y=y;t.w=w;t.h=h;if(floatInput&&editingTextId===selectedId)posFloatInput(t);}
+  else if(selectedType==='stroke'){var s=strokes.find(function(s){return s.id===selectedId;});if(!s)return;var b0=getObjectBounds(selectedId,'stroke');var sx=w/(b0.w||1),sy=h/(b0.h||1);s.points=s.points.map(function(p){return{x:x+(p.x-b0.x)*sx,y:y+(p.y-b0.y)*sy};});}
 }
-function applyBounds(x, y, w, h) {
-  if (selectedType === 'text') {
-    var t = textItems.find(function(t){ return t.id === selectedId; }); if (!t) return;
-    t.x=x; t.y=y; t.w=w; t.h=h;
-    if (floatInput && editingTextId === selectedId) posFloatInput(t);
-  } else if (selectedType === 'stroke') {
-    var s = strokes.find(function(s){ return s.id === selectedId; }); if (!s) return;
-    var b0 = getObjectBounds(selectedId, 'stroke');
-    var sx=w/(b0.w||1), sy=h/(b0.h||1);
-    s.points = s.points.map(function(p){ return { x:x+(p.x-b0.x)*sx, y:y+(p.y-b0.y)*sy }; });
-  }
-}
-
-// ヒットテスト
-function hitTest(cx, cy) {
-  for (var i = textItems.length-1; i >= 0; i--) {
-    var t = textItems[i];
-    if (cx>=t.x && cx<=t.x+(t.w||200) && cy>=t.y && cy<=t.y+(t.h||80))
-      return { id:t.id, type:'text' };
-  }
-  for (var j = strokes.length-1; j >= 0; j--) {
-    var s = strokes[j]; if (!s.id) continue;
-    var b = getObjectBounds(s.id, 'stroke'); if (!b) continue;
-    if (cx>=b.x && cx<=b.x+b.w && cy>=b.y && cy<=b.y+b.h)
-      return { id:s.id, type:'stroke' };
-  }
+function hitTest(cx,cy){
+  for(var i=textItems.length-1;i>=0;i--){var t=textItems[i];if(cx>=t.x&&cx<=t.x+(t.w||200)&&cy>=t.y&&cy<=t.y+(t.h||80))return{id:t.id,type:'text'};}
+  for(var j=strokes.length-1;j>=0;j--){var s=strokes[j];if(!s.id)continue;var b=getObjectBounds(s.id,'stroke');if(!b)continue;if(cx>=b.x&&cx<=b.x+b.w&&cy>=b.y&&cy<=b.y+b.h)return{id:s.id,type:'stroke'};}
   return null;
 }
 
-// ---------- ポインターイベント ----------
-function setupCanvasEvents() {
-  canvasWrap.addEventListener('pointerdown',  onPointerDown,  { passive:false });
-  canvasWrap.addEventListener('pointermove',  onPointerMove,  { passive:false });
-  canvasWrap.addEventListener('pointerup',    onPointerUp,    { passive:false });
-  canvasWrap.addEventListener('pointercancel',onPointerUp,    { passive:false });
-  canvasWrap.addEventListener('wheel',        onWheel,        { passive:false });
-  canvasWrap.addEventListener('touchend',     onTouchEnd,     { passive:false });
+function setupCanvasEvents(){
+  canvasWrap.addEventListener('pointerdown',onPointerDown,{passive:false});
+  canvasWrap.addEventListener('pointermove',onPointerMove,{passive:false});
+  canvasWrap.addEventListener('pointerup',onPointerUp,{passive:false});
+  canvasWrap.addEventListener('pointercancel',onPointerUp,{passive:false});
+  canvasWrap.addEventListener('wheel',onWheel,{passive:false});
+  canvasWrap.addEventListener('touchend',onTouchEnd,{passive:false});
 }
-
-function onTouchEnd(e) {
-  if (e.changedTouches.length !== 1) return;
-  var touch = e.changedTouches[0];
-  var now   = Date.now();
-  var dx    = touch.clientX - lastTapPos.x;
-  var dy    = touch.clientY - lastTapPos.y;
-  if (now - lastTapTime < 350 && Math.hypot(dx, dy) < 35) {
-    e.preventDefault();
-    handleDoubleTap(cPosFromClient(touch.clientX, touch.clientY));
-    lastTapTime = 0; lastTapPos = { x:0, y:0 };
-  } else {
-    lastTapTime = now; lastTapPos = { x:touch.clientX, y:touch.clientY };
-  }
+function onTouchEnd(e){
+  if(e.changedTouches.length!==1)return;
+  var touch=e.changedTouches[0],now=Date.now();
+  var dx=touch.clientX-lastTapPos.x,dy=touch.clientY-lastTapPos.y;
+  if(now-lastTapTime<350&&Math.hypot(dx,dy)<35){
+    e.preventDefault();handleDoubleTap(cPosFromClient(touch.clientX,touch.clientY));
+    lastTapTime=0;lastTapPos={x:0,y:0};
+  }else{lastTapTime=now;lastTapPos={x:touch.clientX,y:touch.clientY};}
 }
-
-function handleDoubleTap(pos) {
-  if (tool === 'text') { createTextItem(pos); return; }
-  if (tool === 'select') {
-    var hit = hitTest(pos.x, pos.y);
-    if (hit && hit.type === 'text') openTextEdit(hit.id);
-  }
+function handleDoubleTap(pos){
+  if(tool==='text'){createTextItem(pos);return;}
+  if(tool==='select'){var hit=hitTest(pos.x,pos.y);if(hit&&hit.type==='text')openTextEdit(hit.id);}
 }
-
-function onPointerDown(e) {
-  if (floatInput && e.target === floatInput) return;
+function onPointerDown(e){
+  if(floatInput&&e.target===floatInput)return;
   e.preventDefault();
-  activePointers[e.pointerId] = { x:e.clientX, y:e.clientY };
-  var pCount = Object.keys(activePointers).length;
-  if (pCount === 2) {
-    isDrawing=false; currentStroke=null; moveDragActive=false;
-    var pts = Object.values(activePointers);
-    lastPinchDist = distP(pts[0], pts[1]);
-    lastPanPos    = midP(pts[0], pts[1]);
-    return;
+  activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
+  var pCount=Object.keys(activePointers).length;
+  if(pCount===2){
+    isDrawing=false;currentStroke=null;moveDragActive=false;
+    var pts=Object.values(activePointers);lastPinchDist=distP(pts[0],pts[1]);lastPanPos=midP(pts[0],pts[1]);return;
   }
-  closeShapePopup(); closeStylePanel();
-  if (editingTextId) { closeTextEdit(); return; }
-  var pos = cPos(e);
-  if (tool === 'select') {
-    var hit = hitTest(pos.x, pos.y);
-    if (hit) {
-      if (hit.id !== selectedId) showSelBox(hit.id, hit.type);
+  closeShapePopup();closeStylePanel();
+  if(editingTextId){closeTextEdit();return;}
+  var pos=cPos(e);
+  if(tool==='select'){
+    var hit=hitTest(pos.x,pos.y);
+    if(hit){
+      if(hit.id!==selectedId)showSelBox(hit.id,hit.type);
       pushUndo();
-      var bSave = getObjectBounds(hit.id, hit.type);
-      var pts0  = null;
-      if (hit.type === 'stroke') {
-        var hs = strokes.find(function(s){ return s.id === hit.id; });
-        if (hs) pts0 = JSON.parse(JSON.stringify(hs.points));
-      }
-      dragMode = 'move'; moveDragActive = true;
-      dragStart = { px:e.clientX, py:e.clientY, ox:bSave.x, oy:bSave.y, pts0:pts0 };
-    } else {
-      clearSelection(); redraw();
-      dragMode = 'pan'; lastPanPos = { x:e.clientX, y:e.clientY };
-    }
+      var bSave=getObjectBounds(hit.id,hit.type),pts0=null;
+      if(hit.type==='stroke'){var hs=strokes.find(function(s){return s.id===hit.id;});if(hs)pts0=JSON.parse(JSON.stringify(hs.points));}
+      dragMode='move';moveDragActive=true;
+      dragStart={px:e.clientX,py:e.clientY,ox:bSave.x,oy:bSave.y,pts0:pts0};
+    }else{clearSelection();redraw();dragMode='pan';lastPanPos={x:e.clientX,y:e.clientY};}
     return;
   }
-  if (tool === 'text') return;
-  if (tool === 'pen') {
-    pushUndo(); isDrawing = true;
-    var id = 's' + Date.now() + Math.random().toString(36).slice(2);
-    currentStroke = {
-      id:id, type:'pen', color:currentColor,
-      screenSize: strokeWidth,   // 画面ピクセル太さを保存
-      size: strokeWidth / scale, // キャンバス座標太さ
-      shape:'pen', points:[pos]
-    };
+  if(tool==='text')return;
+  if(tool==='pen'){
+    pushUndo();isDrawing=true;
+    var id='s'+Date.now()+Math.random().toString(36).slice(2);
+    currentStroke={id:id,type:'pen',color:currentColor,screenSize:strokeWidth,size:strokeWidth/scale,shape:'pen',points:[pos]};
   }
-  if (tool === 'shape') {
-    pushUndo(); isDrawing = true;
-    shapePreview = { x1:pos.x, y1:pos.y, x2:pos.x, y2:pos.y };
-  }
+  if(tool==='shape'){pushUndo();isDrawing=true;shapePreview={x1:pos.x,y1:pos.y,x2:pos.x,y2:pos.y};}
 }
-
-function onPointerMove(e) {
-  if (floatInput && e.target === floatInput) return;
+function onPointerMove(e){
+  if(floatInput&&e.target===floatInput)return;
   e.preventDefault();
-  activePointers[e.pointerId] = { x:e.clientX, y:e.clientY };
-  var pCount = Object.keys(activePointers).length;
-  if (pCount === 2) {
-    var pts = Object.values(activePointers);
-    var d = distP(pts[0], pts[1]);
-    var m = midP(pts[0], pts[1]);
-    if (lastPinchDist !== null) {
-      var f = d / lastPinchDist;
-      var rect = canvasWrap.getBoundingClientRect();
-      var mx = m.x - rect.left, my = m.y - rect.top;
-      panX = mx - (mx-panX)*f;
-      panY = my - (my-panY)*f;
-      scale = Math.max(0.2, Math.min(5, scale*f));
-    }
-    if (lastPanPos) { panX += m.x-lastPanPos.x; panY += m.y-lastPanPos.y; }
-    lastPinchDist = d; lastPanPos = m;
-    redraw(); updateSelBox(); return;
+  activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
+  var pCount=Object.keys(activePointers).length;
+  if(pCount===2){
+    var pts=Object.values(activePointers),d=distP(pts[0],pts[1]),m=midP(pts[0],pts[1]);
+    if(lastPinchDist!==null){var f=d/lastPinchDist,rect=canvasWrap.getBoundingClientRect(),mx=m.x-rect.left,my=m.y-rect.top;panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;scale=Math.max(.2,Math.min(5,scale*f));}
+    if(lastPanPos){panX+=m.x-lastPanPos.x;panY+=m.y-lastPanPos.y;}
+    lastPinchDist=d;lastPanPos=m;redraw();updateSelBox();return;
   }
-  if (dragMode === 'pan') {
-    panX += e.clientX - lastPanPos.x;
-    panY += e.clientY - lastPanPos.y;
-    lastPanPos = { x:e.clientX, y:e.clientY };
-    redraw(); updateSelBox(); return;
+  if(dragMode==='pan'){panX+=e.clientX-lastPanPos.x;panY+=e.clientY-lastPanPos.y;lastPanPos={x:e.clientX,y:e.clientY};redraw();updateSelBox();return;}
+  if(dragMode==='move'&&moveDragActive){
+    var dx=(e.clientX-dragStart.px)/scale,dy=(e.clientY-dragStart.py)/scale;
+    if(selectedType==='text'){var t=textItems.find(function(t){return t.id===selectedId;});if(t){t.x=dragStart.ox+dx;t.y=dragStart.oy+dy;if(floatInput&&editingTextId===selectedId)posFloatInput(t);}}
+    else if(selectedType==='stroke'){var s=strokes.find(function(s){return s.id===selectedId;});if(s&&dragStart.pts0)s.points=dragStart.pts0.map(function(p){return{x:p.x+dx,y:p.y+dy};});}
+    updateSelBox();redraw();return;
   }
-  if (dragMode === 'move' && moveDragActive) {
-    var dx=(e.clientX-dragStart.px)/scale, dy=(e.clientY-dragStart.py)/scale;
-    if (selectedType==='text') {
-      var t=textItems.find(function(t){ return t.id===selectedId; });
-      if (t) { t.x=dragStart.ox+dx; t.y=dragStart.oy+dy;
-        if (floatInput && editingTextId===selectedId) posFloatInput(t); }
-    } else if (selectedType==='stroke') {
-      var s=strokes.find(function(s){ return s.id===selectedId; });
-      if (s && dragStart.pts0) s.points=dragStart.pts0.map(function(p){ return {x:p.x+dx,y:p.y+dy}; });
-    }
-    updateSelBox(); redraw(); return;
-  }
-  if (!isDrawing) return;
-  var pos = cPos(e);
-  if (tool==='pen') { currentStroke.points.push(pos); redraw(); }
-  if (tool==='shape') { shapePreview.x2=pos.x; shapePreview.y2=pos.y; redraw(); }
+  if(!isDrawing)return;
+  var pos=cPos(e);
+  if(tool==='pen'){currentStroke.points.push(pos);redraw();}
+  if(tool==='shape'){shapePreview.x2=pos.x;shapePreview.y2=pos.y;redraw();}
 }
-
-function onPointerUp(e) {
-  if (floatInput && e.target === floatInput) return;
+function onPointerUp(e){
+  if(floatInput&&e.target===floatInput)return;
   e.preventDefault();
   delete activePointers[e.pointerId];
-  if (Object.keys(activePointers).length < 2) { lastPinchDist=null; lastPanPos=null; }
-  if (dragMode==='pan') { dragMode=null; return; }
-  if (dragMode==='move') { moveDragActive=false; dragMode=null; updateSelBox(); return; }
-  if (!isDrawing) return;
-  isDrawing = false;
-  if (tool==='pen') {
-    if (currentStroke && currentStroke.points.length >= 2) strokes.push(currentStroke);
-    currentStroke = null;
-  }
-  if (tool==='shape' && shapePreview) {
-    if (Math.abs(shapePreview.x2-shapePreview.x1)>3 || Math.abs(shapePreview.y2-shapePreview.y1)>3) {
+  if(Object.keys(activePointers).length<2){lastPinchDist=null;lastPanPos=null;}
+  if(dragMode==='pan'){dragMode=null;return;}
+  if(dragMode==='move'){moveDragActive=false;dragMode=null;updateSelBox();return;}
+  if(!isDrawing)return;
+  isDrawing=false;
+  if(tool==='pen'){if(currentStroke&&currentStroke.points.length>=2)strokes.push(currentStroke);currentStroke=null;}
+  if(tool==='shape'&&shapePreview){
+    if(Math.abs(shapePreview.x2-shapePreview.x1)>3||Math.abs(shapePreview.y2-shapePreview.y1)>3){
       var id='s'+Date.now()+Math.random().toString(36).slice(2);
-      strokes.push({
-        id:id, type:'shape',
-        color:spShapeStrokeColor, strokeColor:spShapeStrokeColor,
-        fillColor:spShapeFillColor, fillOpacity:spShapeFillOpacity,
-        size:strokeWidth/scale, shape:selectedShape,
-        points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]
-      });
+      strokes.push({id:id,type:'shape',color:spShapeStrokeColor,strokeColor:spShapeStrokeColor,fillColor:spShapeFillColor,fillOpacity:spShapeFillOpacity,size:strokeWidth/scale,shape:selectedShape,points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]});
     }
-    shapePreview = null;
+    shapePreview=null;
   }
   redraw();
 }
-
-function onWheel(e) {
+function onWheel(e){
   e.preventDefault();
-  var rect = canvasWrap.getBoundingClientRect();
-  var mx = e.clientX - rect.left;
-  var my = e.clientY - rect.top;
-  var f = e.deltaY < 0 ? 1.1 : 0.9;
-  panX = mx - (mx-panX)*f;
-  panY = my - (my-panY)*f;
-  scale = Math.max(0.2, Math.min(5, scale*f));
-  redraw(); updateSelBox();
+  var rect=canvasWrap.getBoundingClientRect(),mx=e.clientX-rect.left,my=e.clientY-rect.top;
+  var f=e.deltaY<0?1.1:.9;panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;scale=Math.max(.2,Math.min(5,scale*f));
+  redraw();updateSelBox();
 }
+function cPos(e){return cPosFromClient(e.clientX,e.clientY);}
+function cPosFromClient(cx,cy){var r=canvasWrap.getBoundingClientRect();return{x:(cx-r.left-panX)/scale,y:(cy-r.top-panY)/scale};}
+function distP(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
+function midP(a,b){return{x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
 
-function cPos(e) { return cPosFromClient(e.clientX, e.clientY); }
-function cPosFromClient(cx, cy) {
-  var r = canvasWrap.getBoundingClientRect();
-  return { x:(cx-r.left-panX)/scale, y:(cy-r.top-panY)/scale };
+// テキスト
+function createTextItem(pos){
+  pushUndo();var id='t'+Date.now()+Math.random().toString(36).slice(2);
+  textItems.push({id:id,x:pos.x,y:pos.y,w:200,h:80,text:'',textColor:spTextColor,borderColor:spTxtBorderColor,bgColor:spTxtBgColor,bgOpacity:spTxtBgOpacity,borderWidth:spTxtBorderWidth,fontSize:spFontSize,fontFamily:spFontFamily});
+  redraw();openTextEdit(id);
 }
-function distP(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
-function midP(a,b){ return { x:(a.x+b.x)/2, y:(a.y+b.y)/2 }; }
+function openTextEdit(id){
+  closeTextEdit();var t=textItems.find(function(x){return x.id===id;});if(!t)return;
+  editingTextId=id;floatInput=document.createElement('textarea');floatInput.className='float-textarea';
+  floatInput.value=t.text||'';floatInput.style.color=t.textColor||'#1c1c1e';floatInput.style.caretColor=t.textColor||'#1c1c1e';floatInput.style.fontFamily=t.fontFamily||'-apple-system,sans-serif';
+  floatInput.setAttribute('autocomplete','off');floatInput.setAttribute('autocorrect','off');floatInput.setAttribute('autocapitalize','none');floatInput.setAttribute('spellcheck','false');
+  posFloatInput(t);canvasWrap.appendChild(floatInput);isComposing=false;
+  floatInput.addEventListener('compositionstart',function(){isComposing=true;});
+  floatInput.addEventListener('compositionend',function(){isComposing=false;t.text=floatInput.value;autoGrow(t);redraw();updateSelBox();});
+  floatInput.addEventListener('input',function(){t.text=floatInput.value;autoGrow(t);redraw();updateSelBox();});
+  floatInput.addEventListener('keydown',function(e){if(isComposing)return;if(e.key==='Escape'){e.preventDefault();closeTextEdit();}});
+  ['pointerdown','pointermove','pointerup','touchstart','touchmove','touchend'].forEach(function(ev){floatInput.addEventListener(ev,function(e){e.stopPropagation();},{passive:true});});
+  floatInput.addEventListener('blur',function(){if(!isComposing)setTimeout(function(){if(editingTextId&&!isComposing)closeTextEdit();},200);});
+  showSelBox(id,'text');setTimeout(function(){if(floatInput)floatInput.focus();},80);
+}
+function autoGrow(t){if(!floatInput)return;t.h=Math.max(80,(t.text||'').split('\n').length*(t.fontSize||18)*1.6+20);floatInput.style.height=(t.h*scale)+'px';}
+function posFloatInput(t){if(!floatInput)return;floatInput.style.left=(t.x*scale+panX)+'px';floatInput.style.top=(t.y*scale+panY)+'px';floatInput.style.width=((t.w||200)*scale)+'px';floatInput.style.height=((t.h||80)*scale)+'px';floatInput.style.fontSize=((t.fontSize||18)*scale)+'px';}
+function closeTextEdit(){if(floatInput){floatInput.remove();floatInput=null;}editingTextId=null;isComposing=false;redraw();}
 
-// ---------- テキスト編集 ----------
-function createTextItem(pos) {
-  pushUndo();
-  var id = 't' + Date.now() + Math.random().toString(36).slice(2);
-  textItems.push({
-    id:id, x:pos.x, y:pos.y, w:200, h:80, text:'',
-    textColor:spTextColor, borderColor:spTxtBorderColor,
-    bgColor:spTxtBgColor, bgOpacity:spTxtBgOpacity,
-    borderWidth:spTxtBorderWidth, fontSize:spFontSize, fontFamily:spFontFamily
-  });
-  redraw(); openTextEdit(id);
+// スタイルパネル
+function buildStylePanel(){
+  buildSpColors('spTextColor',COLORS,function(){return spTextColor;},function(v){spTextColor=v;applyTxtStyle('textColor',v);});
+  buildSpColors('spTxtBorderColor',COLORS.concat(['transparent']),function(){return spTxtBorderColor;},function(v){spTxtBorderColor=v;applyTxtStyle('borderColor',v);});
+  buildSpColors('spTxtBgColor',COLORS.concat(['transparent']),function(){return spTxtBgColor;},function(v){spTxtBgColor=v;applyTxtStyle('bgColor',v);});
+  bindSlider('spTxtBgOpacity','spTxtBgOpacityVal','%',function(v){spTxtBgOpacity=v;applyTxtStyle('bgOpacity',v);});
+  bindSlider('spTxtBorderWidth','spTxtBorderWidthVal','px',function(v){spTxtBorderWidth=v;applyTxtStyle('borderWidth',v);});
+  bindSlider('spFontSize','spFontSizeVal','px',function(v){spFontSize=v;applyTxtStyle('fontSize',v);if(floatInput)floatInput.style.fontSize=(v*scale)+'px';});
+  document.getElementById('spFontFamily').addEventListener('change',function(e){spFontFamily=e.target.value;applyTxtStyle('fontFamily',spFontFamily);if(floatInput)floatInput.style.fontFamily=spFontFamily;redraw();});
+  buildSpColors('spShapeStrokeColor',COLORS,function(){return spShapeStrokeColor;},function(v){spShapeStrokeColor=v;applyShapeStyle('strokeColor',v);applyShapeStyle('color',v);});
+  buildSpColors('spShapeFillColor',COLORS.concat(['transparent']),function(){return spShapeFillColor;},function(v){spShapeFillColor=v;applyShapeStyle('fillColor',v);});
+  var foEl=document.getElementById('spShapeFillOpacity'),foVal=document.getElementById('spShapeFillOpacityVal');
+  if(foEl)foEl.addEventListener('input',function(){var v=+foEl.value;spShapeFillOpacity=v;foVal.textContent=v+'%';applyShapeStyle('fillOpacity',v);redraw();});
 }
-
-function openTextEdit(id) {
-  closeTextEdit();
-  var t = textItems.find(function(x){ return x.id===id; }); if (!t) return;
-  editingTextId = id;
-  floatInput = document.createElement('textarea');
-  floatInput.className = 'float-textarea';
-  floatInput.value = t.text || '';
-  floatInput.style.color      = t.textColor  || '#1c1c1e';
-  floatInput.style.caretColor = t.textColor  || '#1c1c1e';
-  floatInput.style.fontFamily = t.fontFamily || '-apple-system,sans-serif';
-  floatInput.setAttribute('autocomplete', 'off');
-  floatInput.setAttribute('autocorrect',  'off');
-  floatInput.setAttribute('autocapitalize','none');
-  floatInput.setAttribute('spellcheck',   'false');
-  posFloatInput(t); canvasWrap.appendChild(floatInput);
-  isComposing = false;
-  floatInput.addEventListener('compositionstart', function(){ isComposing=true; });
-  floatInput.addEventListener('compositionend', function(){
-    isComposing=false; t.text=floatInput.value; autoGrow(t); redraw(); updateSelBox();
-  });
-  floatInput.addEventListener('input', function(){
-    t.text=floatInput.value; autoGrow(t); redraw(); updateSelBox();
-  });
-  floatInput.addEventListener('keydown', function(e){
-    if (isComposing) return;
-    if (e.key==='Escape') { e.preventDefault(); closeTextEdit(); }
-  });
-  ['pointerdown','pointermove','pointerup','touchstart','touchmove','touchend'].forEach(function(ev){
-    floatInput.addEventListener(ev, function(e){ e.stopPropagation(); }, { passive:true });
-  });
-  floatInput.addEventListener('blur', function(){
-    if (!isComposing) setTimeout(function(){ if (editingTextId && !isComposing) closeTextEdit(); }, 200);
-  });
-  showSelBox(id, 'text');
-  setTimeout(function(){ if (floatInput) floatInput.focus(); }, 80);
-}
-function autoGrow(t) {
-  if (!floatInput) return;
-  t.h = Math.max(80, (t.text||'').split('\n').length * (t.fontSize||18) * 1.6 + 20);
-  floatInput.style.height = (t.h * scale) + 'px';
-}
-function posFloatInput(t) {
-  if (!floatInput) return;
-  floatInput.style.left     = (t.x*scale+panX) + 'px';
-  floatInput.style.top      = (t.y*scale+panY) + 'px';
-  floatInput.style.width    = ((t.w||200)*scale) + 'px';
-  floatInput.style.height   = ((t.h||80)*scale) + 'px';
-  floatInput.style.fontSize = ((t.fontSize||18)*scale) + 'px';
-}
-function closeTextEdit() {
-  if (floatInput) { floatInput.remove(); floatInput=null; }
-  editingTextId=null; isComposing=false; redraw();
-}
-
-// ---------- スタイルパネル ----------
-function buildStylePanel() {
-  buildSpColors('spTextColor', COLORS, function(){ return spTextColor; },
-    function(v){ spTextColor=v; applyTxtStyle('textColor',v); });
-  buildSpColors('spTxtBorderColor', COLORS.concat(['transparent']), function(){ return spTxtBorderColor; },
-    function(v){ spTxtBorderColor=v; applyTxtStyle('borderColor',v); });
-  buildSpColors('spTxtBgColor', COLORS.concat(['transparent']), function(){ return spTxtBgColor; },
-    function(v){ spTxtBgColor=v; applyTxtStyle('bgColor',v); });
-  bindSlider('spTxtBgOpacity','spTxtBgOpacityVal','%',
-    function(v){ spTxtBgOpacity=v; applyTxtStyle('bgOpacity',v); });
-  bindSlider('spTxtBorderWidth','spTxtBorderWidthVal','px',
-    function(v){ spTxtBorderWidth=v; applyTxtStyle('borderWidth',v); });
-  bindSlider('spFontSize','spFontSizeVal','px',
-    function(v){ spFontSize=v; applyTxtStyle('fontSize',v); if(floatInput) floatInput.style.fontSize=(v*scale)+'px'; });
-  document.getElementById('spFontFamily').addEventListener('change', function(e){
-    spFontFamily=e.target.value; applyTxtStyle('fontFamily',spFontFamily);
-    if(floatInput) floatInput.style.fontFamily=spFontFamily; redraw();
-  });
-  buildSpColors('spShapeStrokeColor', COLORS, function(){ return spShapeStrokeColor; },
-    function(v){ spShapeStrokeColor=v; applyShapeStyle('strokeColor',v); applyShapeStyle('color',v); });
-  buildSpColors('spShapeFillColor', COLORS.concat(['transparent']), function(){ return spShapeFillColor; },
-    function(v){ spShapeFillColor=v; applyShapeStyle('fillColor',v); });
-  var foEl  = document.getElementById('spShapeFillOpacity');
-  var foVal = document.getElementById('spShapeFillOpacityVal');
-  if (foEl) foEl.addEventListener('input', function(){
-    var v=+foEl.value; spShapeFillOpacity=v; foVal.textContent=v+'%';
-    applyShapeStyle('fillOpacity',v); redraw();
-  });
-}
-
-function buildSpColors(elId, colors, getVal, setVal) {
-  var el = document.getElementById(elId); if (!el) return;
+function buildSpColors(elId,colors,getVal,setVal){
+  var el=document.getElementById(elId);if(!el)return;
   colors.forEach(function(c){
-    var d = document.createElement('div');
-    d.className = 'sp-dot';
-    if (c === 'transparent') {
-      d.style.background = 'linear-gradient(135deg,#fff 45%,#f00 45%,#f00 55%,#fff 55%)';
-      d.style.border = '2px solid #ccc'; d.title = '透明';
-    } else {
-      d.style.background = c;
-      if (c === '#ffffff') d.style.border = '2px solid #ccc';
-    }
-    d.onclick = function(){
-      el.querySelectorAll('.sp-dot').forEach(function(x){ x.classList.remove('active'); });
-      d.classList.add('active'); setVal(c); redraw();
-    };
-    if (c === getVal()) d.classList.add('active');
-    el.appendChild(d);
+    var d=document.createElement('div');d.className='sp-dot';
+    if(c==='transparent'){d.style.background='linear-gradient(135deg,#fff 45%,#f00 45%,#f00 55%,#fff 55%)';d.style.border='2px solid #ccc';d.title='透明';}
+    else{d.style.background=c;if(c==='#ffffff')d.style.border='2px solid #ccc';}
+    d.onclick=function(){el.querySelectorAll('.sp-dot').forEach(function(x){x.classList.remove('active');});d.classList.add('active');setVal(c);redraw();};
+    if(c===getVal())d.classList.add('active');el.appendChild(d);
   });
 }
+function bindSlider(id,valId,unit,setter){var el=document.getElementById(id),vEl=document.getElementById(valId);if(!el)return;el.addEventListener('input',function(){var v=+el.value;setter(v);if(vEl)vEl.textContent=v+unit;redraw();});}
+function applyTxtStyle(key,val){if(selectedType==='text'){var t=textItems.find(function(t){return t.id===selectedId;});if(t){t[key]=val;redraw();}}}
+function applyShapeStyle(key,val){if(selectedType==='stroke'){var s=strokes.find(function(s){return s.id===selectedId;});if(s){s[key]=val;redraw();}}}
+function switchSpTab(tab){
+  activeSpTab=tab;
+  document.getElementById('spTabText').classList.toggle('active',tab==='text');
+  document.getElementById('spTabShape').classList.toggle('active',tab==='shape');
+  document.getElementById('spBodyText').classList.toggle('hidden',tab!=='text');
+  document.getElementById('spBodyShape').classList.toggle('hidden',tab!=='shape');
+}
+function toggleStylePanel(){var panel=document.getElementById('stylePanel');if(panel.classList.contains('hidden')){switchSpTab(selectedType==='stroke'?'shape':'text');panel.classList.remove('hidden');}else panel.classList.add('hidden');}
+function closeStylePanel(){document.getElementById('stylePanel').classList.add('hidden');}
 
-function bindSlider(id, valId, unit, setter) {
-  var el = document.getElementById(id);
-  var vEl = document.getElementById(valId);
-  if (!el) return;
-  el.addEventListener('input', function(){
-    var v = +el.value; setter(v); if(vEl) vEl.textContent=v+unit; redraw();
-  });
+// ツール
+function setTool(t){
+  if(t!=='select')clearSelection();tool=t;
+  ['Pen','Text','Shape','Select'].forEach(function(n){var btn=document.getElementById('tool'+n);if(btn)btn.classList.toggle('active',n.toLowerCase()===t);});
+  var badges={pen:'ペン',text:'テキスト（ダブルタップで配置）',shape:'図形（ドラッグで描画）',select:'選択・移動・リサイズ'};
+  document.getElementById('modeBadge').textContent=badges[t]||t;
+  canvas.classList.toggle('select-mode',t==='select');
+  closeShapePopup();closeStylePanel();
 }
+function toggleShapePopup(){
+  var popup=document.getElementById('shapePopup');popup.classList.toggle('hidden');
+  ['Rect','Circle','Line','Arrow','Triangle'].forEach(function(n){var el=document.getElementById('shapeOpt'+n);if(el)el.classList.toggle('selected',selectedShape===n.toLowerCase());});
+}
+function closeShapePopup(){document.getElementById('shapePopup').classList.add('hidden');}
+function selectShape(s){selectedShape=s;setTool('shape');document.getElementById('toolShape').classList.add('active');closeShapePopup();}
 
-function applyTxtStyle(key, val) {
-  if (selectedType === 'text') {
-    var t = textItems.find(function(t){ return t.id===selectedId; });
-    if (t) { t[key]=val; redraw(); }
-  }
-}
-function applyShapeStyle(key, val) {
-  if (selectedType === 'stroke') {
-    var s = strokes.find(function(s){ return s.id===selectedId; });
-    if (s) { s[key]=val; redraw(); }
-  }
-}
+// Undo/Redo
+function getState(){return{strokes:JSON.parse(JSON.stringify(strokes)),texts:JSON.parse(JSON.stringify(textItems))};}
+function applyState(s){strokes=s.strokes;textItems=s.texts;clearSelection();closeTextEdit();redraw();}
+function pushUndo(){undoStack.push(getState());if(undoStack.length>50)undoStack.shift();redoStack=[];}
+function undo(){if(!undoStack.length)return;redoStack.push(getState());applyState(undoStack.pop());}
+function redo(){if(!redoStack.length)return;undoStack.push(getState());applyState(redoStack.pop());}
 
-function switchSpTab(tab) {
-  activeSpTab = tab;
-  document.getElementById('spTabText').classList.toggle('active',  tab==='text');
-  document.getElementById('spTabShape').classList.toggle('active', tab==='shape');
-  document.getElementById('spBodyText').classList.toggle('hidden',  tab!=='text');
-  document.getElementById('spBodyShape').classList.toggle('hidden', tab!=='shape');
-}
-function toggleStylePanel() {
-  var panel = document.getElementById('stylePanel');
-  if (panel.classList.contains('hidden')) {
-    switchSpTab(selectedType==='stroke' ? 'shape' : 'text');
-    panel.classList.remove('hidden');
-  } else {
-    panel.classList.add('hidden');
-  }
-}
-function closeStylePanel() { document.getElementById('stylePanel').classList.add('hidden'); }
-
-// ---------- ツール ----------
-function setTool(t) {
-  if (t !== 'select') clearSelection();
-  tool = t;
-  ['Pen','Text','Shape','Select'].forEach(function(n){
-    var btn = document.getElementById('tool'+n);
-    if (btn) btn.classList.toggle('active', n.toLowerCase()===t);
-  });
-  var badges = {
-    pen:    'ペン',
-    text:   'テキスト（ダブルタップで配置）',
-    shape:  '図形（ドラッグで描画）',
-    select: '選択・移動・リサイズ'
-  };
-  document.getElementById('modeBadge').textContent = badges[t] || t;
-  canvas.classList.toggle('select-mode', t==='select');
-  closeShapePopup(); closeStylePanel();
-}
-
-function toggleShapePopup() {
-  var popup = document.getElementById('shapePopup');
-  popup.classList.toggle('hidden');
-  ['Rect','Circle','Line','Arrow','Triangle'].forEach(function(n){
-    var el = document.getElementById('shapeOpt'+n);
-    if (el) el.classList.toggle('selected', selectedShape===n.toLowerCase());
-  });
-}
-function closeShapePopup() { document.getElementById('shapePopup').classList.add('hidden'); }
-function selectShape(s) {
-  selectedShape = s;
-  setTool('shape');
-  document.getElementById('toolShape').classList.add('active');
-  closeShapePopup();
-}
-
-// ---------- Undo/Redo ----------
-function getState() {
-  return { strokes: JSON.parse(JSON.stringify(strokes)), texts: JSON.parse(JSON.stringify(textItems)) };
-}
-function applyState(s) { strokes=s.strokes; textItems=s.texts; clearSelection(); closeTextEdit(); redraw(); }
-function pushUndo() { undoStack.push(getState()); if(undoStack.length>50) undoStack.shift(); redoStack=[]; }
-function undo() { if(!undoStack.length) return; redoStack.push(getState()); applyState(undoStack.pop()); }
-function redo() { if(!redoStack.length) return; undoStack.push(getState()); applyState(redoStack.pop()); }
-
-// ---------- カラーピッカー ----------
-function buildColorPicker() {
-  var cp = document.getElementById('colorPicker');
+// カラーピッカー
+function buildColorPicker(){
+  var cp=document.getElementById('colorPicker');
   COLORS.forEach(function(c){
-    var d = document.createElement('div');
-    d.className = 'color-dot' + (c===currentColor ? ' active' : '');
-    d.style.background = c;
-    if (c==='#ffffff') d.style.border='3px solid #ccc';
-    d.onclick = function(){
-      document.querySelectorAll('#colorPicker .color-dot').forEach(function(x){ x.classList.remove('active'); });
-      d.classList.add('active'); currentColor=c;
-    };
+    var d=document.createElement('div');d.className='color-dot'+(c===currentColor?' active':'');
+    d.style.background=c;if(c==='#ffffff')d.style.border='3px solid #ccc';
+    d.onclick=function(){document.querySelectorAll('#colorPicker .color-dot').forEach(function(x){x.classList.remove('active');});d.classList.add('active');currentColor=c;};
     cp.appendChild(d);
   });
 }
 
-// ---------- キーボード ----------
-function setupKeyboard() {
-  document.addEventListener('keydown', function(e){
-    shiftDown = e.shiftKey;
-    if (isComposing) return;
-    var editorHidden = document.getElementById('editorScreen').classList.contains('hidden');
-    if (editorHidden) return;
-    var tag = document.activeElement ? document.activeElement.tagName : '';
-    if (tag==='TEXTAREA'||tag==='INPUT'||tag==='SELECT') {
-      if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveBoard(true); }
-      return;
-    }
-    if ((e.ctrlKey||e.metaKey) && e.key==='z') { e.preventDefault(); undo(); return; }
-    if ((e.ctrlKey||e.metaKey) && (e.key==='y'||(e.shiftKey&&e.key==='Z'))) { e.preventDefault(); redo(); return; }
-    if ((e.ctrlKey||e.metaKey) && e.key==='s') { e.preventDefault(); saveBoard(true); return; }
-    if ((e.key==='Delete'||e.key==='Backspace') && selectedId) { e.preventDefault(); deleteSelected(); return; }
-    if (e.key==='p') { setTool('pen'); return; }
-    if (e.key==='t') { setTool('text'); return; }
-    if (e.key==='s' && !e.ctrlKey && !e.metaKey) { setTool('select'); return; }
-    if (e.key==='Escape') { clearSelection(); closeTextEdit(); closeShapePopup(); closeStylePanel(); redraw(); }
+// キーボード
+function setupKeyboard(){
+  document.addEventListener('keydown',function(e){
+    shiftDown=e.shiftKey;if(isComposing)return;
+    var editorHidden=document.getElementById('editorScreen').classList.contains('hidden');if(editorHidden)return;
+    var tag=document.activeElement?document.activeElement.tagName:'';
+    if(tag==='TEXTAREA'||tag==='INPUT'||tag==='SELECT'){if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);}return;}
+    // contenteditable は DIV
+    if(document.activeElement&&document.activeElement.contentEditable==='true'){if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);}return;}
+    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();return;}
+    if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){e.preventDefault();redo();return;}
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);return;}
+    if((e.key==='Delete'||e.key==='Backspace')&&selectedId){e.preventDefault();deleteSelected();return;}
+    if(e.key==='p'){setTool('pen');return;}
+    if(e.key==='t'){setTool('text');return;}
+    if(e.key==='s'&&!e.ctrlKey&&!e.metaKey){setTool('select');return;}
+    if(e.key==='Escape'){clearSelection();closeTextEdit();closeShapePopup();closeStylePanel();redraw();}
   });
-  document.addEventListener('keyup', function(e){ shiftDown=e.shiftKey; });
+  document.addEventListener('keyup',function(e){shiftDown=e.shiftKey;});
 }
 
-// ---------- ユーティリティ ----------
-function hexToRgb(hex) {
-  if (!hex || hex==='transparent') return { r:255, g:255, b:255 };
-  return { r:parseInt(hex.slice(1,3),16), g:parseInt(hex.slice(3,5),16), b:parseInt(hex.slice(5,7),16) };
-}
-function show(id) { document.getElementById(id).classList.remove('hidden'); }
-function hide(id) { document.getElementById(id).classList.add('hidden'); }
-function showLoading(v) { document.getElementById('loadingOverlay').classList.toggle('hidden', !v); }
-var toastTimer = null;
-function showToast(msg, type) {
-  type = type || 'success';
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + type + ' show';
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 3000);
-}
-function setSyncStatus(state, label) {
-  var dot = document.getElementById('syncDot');
-  var lbl = document.getElementById('syncLabel');
-  if (!dot) return;
-  dot.className = 'sync-dot' + (state==='loading'?' loading':state==='error'?' error':'');
-  if (lbl) lbl.textContent = label;
-}
+// ユーティリティ
+function hexToRgb(hex){if(!hex||hex==='transparent')return{r:255,g:255,b:255};return{r:parseInt(hex.slice(1,3),16),g:parseInt(hex.slice(3,5),16),b:parseInt(hex.slice(5,7),16)};}
+function show(id){document.getElementById(id).classList.remove('hidden');}
+function hide(id){document.getElementById(id).classList.add('hidden');}
+function showLoading(v){document.getElementById('loadingOverlay').classList.toggle('hidden',!v);}
+var toastTimer=null;
+function showToast(msg,type){type=type||'success';var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove('show');},3000);}
+function setSyncStatus(state,label){var dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel');if(!dot)return;dot.className='sync-dot'+(state==='loading'?' loading':state==='error'?' error':'');if(lbl)lbl.textContent=label;}
 </script>
 </body>
 </html>
