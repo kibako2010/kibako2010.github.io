@@ -60,8 +60,7 @@ body{
 
 .home-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c;
-  flex-shrink:0
+  padding:16px 20px 12px;background:#2c2c2e;border-bottom:1px solid #3a3a3c;flex-shrink:0
 }
 .home-header h1{
   font-size:26px;font-weight:700;
@@ -83,8 +82,7 @@ body{
 .boards-grid{
   flex:1;overflow-y:auto;padding:16px;
   display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:14px;align-content:start;
-  touch-action:pan-y
+  gap:14px;align-content:start;touch-action:pan-y
 }
 .board-card{
   background:#2c2c2e;border-radius:16px;overflow:hidden;
@@ -92,8 +90,7 @@ body{
   border:2px solid transparent;position:relative
 }
 .board-card:hover,.board-card:active{
-  transform:translateY(-2px);
-  box-shadow:0 8px 30px rgba(124,58,237,.35);border-color:#7c3aed
+  transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,.35);border-color:#7c3aed
 }
 .board-thumb{width:100%;aspect-ratio:4/3;background:#f5f4ef;display:block}
 .board-info{padding:10px 12px}
@@ -120,8 +117,7 @@ body{
   background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
   border-bottom:1px solid #e0e0e0;
   flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
-  z-index:100;flex-shrink:0;
-  touch-action:pan-x
+  z-index:100;flex-shrink:0;touch-action:pan-x
 }
 .toolbar::-webkit-scrollbar{display:none}
 .tb-group{display:flex;gap:2px;align-items:center;flex-shrink:0}
@@ -130,8 +126,7 @@ body{
   border:none;background:transparent;border-radius:10px;
   width:38px;height:38px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;font-size:18px;transition:background .12s;flex-shrink:0;
-  -webkit-tap-highlight-color:transparent;color:#1c1c1e;
-  touch-action:manipulation
+  -webkit-tap-highlight-color:transparent;color:#1c1c1e;touch-action:manipulation
 }
 .tb-btn:hover{background:#f0f0f0}
 .tb-btn:active{background:#e8e8e8}
@@ -164,46 +159,41 @@ body{
 #mainCanvas{position:absolute;top:0;left:0;touch-action:none;cursor:crosshair}
 #mainCanvas.select-mode{cursor:default}
 
-/* ── 図形選択ポップアップ ── */
+/* 図形ポップアップ（ダーク背景） */
 .shape-popup{
   position:absolute;top:54px;left:50%;transform:translateX(-50%);
   background:#2c2c2e;border-radius:16px;
   box-shadow:0 8px 32px rgba(0,0,0,.45);
-  padding:12px;display:flex;gap:10px;z-index:200;
-  border:1px solid #3a3a3c
+  padding:12px;display:flex;gap:10px;z-index:200;border:1px solid #3a3a3c
 }
 .shape-popup.hidden{display:none}
 .shape-opt{
-  width:52px;height:52px;
-  border-radius:12px;background:#1c1c1e;cursor:pointer;
+  width:52px;height:52px;border-radius:12px;background:#1c1c1e;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  border:2px solid #3a3a3c;
-  transition:background .15s,border-color .15s;
+  border:2px solid #3a3a3c;transition:background .15s,border-color .15s;
   touch-action:manipulation;-webkit-tap-highlight-color:transparent
 }
 .shape-opt:hover,.shape-opt:active{background:#3a3a3c;border-color:#7c3aed}
 .shape-opt.selected{background:#2d1e6b;border-color:#7c3aed}
-.shape-opt svg{display:block}
 
-/* ── スタイルパネル（テキスト・図形共通） ── */
+/* 統合スタイルパネル */
 .style-panel{
   position:absolute;top:54px;left:50%;transform:translateX(-50%);
   background:#fff;border-radius:16px;
   box-shadow:0 8px 32px rgba(0,0,0,.2);
   padding:16px;z-index:200;border:1px solid #e0e0e0;
   display:flex;flex-direction:column;gap:14px;
-  min-width:320px;max-width:94vw;
-  touch-action:auto
+  min-width:320px;max-width:94vw;touch-action:auto
 }
 .style-panel.hidden{display:none}
 .sp-tabs{display:flex;gap:6px;border-bottom:1px solid #e0e0e0;padding-bottom:10px}
 .sp-tab{
   font-size:13px;font-weight:600;padding:5px 12px;border-radius:8px;
-  border:none;background:none;cursor:pointer;color:#636366;
-  touch-action:manipulation
+  border:none;background:none;cursor:pointer;color:#636366;touch-action:manipulation
 }
 .sp-tab.active{background:#ede9fe;color:#7c3aed}
 .sp-body{display:flex;flex-direction:column;gap:12px}
+.sp-body.hidden{display:none}
 .sp-row{display:flex;align-items:center;gap:10px}
 .sp-label{font-size:12px;color:#636366;width:72px;flex-shrink:0}
 .sp-colors{display:flex;gap:4px;flex-wrap:wrap}
@@ -234,10 +224,9 @@ body{
 .sel-handle{
   position:absolute;width:20px;height:20px;
   background:#fff;border:2.5px solid #2563eb;border-radius:5px;
-  pointer-events:all;z-index:21;
-  transform:translate(-50%,-50%);touch-action:none;cursor:pointer
+  pointer-events:all;z-index:21;transform:translate(-50%,-50%);
+  touch-action:none;cursor:pointer
 }
-
 .float-textarea{
   position:absolute;z-index:50;
   resize:none;outline:none;border:none;overflow:hidden;
@@ -245,27 +234,23 @@ body{
   border-radius:8px;opacity:0.01;
   touch-action:auto;user-select:text;-webkit-user-select:text
 }
-
 .mode-badge{
   position:absolute;bottom:14px;right:14px;
   background:rgba(0,0,0,.55);color:#fff;
   padding:5px 12px;border-radius:12px;
   font-size:12px;font-weight:600;pointer-events:none;z-index:50
 }
-
 .toast{
   position:fixed;bottom:20px;left:50%;
   transform:translateX(-50%) translateY(80px);
   padding:10px 24px;border-radius:20px;
   font-size:14px;font-weight:600;
-  transition:transform .3s ease;z-index:9999;
-  pointer-events:none;white-space:nowrap
+  transition:transform .3s ease;z-index:9999;pointer-events:none;white-space:nowrap
 }
 .toast.show{transform:translateX(-50%) translateY(0)}
 .toast.success{background:rgba(52,199,89,.95);color:#fff}
 .toast.error{background:rgba(255,69,58,.95);color:#fff}
 .toast.info{background:rgba(0,122,255,.95);color:#fff}
-
 .loading-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.5);
   display:flex;align-items:center;justify-content:center;
@@ -273,17 +258,15 @@ body{
 }
 .loading-overlay.hidden{display:none}
 .loading-spinner{
-  width:48px;height:48px;
-  border:4px solid rgba(255,255,255,.2);
-  border-top-color:#a78bfa;border-radius:50%;
-  animation:spin .8s linear infinite
+  width:48px;height:48px;border:4px solid rgba(255,255,255,.2);
+  border-top-color:#a78bfa;border-radius:50%;animation:spin .8s linear infinite
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- ===== SETUP ===== -->
+<!-- SETUP -->
 <div id="setupScreen" class="screen hidden">
   <div class="setup-card">
     <h2>✦ FreePad 初期設定</h2>
@@ -311,7 +294,7 @@ body{
   </div>
 </div>
 
-<!-- ===== HOME ===== -->
+<!-- HOME -->
 <div id="homeScreen" class="screen hidden">
   <div class="home-header">
     <h1>✦ FreePad</h1>
@@ -320,16 +303,16 @@ body{
         <div class="sync-dot" id="syncDot"></div>
         <span id="syncLabel">同期済み</span>
       </div>
-      <button class="btn-settings" onclick="showSetup()" title="設定">⚙️</button>
+      <button class="btn-settings" onclick="showSetup()">⚙️</button>
       <button class="btn-new" onclick="newBoard()">＋ 新しいボード</button>
     </div>
   </div>
   <div class="boards-grid" id="boardsGrid"></div>
 </div>
 
-<!-- ===== EDITOR ===== -->
+<!-- EDITOR -->
 <div id="editorScreen" class="screen hidden">
-  <div class="toolbar" id="toolbar">
+  <div class="toolbar">
     <button class="tb-back" onclick="goHome()">← 戻る</button>
     <input class="board-title-input" id="boardTitle" placeholder="ボード名">
     <div class="tb-sep"></div>
@@ -392,18 +375,18 @@ body{
     </div>
   </div>
 
-  <!-- 図形選択ポップアップ（暗背景＋SVGアイコン） -->
+  <!-- 図形ポップアップ（ダーク＋カラーSVG） -->
   <div class="shape-popup hidden" id="shapePopup">
-    <div class="shape-opt" id="shapeOptRect"    onclick="selectShape('rect')"     title="四角形">
+    <div class="shape-opt" id="shapeOptRect"     onclick="selectShape('rect')"     title="四角形">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#a78bfa" stroke-width="2.5"><rect x="4" y="6" width="20" height="16" rx="2"/></svg>
     </div>
-    <div class="shape-opt" id="shapeOptCircle"  onclick="selectShape('circle')"   title="楕円">
+    <div class="shape-opt" id="shapeOptCircle"   onclick="selectShape('circle')"   title="楕円">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#60a5fa" stroke-width="2.5"><ellipse cx="14" cy="14" rx="10" ry="8"/></svg>
     </div>
-    <div class="shape-opt" id="shapeOptLine"    onclick="selectShape('line')"     title="直線">
+    <div class="shape-opt" id="shapeOptLine"     onclick="selectShape('line')"     title="直線">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#34d399" stroke-width="2.5"><line x1="4" y1="24" x2="24" y2="4"/></svg>
     </div>
-    <div class="shape-opt" id="shapeOptArrow"   onclick="selectShape('arrow')"    title="矢印">
+    <div class="shape-opt" id="shapeOptArrow"    onclick="selectShape('arrow')"    title="矢印">
       <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="#f97316" stroke-width="2.5"><line x1="4" y1="24" x2="22" y2="6"/><polyline points="13,6 22,6 22,15"/></svg>
     </div>
     <div class="shape-opt" id="shapeOptTriangle" onclick="selectShape('triangle')" title="三角形">
@@ -411,14 +394,12 @@ body{
     </div>
   </div>
 
-  <!-- 統合スタイルパネル（テキスト・図形共通、タブ切替） -->
+  <!-- 統合スタイルパネル -->
   <div class="style-panel hidden" id="stylePanel">
-    <!-- タブ -->
     <div class="sp-tabs">
       <button class="sp-tab active" id="spTabText"  onclick="switchSpTab('text')">テキスト</button>
       <button class="sp-tab"        id="spTabShape" onclick="switchSpTab('shape')">図形</button>
     </div>
-
     <!-- テキストタブ -->
     <div class="sp-body" id="spBodyText">
       <div class="sp-row"><span class="sp-label">文字色</span>    <div class="sp-colors" id="spTextColor"></div></div>
@@ -450,7 +431,6 @@ body{
         </select>
       </div>
     </div>
-
     <!-- 図形タブ -->
     <div class="sp-body hidden" id="spBodyShape">
       <div class="sp-row"><span class="sp-label">枠線色</span>    <div class="sp-colors" id="spShapeStrokeColor"></div></div>
@@ -461,7 +441,6 @@ body{
         <span class="sp-val" id="spShapeFillOpacityVal">0%</span>
       </div>
     </div>
-
     <button class="sp-close" onclick="closeStylePanel()">✕ 閉じる</button>
   </div>
 
@@ -475,608 +454,739 @@ body{
 <div class="toast" id="toast"></div>
 
 <script>
-'use strict';
+// strict mode は使わない（二重宣言エラー回避のため除去）
 
-// ─── Unicode対応 Base64 ───────────────────────
-function encodeBase64(str){
-  const bytes=new TextEncoder().encode(str);
-  let bin=''; bytes.forEach(b=>bin+=String.fromCharCode(b)); return btoa(bin);
+// ===== Unicode対応 Base64 =====
+function encodeBase64(str) {
+  var bytes = new TextEncoder().encode(str);
+  var bin = '';
+  bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+  return btoa(bin);
 }
-function decodeBase64(b64){
-  const bin=atob(b64.replace(/[\n\r]/g,''));
-  const bytes=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+function decodeBase64(b64) {
+  var bin = atob(b64.replace(/[\n\r]/g,''));
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
   return new TextDecoder().decode(bytes);
 }
 
-// ─── URLハッシュ設定 ──────────────────────────
-let cfg={};
-function parseHash(){
-  const map={},hash=location.hash.slice(1); if(!hash)return map;
-  hash.split('&').forEach(pair=>{
-    const idx=pair.indexOf('='); if(idx<0)return;
-    map[pair.slice(0,idx)]=decodeURIComponent(pair.slice(idx+1));
-  }); return map;
+// ===== URLハッシュ設定 =====
+var cfg = {};
+function parseHash() {
+  var map = {}, hash = location.hash.slice(1);
+  if (!hash) return map;
+  hash.split('&').forEach(function(pair){
+    var idx = pair.indexOf('=');
+    if (idx < 0) return;
+    map[pair.slice(0,idx)] = decodeURIComponent(pair.slice(idx+1));
+  });
+  return map;
 }
-function buildHashUrl(o,r,t){
+function buildHashUrl(o,r,t) {
   return location.href.split('#')[0]
-    +`#owner=${encodeURIComponent(o)}&repo=${encodeURIComponent(r)}&token=${encodeURIComponent(t)}`;
+    + '#owner=' + encodeURIComponent(o)
+    + '&repo='  + encodeURIComponent(r)
+    + '&token=' + encodeURIComponent(t);
 }
-function loadConfig(){
-  const p=parseHash();
-  if(p.owner&&p.repo&&p.token){cfg=p;return true;} return false;
+function loadConfig() {
+  var p = parseHash();
+  if (p.owner && p.repo && p.token) { cfg = p; return true; }
+  return false;
 }
 
-// ─── GitHub API ───────────────────────────────
-const GH='https://api.github.com', DATA_PATH='data/boards.json';
-let fileSHA=null;
-function ghHeaders(){return{'Authorization':`Bearer ${cfg.token}`,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};}
-async function ghGetFile(path){
-  const res=await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,{headers:ghHeaders(),cache:'no-store'});
-  if(res.status===404)return null; if(!res.ok)throw new Error(`GET ${res.status}`); return res.json();
+// ===== GitHub API =====
+var GH        = 'https://api.github.com';
+var DATA_PATH = 'data/boards.json';
+var fileSHA   = null;
+
+function ghHeaders() {
+  return {
+    'Authorization':        'Bearer ' + cfg.token,
+    'Accept':               'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
 }
-async function ghPutFile(path,obj,msg){
-  const b64=encodeBase64(JSON.stringify(obj,null,2));
-  for(let attempt=1;attempt<=3;attempt++){
-    try{const cur=await ghGetFile(path);fileSHA=cur?cur.sha:null;}catch(_){}
-    const body={message:msg,content:b64,committer:{name:'FreePad',email:'freepad@app.local'}};
-    if(fileSHA)body.sha=fileSHA;
-    const res=await fetch(`${GH}/repos/${cfg.owner}/${cfg.repo}/contents/${path}`,{method:'PUT',headers:{...ghHeaders(),'Content-Type':'application/json'},body:JSON.stringify(body)});
-    if(res.ok){const data=await res.json();fileSHA=data.content.sha;return data;}
-    const err=await res.json().catch(()=>({}));
-    if(res.status===409){console.warn(`SHA mismatch attempt=${attempt}`);await sleep(700*attempt);continue;}
-    throw new Error(err.message||`PUT ${res.status}`);
+function ghGetFile(path) {
+  return fetch(GH+'/repos/'+cfg.owner+'/'+cfg.repo+'/contents/'+path,
+    {headers:ghHeaders(), cache:'no-store'})
+  .then(function(res){
+    if (res.status===404) return null;
+    if (!res.ok) throw new Error('GET '+res.status);
+    return res.json();
+  });
+}
+function sleep(ms){ return new Promise(function(r){setTimeout(r,ms);}); }
+
+async function ghPutFile(path, obj, msg) {
+  var b64 = encodeBase64(JSON.stringify(obj,null,2));
+  for (var attempt = 1; attempt <= 3; attempt++) {
+    try { var cur = await ghGetFile(path); fileSHA = cur ? cur.sha : null; } catch(_){}
+    var body = {message:msg, content:b64, committer:{name:'FreePad',email:'freepad@app.local'}};
+    if (fileSHA) body.sha = fileSHA;
+    var res = await fetch(GH+'/repos/'+cfg.owner+'/'+cfg.repo+'/contents/'+path,
+      {method:'PUT', headers:Object.assign({},ghHeaders(),{'Content-Type':'application/json'}),
+       body:JSON.stringify(body)});
+    if (res.ok) {
+      var data = await res.json();
+      fileSHA = data.content.sha;
+      return data;
+    }
+    var errBody = await res.json().catch(function(){return {};});
+    if (res.status===409) { await sleep(700*attempt); continue; }
+    throw new Error(errBody.message || 'PUT '+res.status);
   }
   throw new Error('保存に3回失敗しました。再読み込みして再試行してください。');
 }
-function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-async function loadBoardsFromGitHub(){
+
+async function loadBoardsFromGitHub() {
   setSyncStatus('loading','同期中...');
-  try{
-    const f=await ghGetFile(DATA_PATH);
-    if(!f){fileSHA=null;boards=[];}else{fileSHA=f.sha;boards=JSON.parse(decodeBase64(f.content));}
+  try {
+    var f = await ghGetFile(DATA_PATH);
+    if (!f) { fileSHA=null; boards=[]; }
+    else { fileSHA=f.sha; boards=JSON.parse(decodeBase64(f.content)); }
     setSyncStatus('ok','同期済み');
-  }catch(e){setSyncStatus('error','エラー');showToast('⚠️ 読み込み失敗: '+e.message,'error');}
+  } catch(e) {
+    setSyncStatus('error','エラー');
+    showToast('⚠️ 読み込み失敗: '+e.message,'error');
+  }
 }
-async function saveBoardsToGitHub(){
+async function saveBoardsToGitHub() {
   setSyncStatus('loading','保存中...');
-  try{await ghPutFile(DATA_PATH,boards,`FreePad ${new Date().toISOString()}`);setSyncStatus('ok','同期済み');return true;}
-  catch(e){setSyncStatus('error','エラー');showToast('⚠️ '+e.message,'error');return false;}
+  try {
+    await ghPutFile(DATA_PATH, boards, 'FreePad '+new Date().toISOString());
+    setSyncStatus('ok','同期済み');
+    return true;
+  } catch(e) {
+    setSyncStatus('error','エラー');
+    showToast('⚠️ '+e.message,'error');
+    return false;
+  }
 }
 
-// ─── 状態 ─────────────────────────────────────
-let boards=[],currentId=null;
-let tool='pen',selectedShape='rect';
-let currentColor='#1c1c1e',strokeSize=4;
-let canvas,ctx,wrap;
-let undoStack=[],redoStack=[];
-let scale=1,panX=0,panY=0;
-let activePointers={},lastPinchDist=null,lastPanPos=null;
-let strokes=[],textItems=[];
-let isDrawing=false,currentStroke=null;
-let shapeStart=null,shapePreview=null;
-let selectedId=null,selectedType=null;
-let selBox=null,handles=[];
-let dragMode=null,dragStart=null,moveDragActive=false;
-let shiftDown=false;
-let lastTapTime=0,lastTapPos={x:0,y:0};
-let editingTextId=null,floatInput=null,isComposing=false;
-let isSaving=false;
+// ===== アプリ状態（すべてvar） =====
+var boards=[], currentId=null;
+var tool='pen', selectedShape='rect';
+var currentColor='#1c1c1e', strokeSize=4;
+var canvas, ctx, wrap;
+var undoStack=[], redoStack=[];
+var scale=1, panX=0, panY=0;
+var activePointers={}, lastPinchDist=null, lastPanPos=null;
+var strokes=[], textItems=[];
+var isDrawing=false, currentStroke=null;
+var shapePreview=null;
+var selectedId=null, selectedType=null;
+var selBox=null, handles=[];
+var dragMode=null, dragStart=null, moveDragActive=false;
+var shiftDown=false;
+var lastTapTime=0, lastTapPos={x:0,y:0};
+var editingTextId=null, floatInput=null, isComposing=false;
+var isSaving=false;
 
-// ─── テキストスタイル初期値 ──────────────────
-let spTextColor='#1c1c1e',spTxtBorderColor='#7c3aed',spTxtBgColor='#ffffff';
-let spTxtBgOpacity=90,spTxtBorderWidth=2,spFontSize=18;
-let spFontFamily='-apple-system,BlinkMacSystemFont,sans-serif';
+// テキストスタイル
+var spTextColor='#1c1c1e', spTxtBorderColor='#7c3aed', spTxtBgColor='#ffffff';
+var spTxtBgOpacity=90, spTxtBorderWidth=2, spFontSize=18;
+var spFontFamily='-apple-system,BlinkMacSystemFont,sans-serif';
 
-// ─── 図形スタイル初期値 ──────────────────────
-let spShapeStrokeColor='#1c1c1e',spShapeFillColor='#ffffff',spShapeFillOpacity=0;
+// 図形スタイル
+var spShapeStrokeColor='#1c1c1e', spShapeFillColor='#ffffff', spShapeFillOpacity=0;
 
-// 現在アクティブなスタイルパネルタブ
-let activeSpTab='text';
+// スタイルパネルタブ（1箇所のみ宣言）
+var activeSpTab='text';
 
-const COLORS=['#1c1c1e','#ff3b30','#ff9500','#ffcc00','#34c759','#007aff','#af52de','#ffffff'];
+var COLORS=['#1c1c1e','#ff3b30','#ff9500','#ffcc00','#34c759','#007aff','#af52de','#ffffff'];
 
-// ─── 初期化 ───────────────────────────────────
-document.addEventListener('DOMContentLoaded',async()=>{
-  canvas=document.getElementById('mainCanvas');
-  ctx=canvas.getContext('2d');
-  wrap=document.getElementById('canvasWrap');
+// ===== 初期化 =====
+document.addEventListener('DOMContentLoaded', async function(){
+  canvas = document.getElementById('mainCanvas');
+  ctx    = canvas.getContext('2d');
+  wrap   = document.getElementById('canvasWrap');
   buildColorPicker();
   buildStylePanel();
   setupCanvasEvents();
   setupKeyboard();
-  document.getElementById('strokeSize').addEventListener('input',e=>{strokeSize=+e.target.value;});
-  if(loadConfig()){
-    show('homeScreen');showLoading(true);
-    await loadBoardsFromGitHub();showLoading(false);renderHome();
-  }else{show('setupScreen');}
+  document.getElementById('strokeSize').addEventListener('input', function(e){
+    strokeSize = +e.target.value;
+  });
+  if (loadConfig()) {
+    show('homeScreen');
+    showLoading(true);
+    await loadBoardsFromGitHub();
+    showLoading(false);
+    renderHome();
+  } else {
+    show('setupScreen');
+  }
 });
 
-// ─── セットアップ ─────────────────────────────
-let verifiedUrl='';
-async function setupSave(){
-  const owner=document.getElementById('cfgOwner').value.trim();
-  const repo=document.getElementById('cfgRepo').value.trim();
-  const token=document.getElementById('cfgToken').value.trim();
-  const errEl=document.getElementById('setupError');
+// ===== セットアップ =====
+var verifiedUrl='';
+async function setupSave() {
+  var owner = document.getElementById('cfgOwner').value.trim();
+  var repo  = document.getElementById('cfgRepo').value.trim();
+  var token = document.getElementById('cfgToken').value.trim();
+  var errEl = document.getElementById('setupError');
   errEl.style.display='none';
-  if(!owner||!repo||!token){errEl.textContent='すべての項目を入力してください';errEl.style.display='block';return;}
+  if (!owner||!repo||!token) {
+    errEl.textContent='すべての項目を入力してください';
+    errEl.style.display='block'; return;
+  }
   showLoading(true);
-  try{
-    const r=await fetch(`${GH}/repos/${owner}/${repo}`,{headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'}});
-    if(!r.ok)throw new Error('リポジトリにアクセスできません。');
-    verifiedUrl=buildHashUrl(owner,repo,token);
-    document.getElementById('urlText').textContent=verifiedUrl;
-    document.getElementById('urlBox').style.display='block';
-    document.getElementById('btnCopy').style.display='inline-block';
-    document.getElementById('btnGo').style.display='block';
-  }catch(e){errEl.textContent=e.message;errEl.style.display='block';}
-  finally{showLoading(false);}
+  try {
+    var r = await fetch(GH+'/repos/'+owner+'/'+repo,
+      {headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}});
+    if (!r.ok) throw new Error('リポジトリにアクセスできません。');
+    verifiedUrl = buildHashUrl(owner,repo,token);
+    document.getElementById('urlText').textContent   = verifiedUrl;
+    document.getElementById('urlBox').style.display  = 'block';
+    document.getElementById('btnCopy').style.display = 'inline-block';
+    document.getElementById('btnGo').style.display   = 'block';
+  } catch(e) {
+    errEl.textContent=e.message; errEl.style.display='block';
+  } finally { showLoading(false); }
 }
-function copyUrl(){
-  if(!verifiedUrl)return;
-  navigator.clipboard.writeText(verifiedUrl).then(()=>showToast('📋 コピーしました','success')).catch(()=>{
-    const ta=document.createElement('textarea');ta.value=verifiedUrl;ta.style.cssText='position:fixed;opacity:0';
-    document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');ta.remove();
-    showToast('📋 コピーしました','success');
-  });
+function copyUrl() {
+  if (!verifiedUrl) return;
+  navigator.clipboard.writeText(verifiedUrl)
+    .then(function(){ showToast('📋 コピーしました','success'); })
+    .catch(function(){
+      var ta=document.createElement('textarea');
+      ta.value=verifiedUrl; ta.style.cssText='position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      document.execCommand('copy'); ta.remove();
+      showToast('📋 コピーしました','success');
+    });
 }
-function goToApp(){location.href=verifiedUrl;}
+function goToApp(){ location.href=verifiedUrl; }
 function showSetup(){
   document.getElementById('cfgOwner').value=cfg.owner||'';
   document.getElementById('cfgRepo').value=cfg.repo||'';
   document.getElementById('cfgToken').value=cfg.token||'';
-  ['urlBox','btnCopy','setupError'].forEach(id=>document.getElementById(id).style.display='none');
+  ['urlBox','btnCopy','setupError'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
   document.getElementById('btnGo').style.display='none';
-  hide('homeScreen');show('setupScreen');
+  hide('homeScreen'); show('setupScreen');
 }
 
-// ─── ホーム ───────────────────────────────────
-function renderHome(){
-  const grid=document.getElementById('boardsGrid');grid.innerHTML='';
-  if(!boards.length){grid.innerHTML='<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>';return;}
-  boards.slice().reverse().forEach(b=>{
-    const card=document.createElement('div');card.className='board-card';
-    const thumb=document.createElement('canvas');thumb.className='board-thumb';thumb.width=360;thumb.height=270;
-    if(b.thumb){const img=new Image();img.onload=()=>{const c=thumb.getContext('2d');c.drawImage(img,0,0,360,270);};img.src=b.thumb;}
-    else{const c=thumb.getContext('2d');c.fillStyle='#f5f4ef';c.fillRect(0,0,360,270);}
-    const info=document.createElement('div');info.className='board-info';
-    info.innerHTML=`<div class="board-name">${esc(b.name)}</div><div class="board-date">${fmtDate(b.date)}</div>`;
-    const del=document.createElement('button');del.className='board-del';del.textContent='✕';del.title='削除';
-    del.onclick=e=>{e.stopPropagation();deleteBoard(b.id);};
-    card.appendChild(thumb);card.appendChild(info);card.appendChild(del);
-    card.onclick=()=>openBoard(b.id);grid.appendChild(card);
+// ===== ホーム =====
+function renderHome() {
+  var grid=document.getElementById('boardsGrid');
+  grid.innerHTML='';
+  if (!boards.length) {
+    grid.innerHTML='<div class="empty-state"><p style="font-size:48px;margin-bottom:12px">📋</p><p>「新しいボード」から始めましょう</p></div>';
+    return;
+  }
+  boards.slice().reverse().forEach(function(b){
+    var card=document.createElement('div'); card.className='board-card';
+    var thumb=document.createElement('canvas');
+    thumb.className='board-thumb'; thumb.width=360; thumb.height=270;
+    if (b.thumb) {
+      var img=new Image();
+      img.onload=function(){ thumb.getContext('2d').drawImage(img,0,0,360,270); };
+      img.src=b.thumb;
+    } else {
+      var tc=thumb.getContext('2d'); tc.fillStyle='#f5f4ef'; tc.fillRect(0,0,360,270);
+    }
+    var info=document.createElement('div'); info.className='board-info';
+    info.innerHTML='<div class="board-name">'+esc(b.name)+'</div><div class="board-date">'+fmtDate(b.date)+'</div>';
+    var del=document.createElement('button'); del.className='board-del';
+    del.textContent='✕'; del.title='削除';
+    del.onclick=function(e){ e.stopPropagation(); deleteBoard(b.id); };
+    card.appendChild(thumb); card.appendChild(info); card.appendChild(del);
+    card.onclick=function(){ openBoard(b.id); };
+    grid.appendChild(card);
   });
 }
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function fmtDate(iso){if(!iso)return'';const d=new Date(iso);return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;}
-
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(iso){
+  if (!iso) return '';
+  var d=new Date(iso);
+  return d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0');
+}
 async function newBoard(){
-  const id='board_'+Date.now();
-  boards.push({id,name:'新しいボード',date:new Date().toISOString(),strokes:[],texts:[],thumb:null});
-  showLoading(true);await saveBoardsToGitHub();showLoading(false);openBoard(id);
+  var id='board_'+Date.now();
+  boards.push({id:id,name:'新しいボード',date:new Date().toISOString(),strokes:[],texts:[],thumb:null});
+  showLoading(true); await saveBoardsToGitHub(); showLoading(false);
+  openBoard(id);
 }
 function openBoard(id){
-  currentId=id;const b=boards.find(x=>x.id===id);if(!b)return;
+  currentId=id;
+  var b=boards.find(function(x){return x.id===id;});
+  if (!b) return;
   document.getElementById('boardTitle').value=b.name;
   strokes=JSON.parse(JSON.stringify(b.strokes||[]));
   textItems=JSON.parse(JSON.stringify(b.texts||[]));
-  undoStack=[];redoStack=[];scale=1;panX=0;panY=0;
-  clearSelection();closeTextEdit();
-  hide('homeScreen');show('editorScreen');setTool('pen');
-  requestAnimationFrame(()=>{resizeCanvas();redraw();});
+  undoStack=[]; redoStack=[];
+  scale=1; panX=0; panY=0;
+  clearSelection(); closeTextEdit();
+  hide('homeScreen'); show('editorScreen'); setTool('pen');
+  requestAnimationFrame(function(){ resizeCanvas(); redraw(); });
 }
 async function goHome(){
-  clearSelection();closeTextEdit();await saveBoard(false);
-  hide('editorScreen');show('homeScreen');renderHome();
+  clearSelection(); closeTextEdit();
+  await saveBoard(false);
+  hide('editorScreen'); show('homeScreen'); renderHome();
 }
 async function deleteBoard(id){
-  if(!confirm('このボードを削除しますか？'))return;
-  boards=boards.filter(b=>b.id!==id);showLoading(true);await saveBoardsToGitHub();showLoading(false);renderHome();
+  if (!confirm('このボードを削除しますか？')) return;
+  boards=boards.filter(function(b){return b.id!==id;});
+  showLoading(true); await saveBoardsToGitHub(); showLoading(false); renderHome();
 }
 function clearBoard(){
-  if(!confirm('ボード上の全オブジェクトを削除しますか？'))return;
-  pushUndo();strokes=[];textItems=[];clearSelection();closeTextEdit();redraw();
+  if (!confirm('ボード上の全オブジェクトを削除しますか？')) return;
+  pushUndo(); strokes=[]; textItems=[];
+  clearSelection(); closeTextEdit(); redraw();
 }
 
-// ─── 選択削除 ────────────────────────────────
+// ===== 選択削除 =====
 function deleteSelected(){
-  if(!selectedId){showToast('オブジェクトを選択してください','info');return;}
+  if (!selectedId){ showToast('オブジェクトを選択してください','info'); return; }
   pushUndo();
-  if(selectedType==='text')   textItems=textItems.filter(t=>t.id!==selectedId);
-  if(selectedType==='stroke') strokes=strokes.filter(s=>s.id!==selectedId);
-  clearSelection();redraw();updateDeleteBtn();showToast('🗑️ 削除しました','info');
+  if (selectedType==='text')   textItems=textItems.filter(function(t){return t.id!==selectedId;});
+  if (selectedType==='stroke') strokes=strokes.filter(function(s){return s.id!==selectedId;});
+  clearSelection(); redraw(); updateDeleteBtn();
+  showToast('🗑️ 削除しました','info');
 }
 function updateDeleteBtn(){
-  const btn=document.getElementById('btnDeleteObj');if(!btn)return;
-  if(selectedId)btn.classList.add('has-selection');else btn.classList.remove('has-selection');
+  var btn=document.getElementById('btnDeleteObj'); if (!btn) return;
+  if (selectedId) btn.classList.add('has-selection');
+  else            btn.classList.remove('has-selection');
 }
 
-// ─── 保存 ─────────────────────────────────────
+// ===== 保存 =====
 async function saveBoard(showMsg){
-  if(isSaving){if(showMsg)showToast('⏳ 保存中...','info');return;}
+  if (isSaving){ if(showMsg) showToast('⏳ 保存中...','info'); return; }
   isSaving=true;
-  const b=boards.find(x=>x.id===currentId);if(!b){isSaving=false;return;}
+  var b=boards.find(function(x){return x.id===currentId;});
+  if (!b){ isSaving=false; return; }
   b.name=document.getElementById('boardTitle').value||'無題';
   b.date=new Date().toISOString();
   b.strokes=JSON.parse(JSON.stringify(strokes));
   b.texts=JSON.parse(JSON.stringify(textItems));
   b.thumb=canvas.toDataURL('image/jpeg',.4);
-  if(showMsg)showLoading(true);
-  const ok=await saveBoardsToGitHub();
-  if(showMsg){showLoading(false);if(ok)showToast('💾 保存しました','success');}
+  if (showMsg) showLoading(true);
+  var ok=await saveBoardsToGitHub();
+  if (showMsg){ showLoading(false); if(ok) showToast('💾 保存しました','success'); }
   isSaving=false;
 }
-setInterval(()=>{if(!document.getElementById('editorScreen').classList.contains('hidden'))saveBoard(false);},90000);
+setInterval(function(){
+  if (!document.getElementById('editorScreen').classList.contains('hidden')) saveBoard(false);
+}, 90000);
 
-// ─── Canvas ───────────────────────────────────
+// ===== Canvas =====
 function resizeCanvas(){
-  const rect=wrap.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
-  canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;
-  canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';
-  ctx.scale(dpr,dpr);redraw();
+  var rect=wrap.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  canvas.width=rect.width*dpr; canvas.height=rect.height*dpr;
+  canvas.style.width=rect.width+'px'; canvas.style.height=rect.height+'px';
+  ctx.scale(dpr,dpr); redraw();
 }
-window.addEventListener('resize',()=>{resizeCanvas();updateSelBox();});
+window.addEventListener('resize', function(){ resizeCanvas(); updateSelBox(); });
 
 function redraw(){
-  if(!ctx)return;
-  const dpr=window.devicePixelRatio||1,W=canvas.width/dpr,H=canvas.height/dpr;
-  ctx.clearRect(0,0,W,H);ctx.fillStyle='#f5f4ef';ctx.fillRect(0,0,W,H);
+  if (!ctx) return;
+  var dpr=window.devicePixelRatio||1;
+  var W=canvas.width/dpr, H=canvas.height/dpr;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#f5f4ef'; ctx.fillRect(0,0,W,H);
   drawGrid(W,H);
-  ctx.save();ctx.translate(panX,panY);ctx.scale(scale,scale);
-  textItems.forEach(t=>drawTextItem(t));
-  strokes.forEach(s=>drawStroke(s));
-  if(currentStroke)drawStroke(currentStroke);
-  if(shapePreview)drawShapePreview();
+  ctx.save();
+  ctx.translate(panX,panY); ctx.scale(scale,scale);
+  textItems.forEach(function(t){ drawTextItem(t); });
+  strokes.forEach(function(s){ drawStroke(s); });
+  if (currentStroke) drawStroke(currentStroke);
+  if (shapePreview)  drawShapePreview();
   ctx.restore();
 }
 function drawGrid(W,H){
-  const sp=24*scale,ox=((panX%sp)+sp)%sp,oy=((panY%sp)+sp)%sp;
+  var sp=24*scale;
+  var ox=((panX%sp)+sp)%sp, oy=((panY%sp)+sp)%sp;
   ctx.fillStyle='rgba(0,0,0,.06)';
-  for(let x=ox;x<W;x+=sp)for(let y=oy;y<H;y+=sp){ctx.beginPath();ctx.arc(x,y,1.2,0,Math.PI*2);ctx.fill();}
+  for (var x=ox;x<W;x+=sp)
+    for (var y=oy;y<H;y+=sp){
+      ctx.beginPath(); ctx.arc(x,y,1.2,0,Math.PI*2); ctx.fill();
+    }
 }
 
 function drawTextItem(t){
-  const x=t.x,y=t.y,w=t.w||200,h=t.h||80;
-  const rgb=hexToRgb(t.bgColor||'#ffffff'),alpha=(t.bgOpacity??90)/100;
-  ctx.fillStyle=`rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`;
-  ctx.beginPath();roundRect(ctx,x,y,w,h,8);ctx.fill();
-  const bw=t.borderWidth??2;
-  if(bw>0&&t.borderColor&&t.borderColor!=='transparent'){
-    ctx.strokeStyle=t.borderColor;ctx.lineWidth=bw;
-    ctx.beginPath();roundRect(ctx,x,y,w,h,8);ctx.stroke();
+  var x=t.x, y=t.y, w=t.w||200, h=t.h||80;
+  var rgb=hexToRgb(t.bgColor||'#ffffff');
+  var alpha=(t.bgOpacity!=null?t.bgOpacity:90)/100;
+  ctx.fillStyle='rgba('+rgb.r+','+rgb.g+','+rgb.b+','+alpha+')';
+  ctx.beginPath(); roundRect(ctx,x,y,w,h,8); ctx.fill();
+  var bw=t.borderWidth!=null?t.borderWidth:2;
+  if (bw>0 && t.borderColor && t.borderColor!=='transparent'){
+    ctx.strokeStyle=t.borderColor; ctx.lineWidth=bw;
+    ctx.beginPath(); roundRect(ctx,x,y,w,h,8); ctx.stroke();
   }
   ctx.fillStyle=t.textColor||'#1c1c1e';
-  ctx.font=`${t.fontSize||18}px ${t.fontFamily||'-apple-system,sans-serif'}`;
+  ctx.font=(t.fontSize||18)+'px '+(t.fontFamily||'-apple-system,sans-serif');
   ctx.textBaseline='top';
-  wrapText(ctx,t.text||'',x+10,y+8,w-20,(t.fontSize||18)*1.5);
+  wrapText(ctx, t.text||'', x+10, y+8, w-20, (t.fontSize||18)*1.5);
 }
 function wrapText(ctx,text,x,y,maxW,lineH){
-  text.split('\n').forEach(line=>{
-    const words=line.split(' ');let cur='';
-    words.forEach(word=>{
-      const test=cur?cur+' '+word:word;
-      if(ctx.measureText(test).width>maxW&&cur){ctx.fillText(cur,x,y);cur=word;y+=lineH;}
-      else cur=test;
+  text.split('\n').forEach(function(line){
+    var words=line.split(' '), cur='';
+    words.forEach(function(word){
+      var test=cur?cur+' '+word:word;
+      if (ctx.measureText(test).width>maxW && cur){
+        ctx.fillText(cur,x,y); cur=word; y+=lineH;
+      } else { cur=test; }
     });
-    ctx.fillText(cur,x,y);y+=lineH;
+    ctx.fillText(cur,x,y); y+=lineH;
   });
 }
 function roundRect(ctx,x,y,w,h,r){
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
-  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r); ctx.closePath();
 }
 
-// ─── ストローク描画（ペン太さをズームに連動） ─
+// ★ ペン太さをズームに連動: screenSize/scale で描画
 function drawStroke(s){
-  if(!s.points||s.points.length<2)return;
+  if (!s.points || s.points.length<2) return;
   ctx.globalCompositeOperation='source-over';
-  // ★ ペンは保存時の絶対ピクセル太さをscaleで割って描画
-  //    → ズーム変化に追従（拡大すると見た目の太さが変わらない）
-  const lw = s.type==='pen'
-    ? s.screenSize / scale   // screenSize = 描いた時点のstrokeSize(px)
-    : (s.size || 4);         // 図形はキャンバス座標系のまま
-  ctx.strokeStyle=s.color||'#1c1c1e';
-  ctx.lineWidth=lw;ctx.lineCap='round';ctx.lineJoin='round';
-  if(s.shape&&s.shape!=='pen'){drawShape(s,lw);return;}
-  ctx.beginPath();ctx.moveTo(s.points[0].x,s.points[0].y);
-  for(let i=1;i<s.points.length;i++){
-    const p0=s.points[i-1],p1=s.points[i];
+  // ペンは screenSize(画面px)÷scale で常に同じ見た目の太さ
+  var lw = (s.screenSize != null) ? s.screenSize/scale : (s.size||4);
+  ctx.strokeStyle=s.strokeColor||s.color||'#1c1c1e';
+  ctx.lineWidth=lw; ctx.lineCap='round'; ctx.lineJoin='round';
+  if (s.shape && s.shape!=='pen'){ drawShape(s,lw); return; }
+  ctx.beginPath(); ctx.moveTo(s.points[0].x,s.points[0].y);
+  for (var i=1;i<s.points.length;i++){
+    var p0=s.points[i-1], p1=s.points[i];
     ctx.quadraticCurveTo(p0.x,p0.y,(p0.x+p1.x)/2,(p0.y+p1.y)/2);
   }
   ctx.stroke();
 }
 
-function drawShape(s, lw){
-  const pts=s.points,x1=pts[0].x,y1=pts[0].y,x2=pts[pts.length-1].x,y2=pts[pts.length-1].y;
+function drawShape(s,lw){
+  var pts=s.points;
+  var x1=pts[0].x, y1=pts[0].y, x2=pts[pts.length-1].x, y2=pts[pts.length-1].y;
   ctx.strokeStyle=s.strokeColor||s.color||'#1c1c1e';
-  ctx.lineWidth=lw!==undefined?lw:(s.size||4);
+  ctx.lineWidth=lw!=null?lw:(s.size||4);
   ctx.lineCap='round';
-  // 塗りつぶし
-  const fillRgb=hexToRgb(s.fillColor||'#ffffff');
-  const fillAlpha=(s.fillOpacity??0)/100;
-  ctx.fillStyle=`rgba(${fillRgb.r},${fillRgb.g},${fillRgb.b},${fillAlpha})`;
+  var frgb=hexToRgb(s.fillColor||'#ffffff');
+  var fa=(s.fillOpacity!=null?s.fillOpacity:0)/100;
+  ctx.fillStyle='rgba('+frgb.r+','+frgb.g+','+frgb.b+','+fa+')';
   switch(s.shape){
     case 'rect':
-      ctx.beginPath();roundRect(ctx,Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1),4);
-      if(fillAlpha>0)ctx.fill();ctx.stroke();break;
-    case 'circle':{
-      const rx=(x2-x1)/2,ry=(y2-y1)/2;
-      ctx.beginPath();ctx.ellipse(x1+rx,y1+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2);
-      if(fillAlpha>0)ctx.fill();ctx.stroke();break;}
+      ctx.beginPath();
+      roundRect(ctx,Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1),4);
+      if(fa>0) ctx.fill(); ctx.stroke(); break;
+    case 'circle':
+      var rx=(x2-x1)/2, ry=(y2-y1)/2;
+      ctx.beginPath(); ctx.ellipse(x1+rx,y1+ry,Math.abs(rx),Math.abs(ry),0,0,Math.PI*2);
+      if(fa>0) ctx.fill(); ctx.stroke(); break;
     case 'line':
-      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();break;
-    case 'arrow':drawArrow(x1,y1,x2,y2,ctx.lineWidth);break;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); break;
+    case 'arrow':
+      drawArrow(x1,y1,x2,y2,ctx.lineWidth); break;
     case 'triangle':
-      ctx.beginPath();ctx.moveTo((x1+x2)/2,y1);ctx.lineTo(x2,y2);ctx.lineTo(x1,y2);ctx.closePath();
-      if(fillAlpha>0)ctx.fill();ctx.stroke();break;
+      ctx.beginPath();
+      ctx.moveTo((x1+x2)/2,y1); ctx.lineTo(x2,y2); ctx.lineTo(x1,y2);
+      ctx.closePath(); if(fa>0) ctx.fill(); ctx.stroke(); break;
   }
 }
 function drawArrow(x1,y1,x2,y2,lw){
-  const angle=Math.atan2(y2-y1,x2-x1),hl=Math.max(lw*4,16);
-  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(x2,y2);
-  ctx.lineTo(x2-hl*Math.cos(angle-Math.PI/7),y2-hl*Math.sin(angle-Math.PI/7));
-  ctx.lineTo(x2-hl*Math.cos(angle+Math.PI/7),y2-hl*Math.sin(angle+Math.PI/7));
-  ctx.closePath();ctx.fillStyle=ctx.strokeStyle;ctx.fill();
+  var angle=Math.atan2(y2-y1,x2-x1), hl=Math.max(lw*4,16);
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hl*Math.cos(angle-Math.PI/7), y2-hl*Math.sin(angle-Math.PI/7));
+  ctx.lineTo(x2-hl*Math.cos(angle+Math.PI/7), y2-hl*Math.sin(angle+Math.PI/7));
+  ctx.closePath(); ctx.fillStyle=ctx.strokeStyle; ctx.fill();
 }
 function drawShapePreview(){
   ctx.setLineDash([6,4]);
   drawShape({
-    color:currentColor,strokeColor:spShapeStrokeColor,
-    fillColor:spShapeFillColor,fillOpacity:spShapeFillOpacity,
-    size:strokeSize/scale,shape:selectedShape,
+    strokeColor:spShapeStrokeColor, color:spShapeStrokeColor,
+    fillColor:spShapeFillColor, fillOpacity:spShapeFillOpacity,
+    size:strokeSize/scale, shape:selectedShape,
     points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]
-  });
+  }, strokeSize/scale);
   ctx.setLineDash([]);
 }
 
-// ─── 選択ボックス ─────────────────────────────
+// ===== 選択ボックス =====
 function clearSelection(){
-  selectedId=null;selectedType=null;dragMode=null;moveDragActive=false;
-  if(selBox){selBox.remove();selBox=null;}
-  handles.forEach(h=>h.remove());handles=[];updateDeleteBtn();
+  selectedId=null; selectedType=null; dragMode=null; moveDragActive=false;
+  if (selBox){ selBox.remove(); selBox=null; }
+  handles.forEach(function(h){h.remove();}); handles=[];
+  updateDeleteBtn();
 }
 function getObjectBounds(id,type){
-  if(type==='text'){const t=textItems.find(x=>x.id===id);if(!t)return null;return{x:t.x,y:t.y,w:t.w||200,h:t.h||80};}
-  if(type==='stroke'){
-    const s=strokes.find(x=>x.id===id);if(!s||!s.points||!s.points.length)return null;
-    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
-    s.points.forEach(p=>{minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);});
-    const pad=(s.size||4)/2;return{x:minX-pad,y:minY-pad,w:maxX-minX+pad*2,h:maxY-minY+pad*2};
+  if (type==='text'){
+    var t=textItems.find(function(x){return x.id===id;});
+    if (!t) return null;
+    return {x:t.x, y:t.y, w:t.w||200, h:t.h||80};
+  }
+  if (type==='stroke'){
+    var s=strokes.find(function(x){return x.id===id;});
+    if (!s||!s.points||!s.points.length) return null;
+    var minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    s.points.forEach(function(p){
+      minX=Math.min(minX,p.x); minY=Math.min(minY,p.y);
+      maxX=Math.max(maxX,p.x); maxY=Math.max(maxY,p.y);
+    });
+    var pad=(s.size||4)/2;
+    return {x:minX-pad, y:minY-pad, w:maxX-minX+pad*2, h:maxY-minY+pad*2};
   }
   return null;
 }
 function showSelBox(id,type){
-  clearSelection();selectedId=id;selectedType=type;
-  selBox=document.createElement('div');selBox.className='sel-box';wrap.appendChild(selBox);
-  ['nw','ne','se','sw'].forEach(pos=>{
-    const h=document.createElement('div');h.className='sel-handle';h.dataset.pos=pos;
+  clearSelection(); selectedId=id; selectedType=type;
+  selBox=document.createElement('div'); selBox.className='sel-box'; wrap.appendChild(selBox);
+  ['nw','ne','se','sw'].forEach(function(pos){
+    var h=document.createElement('div'); h.className='sel-handle'; h.dataset.pos=pos;
     h.style.cursor={nw:'nw-resize',ne:'ne-resize',se:'se-resize',sw:'sw-resize'}[pos];
-    wrap.appendChild(h);handles.push(h);
+    wrap.appendChild(h); handles.push(h);
     h.addEventListener('pointerdown',onHandleDown,{passive:false});
   });
-  updateSelBox();updateDeleteBtn();
+  updateSelBox(); updateDeleteBtn();
 }
 function updateSelBox(){
-  if(!selectedId||!selBox)return;
-  const b=getObjectBounds(selectedId,selectedType);if(!b)return;
-  const sx=b.x*scale+panX,sy=b.y*scale+panY,sw=b.w*scale,sh=b.h*scale;
-  selBox.style.left=sx+'px';selBox.style.top=sy+'px';selBox.style.width=sw+'px';selBox.style.height=sh+'px';
-  const pos={nw:{x:sx,y:sy},ne:{x:sx+sw,y:sy},se:{x:sx+sw,y:sy+sh},sw:{x:sx,y:sy+sh}};
-  handles.forEach(h=>{const p=pos[h.dataset.pos];if(p){h.style.left=p.x+'px';h.style.top=p.y+'px';}});
+  if (!selectedId||!selBox) return;
+  var b=getObjectBounds(selectedId,selectedType); if (!b) return;
+  var sx=b.x*scale+panX, sy=b.y*scale+panY, sw=b.w*scale, sh=b.h*scale;
+  selBox.style.left=sx+'px'; selBox.style.top=sy+'px';
+  selBox.style.width=sw+'px'; selBox.style.height=sh+'px';
+  var pos={nw:{x:sx,y:sy},ne:{x:sx+sw,y:sy},se:{x:sx+sw,y:sy+sh},sw:{x:sx,y:sy+sh}};
+  handles.forEach(function(h){
+    var p=pos[h.dataset.pos]; if(p){h.style.left=p.x+'px'; h.style.top=p.y+'px';}
+  });
 }
 function onHandleDown(e){
-  e.preventDefault();e.stopPropagation();
+  e.preventDefault(); e.stopPropagation();
   dragMode='resize-'+e.currentTarget.dataset.pos;
-  const b=getObjectBounds(selectedId,selectedType);
+  var b=getObjectBounds(selectedId,selectedType);
   dragStart={px:e.clientX,py:e.clientY,ox:b.x,oy:b.y,ow:b.w,oh:b.h,aspect:b.w/(b.h||1)};
   e.currentTarget.setPointerCapture(e.pointerId);
   e.currentTarget.addEventListener('pointermove',onHandleMove,{passive:false});
   e.currentTarget.addEventListener('pointerup',onHandleUp,{passive:false});
 }
 function onHandleMove(e){
-  e.preventDefault();if(!dragStart)return;
-  const dx=(e.clientX-dragStart.px)/scale,dy=(e.clientY-dragStart.py)/scale;
-  const pos=dragMode.replace('resize-','');
-  let{ox,oy,ow,oh,aspect}=dragStart,nx=ox,ny=oy,nw=ow,nh=oh;
+  e.preventDefault(); if (!dragStart) return;
+  var dx=(e.clientX-dragStart.px)/scale, dy=(e.clientY-dragStart.py)/scale;
+  var pos=dragMode.replace('resize-','');
+  var ox=dragStart.ox, oy=dragStart.oy, ow=dragStart.ow, oh=dragStart.oh, aspect=dragStart.aspect;
+  var nx=ox,ny=oy,nw=ow,nh=oh;
   if(pos==='se'){nw=Math.max(40,ow+dx);nh=Math.max(20,oh+dy);}
   else if(pos==='sw'){nx=ox+dx;nw=Math.max(40,ow-dx);nh=Math.max(20,oh+dy);}
   else if(pos==='ne'){nw=Math.max(40,ow+dx);ny=oy+dy;nh=Math.max(20,oh-dy);}
   else if(pos==='nw'){nx=ox+dx;ny=oy+dy;nw=Math.max(40,ow-dx);nh=Math.max(20,oh-dy);}
-  if(shiftDown){nh=nw/aspect;if(pos==='ne'||pos==='nw')ny=oy+(oh-nh);}
-  applyBounds(nx,ny,nw,nh);updateSelBox();redraw();
+  if(shiftDown){nh=nw/aspect; if(pos==='ne'||pos==='nw') ny=oy+(oh-nh);}
+  applyBounds(nx,ny,nw,nh); updateSelBox(); redraw();
 }
 function onHandleUp(e){
   e.currentTarget.removeEventListener('pointermove',onHandleMove);
-  e.currentTarget.removeEventListener('pointerup',onHandleUp);dragMode=null;
+  e.currentTarget.removeEventListener('pointerup',onHandleUp);
+  dragMode=null;
 }
 function applyBounds(x,y,w,h){
   if(selectedType==='text'){
-    const t=textItems.find(t=>t.id===selectedId);if(!t)return;
-    t.x=x;t.y=y;t.w=w;t.h=h;if(floatInput&&editingTextId===selectedId)posFloatInput(t);
-  }else if(selectedType==='stroke'){
-    const s=strokes.find(s=>s.id===selectedId);if(!s)return;
-    const b0=getObjectBounds(selectedId,'stroke');
-    const sx=w/(b0.w||1),sy=h/(b0.h||1);
-    s.points=s.points.map(p=>({x:x+(p.x-b0.x)*sx,y:y+(p.y-b0.y)*sy}));
+    var t=textItems.find(function(t){return t.id===selectedId;}); if(!t) return;
+    t.x=x; t.y=y; t.w=w; t.h=h;
+    if(floatInput&&editingTextId===selectedId) posFloatInput(t);
+  } else if(selectedType==='stroke'){
+    var s=strokes.find(function(s){return s.id===selectedId;}); if(!s) return;
+    var b0=getObjectBounds(selectedId,'stroke');
+    var sx=w/(b0.w||1), sy=h/(b0.h||1);
+    s.points=s.points.map(function(p){return{x:x+(p.x-b0.x)*sx, y:y+(p.y-b0.y)*sy};});
   }
 }
 
-// ─── ヒットテスト ─────────────────────────────
+// ===== ヒットテスト =====
 function hitTest(cx,cy){
-  for(let i=textItems.length-1;i>=0;i--){
-    const t=textItems[i];
-    if(cx>=t.x&&cx<=t.x+(t.w||200)&&cy>=t.y&&cy<=t.y+(t.h||80))return{id:t.id,type:'text'};
+  for(var i=textItems.length-1;i>=0;i--){
+    var t=textItems[i];
+    if(cx>=t.x&&cx<=t.x+(t.w||200)&&cy>=t.y&&cy<=t.y+(t.h||80))
+      return{id:t.id,type:'text'};
   }
-  for(let i=strokes.length-1;i>=0;i--){
-    const s=strokes[i];if(!s.id)continue;
-    const b=getObjectBounds(s.id,'stroke');if(!b)continue;
-    if(cx>=b.x&&cx<=b.x+b.w&&cy>=b.y&&cy<=b.y+b.h)return{id:s.id,type:'stroke'};
+  for(var j=strokes.length-1;j>=0;j--){
+    var s=strokes[j]; if(!s.id) continue;
+    var b=getObjectBounds(s.id,'stroke'); if(!b) continue;
+    if(cx>=b.x&&cx<=b.x+b.w&&cy>=b.y&&cy<=b.y+b.h)
+      return{id:s.id,type:'stroke'};
   }
   return null;
 }
 
-// ─── ポインターイベント ───────────────────────
+// ===== ポインターイベント =====
 function setupCanvasEvents(){
-  wrap.addEventListener('pointerdown',onPointerDown,{passive:false});
-  wrap.addEventListener('pointermove',onPointerMove,{passive:false});
-  wrap.addEventListener('pointerup',onPointerUp,{passive:false});
-  wrap.addEventListener('pointercancel',onPointerUp,{passive:false});
-  wrap.addEventListener('wheel',onWheel,{passive:false});
-  wrap.addEventListener('dblclick',onDblActivate);
-  wrap.addEventListener('touchend',onTouchEnd,{passive:false});
+  wrap.addEventListener('pointerdown', onPointerDown,  {passive:false});
+  wrap.addEventListener('pointermove', onPointerMove,  {passive:false});
+  wrap.addEventListener('pointerup',   onPointerUp,    {passive:false});
+  wrap.addEventListener('pointercancel',onPointerUp,   {passive:false});
+  wrap.addEventListener('wheel',       onWheel,        {passive:false});
+  wrap.addEventListener('dblclick',    onDblActivate);
+  wrap.addEventListener('touchend',    onTouchEnd,     {passive:false});
 }
 function onTouchEnd(e){
-  if(e.changedTouches.length!==1)return;
-  const touch=e.changedTouches[0],now=Date.now();
-  const dx=touch.clientX-lastTapPos.x,dy=touch.clientY-lastTapPos.y;
-  if(now-lastTapTime<350&&Math.hypot(dx,dy)<35){
+  if(e.changedTouches.length!==1) return;
+  var touch=e.changedTouches[0], now=Date.now();
+  var dx=touch.clientX-lastTapPos.x, dy=touch.clientY-lastTapPos.y;
+  if(now-lastTapTime<350 && Math.hypot(dx,dy)<35){
     e.preventDefault();
     handleDoubleTap(cPosFromClient(touch.clientX,touch.clientY));
-    lastTapTime=0;lastTapPos={x:0,y:0};
-  }else{lastTapTime=now;lastTapPos={x:touch.clientX,y:touch.clientY};}
+    lastTapTime=0; lastTapPos={x:0,y:0};
+  } else {
+    lastTapTime=now; lastTapPos={x:touch.clientX,y:touch.clientY};
+  }
 }
-function onDblActivate(e){handleDoubleTap(cPos(e));}
+function onDblActivate(e){ handleDoubleTap(cPos(e)); }
 function handleDoubleTap(pos){
-  if(tool==='text'){createTextItem(pos);return;}
-  if(tool==='select'){const hit=hitTest(pos.x,pos.y);if(hit&&hit.type==='text')openTextEdit(hit.id);}
+  if(tool==='text'){ createTextItem(pos); return; }
+  if(tool==='select'){
+    var hit=hitTest(pos.x,pos.y);
+    if(hit&&hit.type==='text') openTextEdit(hit.id);
+  }
 }
 
 function onPointerDown(e){
-  if(floatInput&&e.target===floatInput)return;
+  if(floatInput&&e.target===floatInput) return;
   e.preventDefault();
   activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
-  const pCount=Object.keys(activePointers).length;
+  var pCount=Object.keys(activePointers).length;
   if(pCount===2){
-    isDrawing=false;currentStroke=null;moveDragActive=false;
-    const pts=Object.values(activePointers);
-    lastPinchDist=distP(pts[0],pts[1]);lastPanPos=midP(pts[0],pts[1]);return;
+    isDrawing=false; currentStroke=null; moveDragActive=false;
+    var pts=Object.values(activePointers);
+    lastPinchDist=distP(pts[0],pts[1]); lastPanPos=midP(pts[0],pts[1]); return;
   }
-  closeShapePopup();closeStylePanel();
-  if(editingTextId){closeTextEdit();return;}
-  const pos=cPos(e);
+  closeShapePopup(); closeStylePanel();
+  if(editingTextId){ closeTextEdit(); return; }
+  var pos=cPos(e);
   if(tool==='select'){
-    const hit=hitTest(pos.x,pos.y);
+    var hit=hitTest(pos.x,pos.y);
     if(hit){
-      if(hit.id!==selectedId)showSelBox(hit.id,hit.type);
+      if(hit.id!==selectedId) showSelBox(hit.id,hit.type);
       pushUndo();
-      const bSave=getObjectBounds(hit.id,hit.type);
-      dragMode='move';moveDragActive=true;
-      dragStart={px:e.clientX,py:e.clientY,ox:bSave.x,oy:bSave.y,
-        pts0:hit.type==='stroke'?JSON.parse(JSON.stringify(strokes.find(s=>s.id===hit.id).points)):null};
-    }else{clearSelection();redraw();dragMode='pan';lastPanPos={x:e.clientX,y:e.clientY};}
+      var bSave=getObjectBounds(hit.id,hit.type);
+      dragMode='move'; moveDragActive=true;
+      var pts0=null;
+      if(hit.type==='stroke'){
+        var hs=strokes.find(function(s){return s.id===hit.id;});
+        if(hs) pts0=JSON.parse(JSON.stringify(hs.points));
+      }
+      dragStart={px:e.clientX,py:e.clientY,ox:bSave.x,oy:bSave.y,pts0:pts0};
+    } else {
+      clearSelection(); redraw();
+      dragMode='pan'; lastPanPos={x:e.clientX,y:e.clientY};
+    }
     return;
   }
-  if(tool==='text')return;
+  if(tool==='text') return;
   if(tool==='pen'){
-    pushUndo();isDrawing=true;
-    const id='s'+Date.now()+Math.random().toString(36).slice(2);
-    // ★ screenSize にその時点の strokeSize を保存
-    currentStroke={id,type:'pen',color:currentColor,
-      screenSize:strokeSize,  // 画面ピクセル単位の太さ
-      size:strokeSize/scale,  // キャンバス座標系の太さ（後方互換）
+    pushUndo(); isDrawing=true;
+    var id='s'+Date.now()+Math.random().toString(36).slice(2);
+    currentStroke={id:id,type:'pen',color:currentColor,
+      screenSize:strokeSize,  // 画面px単位の太さ（ズーム連動用）
+      size:strokeSize/scale,  // キャンバス座標系（後方互換）
       shape:'pen',points:[pos]};
   }
   if(tool==='shape'){
-    pushUndo();isDrawing=true;shapeStart=pos;
+    pushUndo(); isDrawing=true;
     shapePreview={x1:pos.x,y1:pos.y,x2:pos.x,y2:pos.y};
   }
 }
 function onPointerMove(e){
-  if(floatInput&&e.target===floatInput)return;
+  if(floatInput&&e.target===floatInput) return;
   e.preventDefault();
   activePointers[e.pointerId]={x:e.clientX,y:e.clientY};
-  const pCount=Object.keys(activePointers).length;
+  var pCount=Object.keys(activePointers).length;
   if(pCount===2){
-    const pts=Object.values(activePointers),d=distP(pts[0],pts[1]),m=midP(pts[0],pts[1]);
+    var pts=Object.values(activePointers);
+    var d=distP(pts[0],pts[1]), m=midP(pts[0],pts[1]);
     if(lastPinchDist!==null){
-      const f=d/lastPinchDist,rect=wrap.getBoundingClientRect();
-      const mx=m.x-rect.left,my=m.y-rect.top;
-      panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
+      var f=d/lastPinchDist;
+      var rect=wrap.getBoundingClientRect();
+      var mx=m.x-rect.left, my=m.y-rect.top;
+      panX=mx-(mx-panX)*f; panY=my-(my-panY)*f;
       scale=Math.max(.2,Math.min(5,scale*f));
     }
-    if(lastPanPos){panX+=m.x-lastPanPos.x;panY+=m.y-lastPanPos.y;}
-    lastPinchDist=d;lastPanPos=m;redraw();updateSelBox();return;
+    if(lastPanPos){ panX+=m.x-lastPanPos.x; panY+=m.y-lastPanPos.y; }
+    lastPinchDist=d; lastPanPos=m; redraw(); updateSelBox(); return;
   }
   if(dragMode==='pan'){
-    panX+=e.clientX-lastPanPos.x;panY+=e.clientY-lastPanPos.y;
-    lastPanPos={x:e.clientX,y:e.clientY};redraw();updateSelBox();return;
+    panX+=e.clientX-lastPanPos.x; panY+=e.clientY-lastPanPos.y;
+    lastPanPos={x:e.clientX,y:e.clientY}; redraw(); updateSelBox(); return;
   }
   if(dragMode==='move'&&moveDragActive){
-    const dx=(e.clientX-dragStart.px)/scale,dy=(e.clientY-dragStart.py)/scale;
+    var dx=(e.clientX-dragStart.px)/scale, dy=(e.clientY-dragStart.py)/scale;
     if(selectedType==='text'){
-      const t=textItems.find(t=>t.id===selectedId);
-      if(t){t.x=dragStart.ox+dx;t.y=dragStart.oy+dy;if(floatInput&&editingTextId===selectedId)posFloatInput(t);}
-    }else if(selectedType==='stroke'){
-      const s=strokes.find(s=>s.id===selectedId);
-      if(s&&dragStart.pts0)s.points=dragStart.pts0.map(p=>({x:p.x+dx,y:p.y+dy}));
+      var t=textItems.find(function(t){return t.id===selectedId;});
+      if(t){ t.x=dragStart.ox+dx; t.y=dragStart.oy+dy;
+        if(floatInput&&editingTextId===selectedId) posFloatInput(t); }
+    } else if(selectedType==='stroke'){
+      var s=strokes.find(function(s){return s.id===selectedId;});
+      if(s&&dragStart.pts0)
+        s.points=dragStart.pts0.map(function(p){return{x:p.x+dx,y:p.y+dy};});
     }
-    updateSelBox();redraw();return;
+    updateSelBox(); redraw(); return;
   }
-  if(!isDrawing)return;
-  const pos=cPos(e);
-  if(tool==='pen'){currentStroke.points.push(pos);redraw();}
-  if(tool==='shape'){shapePreview.x2=pos.x;shapePreview.y2=pos.y;redraw();}
+  if(!isDrawing) return;
+  var pos=cPos(e);
+  if(tool==='pen'){ currentStroke.points.push(pos); redraw(); }
+  if(tool==='shape'){ shapePreview.x2=pos.x; shapePreview.y2=pos.y; redraw(); }
 }
 function onPointerUp(e){
-  if(floatInput&&e.target===floatInput)return;
+  if(floatInput&&e.target===floatInput) return;
   e.preventDefault();
   delete activePointers[e.pointerId];
-  const pCount=Object.keys(activePointers).length;
-  if(pCount<2){lastPinchDist=null;lastPanPos=null;}
-  if(dragMode==='pan'){dragMode=null;return;}
-  if(dragMode==='move'){moveDragActive=false;dragMode=null;updateSelBox();return;}
-  if(!isDrawing)return;
+  var pCount=Object.keys(activePointers).length;
+  if(pCount<2){ lastPinchDist=null; lastPanPos=null; }
+  if(dragMode==='pan'){ dragMode=null; return; }
+  if(dragMode==='move'){ moveDragActive=false; dragMode=null; updateSelBox(); return; }
+  if(!isDrawing) return;
   isDrawing=false;
   if(tool==='pen'){
-    if(currentStroke&&currentStroke.points.length>=2)strokes.push(currentStroke);
+    if(currentStroke&&currentStroke.points.length>=2) strokes.push(currentStroke);
     currentStroke=null;
   }
   if(tool==='shape'&&shapePreview){
     if(Math.abs(shapePreview.x2-shapePreview.x1)>3||Math.abs(shapePreview.y2-shapePreview.y1)>3){
-      const id='s'+Date.now()+Math.random().toString(36).slice(2);
+      var id='s'+Date.now()+Math.random().toString(36).slice(2);
       strokes.push({
-        id,type:'shape',color:currentColor,
+        id:id, type:'shape', color:spShapeStrokeColor,
         strokeColor:spShapeStrokeColor,
         fillColor:spShapeFillColor,
         fillOpacity:spShapeFillOpacity,
-        size:strokeSize/scale,
-        shape:selectedShape,
+        size:strokeSize/scale, shape:selectedShape,
         points:[{x:shapePreview.x1,y:shapePreview.y1},{x:shapePreview.x2,y:shapePreview.y2}]
       });
     }
-    shapePreview=null;shapeStart=null;
+    shapePreview=null;
   }
   redraw();
 }
 function onWheel(e){
   e.preventDefault();
-  const rect=wrap.getBoundingClientRect(),mx=e.clientX-rect.left,my=e.clientY-rect.top;
-  const f=e.deltaY<0?1.1:.9;
-  panX=mx-(mx-panX)*f;panY=my-(my-panY)*f;
+  var rect=wrap.getBoundingClientRect();
+  var mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  var f=e.deltaY<0?1.1:.9;
+  panX=mx-(mx-panX)*f; panY=my-(my-panY)*f;
   scale=Math.max(.2,Math.min(5,scale*f));
-  redraw();updateSelBox();
+  redraw(); updateSelBox();
 }
-function cPos(e){return cPosFromClient(e.clientX,e.clientY);}
-function cPosFromClient(cx,cy){const r=wrap.getBoundingClientRect();return{x:(cx-r.left-panX)/scale,y:(cy-r.top-panY)/scale};}
-function distP(a,b){return Math.hypot(a.x-b.x,a.y-b.y);}
-function midP(a,b){return{x:(a.x+b.x)/2,y:(a.y+b.y)/2};}
+function cPos(e){ return cPosFromClient(e.clientX,e.clientY); }
+function cPosFromClient(cx,cy){
+  var r=wrap.getBoundingClientRect();
+  return {x:(cx-r.left-panX)/scale, y:(cy-r.top-panY)/scale};
+}
+function distP(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+function midP(a,b){ return {x:(a.x+b.x)/2, y:(a.y+b.y)/2}; }
 
-// ─── テキスト ─────────────────────────────────
+// ===== テキスト =====
 function createTextItem(pos){
   pushUndo();
-  const id='t'+Date.now()+Math.random().toString(36).slice(2);
-  textItems.push({id,x:pos.x,y:pos.y,w:200,h:80,text:'',
-    textColor:spTextColor,borderColor:spTxtBorderColor,bgColor:spTxtBgColor,
-    bgOpacity:spTxtBgOpacity,borderWidth:spTxtBorderWidth,fontSize:spFontSize,fontFamily:spFontFamily});
-  redraw();openTextEdit(id);
+  var id='t'+Date.now()+Math.random().toString(36).slice(2);
+  textItems.push({id:id,x:pos.x,y:pos.y,w:200,h:80,text:'',
+    textColor:spTextColor, borderColor:spTxtBorderColor, bgColor:spTxtBgColor,
+    bgOpacity:spTxtBgOpacity, borderWidth:spTxtBorderWidth,
+    fontSize:spFontSize, fontFamily:spFontFamily});
+  redraw(); openTextEdit(id);
 }
 function openTextEdit(id){
   closeTextEdit();
-  const t=textItems.find(x=>x.id===id);if(!t)return;
+  var t=textItems.find(function(x){return x.id===id;}); if(!t) return;
   editingTextId=id;
   floatInput=document.createElement('textarea');
   floatInput.className='float-textarea';
@@ -1084,216 +1194,259 @@ function openTextEdit(id){
   floatInput.style.color=t.textColor||'#1c1c1e';
   floatInput.style.caretColor=t.textColor||'#1c1c1e';
   floatInput.style.fontFamily=t.fontFamily||'-apple-system,sans-serif';
-  floatInput.setAttribute('autocomplete','off');floatInput.setAttribute('autocorrect','off');
-  floatInput.setAttribute('autocapitalize','none');floatInput.setAttribute('spellcheck','false');
-  posFloatInput(t);wrap.appendChild(floatInput);
+  floatInput.setAttribute('autocomplete','off');
+  floatInput.setAttribute('autocorrect','off');
+  floatInput.setAttribute('autocapitalize','none');
+  floatInput.setAttribute('spellcheck','false');
+  posFloatInput(t); wrap.appendChild(floatInput);
   isComposing=false;
-  floatInput.addEventListener('compositionstart',()=>{isComposing=true;});
-  floatInput.addEventListener('compositionend',()=>{isComposing=false;t.text=floatInput.value;autoGrow(t);redraw();updateSelBox();});
-  floatInput.addEventListener('input',()=>{t.text=floatInput.value;autoGrow(t);redraw();updateSelBox();});
-  floatInput.addEventListener('keydown',e=>{if(isComposing)return;if(e.key==='Escape'){e.preventDefault();closeTextEdit();}});
-  ['pointerdown','pointermove','pointerup','touchstart','touchmove','touchend'].forEach(ev=>{
-    floatInput.addEventListener(ev,e=>e.stopPropagation(),{passive:true});
+  floatInput.addEventListener('compositionstart',function(){isComposing=true;});
+  floatInput.addEventListener('compositionend',function(){
+    isComposing=false; t.text=floatInput.value; autoGrow(t); redraw(); updateSelBox();
   });
-  floatInput.addEventListener('blur',()=>{if(!isComposing)setTimeout(()=>{if(editingTextId&&!isComposing)closeTextEdit();},200);});
+  floatInput.addEventListener('input',function(){
+    t.text=floatInput.value; autoGrow(t); redraw(); updateSelBox();
+  });
+  floatInput.addEventListener('keydown',function(e){
+    if(isComposing) return;
+    if(e.key==='Escape'){e.preventDefault(); closeTextEdit();}
+  });
+  ['pointerdown','pointermove','pointerup','touchstart','touchmove','touchend'].forEach(function(ev){
+    floatInput.addEventListener(ev,function(e){e.stopPropagation();},{passive:true});
+  });
+  floatInput.addEventListener('blur',function(){
+    if(!isComposing) setTimeout(function(){if(editingTextId&&!isComposing)closeTextEdit();},200);
+  });
   showSelBox(id,'text');
-  setTimeout(()=>{if(floatInput)floatInput.focus();},80);
+  setTimeout(function(){if(floatInput)floatInput.focus();},80);
 }
 function autoGrow(t){
-  if(!floatInput)return;
-  const lines=(t.text||'').split('\n').length;
-  t.h=Math.max(80,lines*(t.fontSize||18)*1.6+20);
+  if(!floatInput) return;
+  var lines=(t.text||'').split('\n').length;
+  t.h=Math.max(80, lines*(t.fontSize||18)*1.6+20);
   floatInput.style.height=(t.h*scale)+'px';
 }
 function posFloatInput(t){
-  if(!floatInput)return;
-  floatInput.style.left=(t.x*scale+panX)+'px';floatInput.style.top=(t.y*scale+panY)+'px';
-  floatInput.style.width=((t.w||200)*scale)+'px';floatInput.style.height=((t.h||80)*scale)+'px';
+  if(!floatInput) return;
+  floatInput.style.left=(t.x*scale+panX)+'px';
+  floatInput.style.top=(t.y*scale+panY)+'px';
+  floatInput.style.width=((t.w||200)*scale)+'px';
+  floatInput.style.height=((t.h||80)*scale)+'px';
   floatInput.style.fontSize=((t.fontSize||18)*scale)+'px';
 }
 function closeTextEdit(){
-  if(floatInput){floatInput.remove();floatInput=null;}
-  editingTextId=null;isComposing=false;redraw();
+  if(floatInput){floatInput.remove(); floatInput=null;}
+  editingTextId=null; isComposing=false; redraw();
 }
 
-// ─── スタイルパネル（テキスト・図形統合） ────
-let activeSpTab='text';
-
+// ===== スタイルパネル =====
 function buildStylePanel(){
-  // テキスト：文字色
-  buildSpColors('spTextColor',COLORS,()=>spTextColor,v=>{spTextColor=v;applyStyleToSelected('textColor',v);});
-  // テキスト：枠色
-  buildSpColors('spTxtBorderColor',[...COLORS,'transparent'],()=>spTxtBorderColor,v=>{spTxtBorderColor=v;applyStyleToSelected('borderColor',v);});
-  // テキスト：背景色
-  buildSpColors('spTxtBgColor',[...COLORS,'transparent'],()=>spTxtBgColor,v=>{spTxtBgColor=v;applyStyleToSelected('bgColor',v);});
+  buildSpColors('spTextColor', COLORS,
+    function(){return spTextColor;},
+    function(v){spTextColor=v; applyTxtStyle('textColor',v);});
+  buildSpColors('spTxtBorderColor', COLORS.concat(['transparent']),
+    function(){return spTxtBorderColor;},
+    function(v){spTxtBorderColor=v; applyTxtStyle('borderColor',v);});
+  buildSpColors('spTxtBgColor', COLORS.concat(['transparent']),
+    function(){return spTxtBgColor;},
+    function(v){spTxtBgColor=v; applyTxtStyle('bgColor',v);});
+  bindSlider('spTxtBgOpacity','spTxtBgOpacityVal','%',
+    function(v){spTxtBgOpacity=v; applyTxtStyle('bgOpacity',v);});
+  bindSlider('spTxtBorderWidth','spTxtBorderWidthVal','px',
+    function(v){spTxtBorderWidth=v; applyTxtStyle('borderWidth',v);});
+  bindSlider('spFontSize','spFontSizeVal','px',function(v){
+    spFontSize=v; applyTxtStyle('fontSize',v);
+    if(floatInput) floatInput.style.fontSize=(v*scale)+'px';
+  });
+  document.getElementById('spFontFamily').addEventListener('change',function(e){
+    spFontFamily=e.target.value; applyTxtStyle('fontFamily',spFontFamily);
+    if(floatInput) floatInput.style.fontFamily=spFontFamily;
+    redraw();
+  });
 
-  // テキスト：スライダー類
-  bindSlider('spTxtBgOpacity','spTxtBgOpacityVal','%','bgOpacity',v=>spTxtBgOpacity=v);
-  bindSlider('spTxtBorderWidth','spTxtBorderWidthVal','px','borderWidth',v=>spTxtBorderWidth=v);
-  bindSlider('spFontSize','spFontSizeVal','px','fontSize',v=>{
-    spFontSize=v;
-    if(floatInput)floatInput.style.fontSize=(v*scale)+'px';
-  });
-  document.getElementById('spFontFamily').addEventListener('change',e=>{
-    spFontFamily=e.target.value;applyStyleToSelected('fontFamily',spFontFamily);
-    if(floatInput)floatInput.style.fontFamily=spFontFamily;redraw();
-  });
-
-  // 図形：枠線色
-  buildSpColors('spShapeStrokeColor',COLORS,()=>spShapeStrokeColor,v=>{
-    spShapeStrokeColor=v;applyShapeStyleToSelected('strokeColor',v);
-  });
-  // 図形：塗り色
-  buildSpColors('spShapeFillColor',[...COLORS,'transparent'],()=>spShapeFillColor,v=>{
-    spShapeFillColor=v;applyShapeStyleToSelected('fillColor',v);
-  });
-  // 図形：塗り透明度
-  const foEl=document.getElementById('spShapeFillOpacity');
-  const foVal=document.getElementById('spShapeFillOpacityVal');
-  foEl.addEventListener('input',()=>{
-    const v=+foEl.value;spShapeFillOpacity=v;foVal.textContent=v+'%';
-    applyShapeStyleToSelected('fillOpacity',v);redraw();
+  // 図形
+  buildSpColors('spShapeStrokeColor', COLORS,
+    function(){return spShapeStrokeColor;},
+    function(v){spShapeStrokeColor=v; applyShapeStyle('strokeColor',v); applyShapeStyle('color',v);});
+  buildSpColors('spShapeFillColor', COLORS.concat(['transparent']),
+    function(){return spShapeFillColor;},
+    function(v){spShapeFillColor=v; applyShapeStyle('fillColor',v);});
+  var foEl=document.getElementById('spShapeFillOpacity');
+  var foVal=document.getElementById('spShapeFillOpacityVal');
+  foEl.addEventListener('input',function(){
+    var v=+foEl.value; spShapeFillOpacity=v; foVal.textContent=v+'%';
+    applyShapeStyle('fillOpacity',v); redraw();
   });
 }
-
 function buildSpColors(elId,colors,getVal,setVal){
-  const el=document.getElementById(elId);if(!el)return;
-  colors.forEach(c=>{
-    const d=document.createElement('div');d.className='sp-dot';
+  var el=document.getElementById(elId); if(!el) return;
+  colors.forEach(function(c){
+    var d=document.createElement('div'); d.className='sp-dot';
     if(c==='transparent'){
       d.style.background='linear-gradient(135deg,#fff 45%,#f00 45%,#f00 55%,#fff 55%)';
-      d.style.border='2px solid #ccc';d.title='透明';
-    }else{
-      d.style.background=c;if(c==='#ffffff')d.style.border='2px solid #ccc';
+      d.style.border='2px solid #ccc'; d.title='透明';
+    } else {
+      d.style.background=c;
+      if(c==='#ffffff') d.style.border='2px solid #ccc';
     }
-    d.onclick=()=>{el.querySelectorAll('.sp-dot').forEach(x=>x.classList.remove('active'));d.classList.add('active');setVal(c);redraw();};
-    if(c===getVal())d.classList.add('active');
+    d.onclick=function(){
+      el.querySelectorAll('.sp-dot').forEach(function(x){x.classList.remove('active');});
+      d.classList.add('active'); setVal(c); redraw();
+    };
+    if(c===getVal()) d.classList.add('active');
     el.appendChild(d);
   });
 }
-
-function bindSlider(id,valId,unit,key,setter){
-  const el=document.getElementById(id),vEl=document.getElementById(valId);if(!el)return;
-  el.addEventListener('input',()=>{
-    const v=+el.value;setter(v);vEl.textContent=v+unit;
-    applyStyleToSelected(key,v);redraw();
+function bindSlider(id,valId,unit,setter){
+  var el=document.getElementById(id), vEl=document.getElementById(valId);
+  if(!el) return;
+  el.addEventListener('input',function(){
+    var v=+el.value; setter(v); vEl.textContent=v+unit; redraw();
   });
 }
-
-function applyStyleToSelected(key,val){
-  if(selectedType==='text'){const t=textItems.find(t=>t.id===selectedId);if(t){t[key]=val;redraw();}}
+function applyTxtStyle(key,val){
+  if(selectedType==='text'){
+    var t=textItems.find(function(t){return t.id===selectedId;});
+    if(t){t[key]=val; redraw();}
+  }
 }
-function applyShapeStyleToSelected(key,val){
-  if(selectedType==='stroke'){const s=strokes.find(s=>s.id===selectedId);if(s){s[key]=val;redraw();}}
+function applyShapeStyle(key,val){
+  if(selectedType==='stroke'){
+    var s=strokes.find(function(s){return s.id===selectedId;});
+    if(s){s[key]=val; redraw();}
+  }
 }
 
 function switchSpTab(tab){
   activeSpTab=tab;
-  document.getElementById('spTabText').classList.toggle('active',tab==='text');
-  document.getElementById('spTabShape').classList.toggle('active',tab==='shape');
-  document.getElementById('spBodyText').classList.toggle('hidden',tab!=='text');
-  document.getElementById('spBodyShape').classList.toggle('hidden',tab!=='shape');
+  document.getElementById('spTabText').classList.toggle('active', tab==='text');
+  document.getElementById('spTabShape').classList.toggle('active', tab==='shape');
+  document.getElementById('spBodyText').classList.toggle('hidden',  tab!=='text');
+  document.getElementById('spBodyShape').classList.toggle('hidden', tab!=='shape');
 }
-
 function toggleStylePanel(){
-  const panel=document.getElementById('stylePanel');
-  const isHidden=panel.classList.contains('hidden');
-  if(isHidden){
-    // 選択中のオブジェクト種別に合わせてタブを自動切替
-    if(selectedType==='stroke')switchSpTab('shape');
-    else switchSpTab('text');
+  var panel=document.getElementById('stylePanel');
+  if(panel.classList.contains('hidden')){
+    // 選択中オブジェクトに合わせてタブ自動切替
+    switchSpTab(selectedType==='stroke' ? 'shape' : 'text');
     panel.classList.remove('hidden');
-  }else{
+  } else {
     panel.classList.add('hidden');
   }
 }
-function closeStylePanel(){document.getElementById('stylePanel').classList.add('hidden');}
+function closeStylePanel(){
+  document.getElementById('stylePanel').classList.add('hidden');
+}
 
-// ─── ツール ───────────────────────────────────
+// ===== ツール =====
 function setTool(t){
-  if(t!=='select')clearSelection();
+  if(t!=='select') clearSelection();
   tool=t;
-  ['Pen','Text','Shape','Select'].forEach(n=>{
-    const btn=document.getElementById('tool'+n);if(btn)btn.classList.toggle('active',n.toLowerCase()===t);
+  ['Pen','Text','Shape','Select'].forEach(function(n){
+    var btn=document.getElementById('tool'+n);
+    if(btn) btn.classList.toggle('active', n.toLowerCase()===t);
   });
-  const badges={pen:'ペン',text:'テキスト（ダブルタップで配置）',shape:'図形（ドラッグで描画）',select:'選択・移動・拡大縮小（SHIFTで比率固定）'};
+  var badges={
+    pen:'ペン',
+    text:'テキスト（ダブルタップで配置）',
+    shape:'図形（ドラッグで描画）',
+    select:'選択・移動・拡大縮小（SHIFTで比率固定）'
+  };
   document.getElementById('modeBadge').textContent=badges[t]||t;
-  canvas.classList.toggle('select-mode',t==='select');
-  closeShapePopup();closeStylePanel();
+  canvas.classList.toggle('select-mode', t==='select');
+  closeShapePopup(); closeStylePanel();
 }
 function toggleShapePopup(){
-  const popup=document.getElementById('shapePopup');
+  var popup=document.getElementById('shapePopup');
   popup.classList.toggle('hidden');
-  // 現在選択中の図形にselectedクラスを付与
-  ['Rect','Circle','Line','Arrow','Triangle'].forEach(n=>{
-    const el=document.getElementById('shapeOpt'+n);
-    if(el)el.classList.toggle('selected',selectedShape===n.toLowerCase());
+  ['Rect','Circle','Line','Arrow','Triangle'].forEach(function(n){
+    var el=document.getElementById('shapeOpt'+n);
+    if(el) el.classList.toggle('selected', selectedShape===n.toLowerCase());
   });
 }
-function closeShapePopup(){document.getElementById('shapePopup').classList.add('hidden');}
+function closeShapePopup(){ document.getElementById('shapePopup').classList.add('hidden'); }
 function selectShape(s){
-  selectedShape=s;setTool('shape');
+  selectedShape=s; setTool('shape');
   document.getElementById('toolShape').classList.add('active');
   closeShapePopup();
 }
 
-// ─── Undo / Redo ──────────────────────────────
-function getState(){return{strokes:JSON.parse(JSON.stringify(strokes)),texts:JSON.parse(JSON.stringify(textItems))};}
-function applyState(s){strokes=s.strokes;textItems=s.texts;clearSelection();closeTextEdit();redraw();}
-function pushUndo(){undoStack.push(getState());if(undoStack.length>50)undoStack.shift();redoStack=[];}
-function undo(){if(!undoStack.length)return;redoStack.push(getState());applyState(undoStack.pop());}
-function redo(){if(!redoStack.length)return;undoStack.push(getState());applyState(redoStack.pop());}
+// ===== Undo/Redo =====
+function getState(){
+  return {
+    strokes:JSON.parse(JSON.stringify(strokes)),
+    texts:JSON.parse(JSON.stringify(textItems))
+  };
+}
+function applyState(s){ strokes=s.strokes; textItems=s.texts; clearSelection(); closeTextEdit(); redraw(); }
+function pushUndo(){ undoStack.push(getState()); if(undoStack.length>50) undoStack.shift(); redoStack=[]; }
+function undo(){ if(!undoStack.length) return; redoStack.push(getState()); applyState(undoStack.pop()); }
+function redo(){ if(!redoStack.length) return; undoStack.push(getState()); applyState(redoStack.pop()); }
 
-// ─── カラーピッカー ───────────────────────────
+// ===== カラーピッカー =====
 function buildColorPicker(){
-  const cp=document.getElementById('colorPicker');
-  COLORS.forEach(c=>{
-    const d=document.createElement('div');d.className='color-dot'+(c===currentColor?' active':'');
-    d.style.background=c;if(c==='#ffffff')d.style.border='3px solid #ccc';
-    d.onclick=()=>{document.querySelectorAll('#colorPicker .color-dot').forEach(x=>x.classList.remove('active'));d.classList.add('active');currentColor=c;};
+  var cp=document.getElementById('colorPicker');
+  COLORS.forEach(function(c){
+    var d=document.createElement('div');
+    d.className='color-dot'+(c===currentColor?' active':'');
+    d.style.background=c;
+    if(c==='#ffffff') d.style.border='3px solid #ccc';
+    d.onclick=function(){
+      document.querySelectorAll('#colorPicker .color-dot').forEach(function(x){x.classList.remove('active');});
+      d.classList.add('active'); currentColor=c;
+    };
     cp.appendChild(d);
   });
 }
 
-// ─── キーボード ───────────────────────────────
+// ===== キーボード =====
 function setupKeyboard(){
-  document.addEventListener('keydown',e=>{
-    shiftDown=e.shiftKey;if(isComposing)return;
-    if(document.getElementById('editorScreen').classList.contains('hidden'))return;
-    const tag=document.activeElement?document.activeElement.tagName:'';
+  document.addEventListener('keydown',function(e){
+    shiftDown=e.shiftKey;
+    if(isComposing) return;
+    if(document.getElementById('editorScreen').classList.contains('hidden')) return;
+    var tag=document.activeElement?document.activeElement.tagName:'';
     if(tag==='TEXTAREA'||tag==='INPUT'||tag==='SELECT'){
-      if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);}
+      if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault(); saveBoard(true);}
       return;
     }
-    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undo();return;}
-    if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){e.preventDefault();redo();return;}
-    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBoard(true);return;}
-    if((e.key==='Delete'||e.key==='Backspace')&&selectedId){e.preventDefault();deleteSelected();return;}
-    if(e.key==='p'){setTool('pen');return;}
-    if(e.key==='t'){setTool('text');return;}
-    if(e.key==='s'&&!e.ctrlKey&&!e.metaKey){setTool('select');return;}
-    if(e.key==='Escape'){clearSelection();closeTextEdit();closeShapePopup();closeStylePanel();redraw();}
+    if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault(); undo(); return;}
+    if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){e.preventDefault(); redo(); return;}
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault(); saveBoard(true); return;}
+    if((e.key==='Delete'||e.key==='Backspace')&&selectedId){e.preventDefault(); deleteSelected(); return;}
+    if(e.key==='p'){setTool('pen'); return;}
+    if(e.key==='t'){setTool('text'); return;}
+    if(e.key==='s'&&!e.ctrlKey&&!e.metaKey){setTool('select'); return;}
+    if(e.key==='Escape'){clearSelection(); closeTextEdit(); closeShapePopup(); closeStylePanel(); redraw();}
   });
-  document.addEventListener('keyup',e=>{shiftDown=e.shiftKey;});
+  document.addEventListener('keyup',function(e){ shiftDown=e.shiftKey; });
 }
 
-// ─── ユーティリティ ───────────────────────────
+// ===== ユーティリティ =====
 function hexToRgb(hex){
-  if(!hex||hex==='transparent')return{r:255,g:255,b:255};
-  return{r:parseInt(hex.slice(1,3),16),g:parseInt(hex.slice(3,5),16),b:parseInt(hex.slice(5,7),16)};
+  if(!hex||hex==='transparent') return {r:255,g:255,b:255};
+  return {
+    r:parseInt(hex.slice(1,3),16),
+    g:parseInt(hex.slice(3,5),16),
+    b:parseInt(hex.slice(5,7),16)
+  };
 }
-function show(id){document.getElementById(id).classList.remove('hidden');}
-function hide(id){document.getElementById(id).classList.add('hidden');}
-function showLoading(v){document.getElementById('loadingOverlay').classList.toggle('hidden',!v);}
-let toastTimer=null;
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type+' show';
-  if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+function show(id){ document.getElementById(id).classList.remove('hidden'); }
+function hide(id){ document.getElementById(id).classList.add('hidden'); }
+function showLoading(v){ document.getElementById('loadingOverlay').classList.toggle('hidden',!v); }
+var toastTimer=null;
+function showToast(msg,type){
+  type=type||'success';
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){t.classList.remove('show');},3000);
 }
 function setSyncStatus(state,label){
-  const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel');if(!dot)return;
+  var dot=document.getElementById('syncDot'), lbl=document.getElementById('syncLabel');
+  if(!dot) return;
   dot.className='sync-dot'+(state==='loading'?' loading':state==='error'?' error':'');
-  if(lbl)lbl.textContent=label;
+  if(lbl) lbl.textContent=label;
 }
 </script>
 </body>
