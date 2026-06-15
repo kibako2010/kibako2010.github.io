@@ -39,7 +39,6 @@
   #drop-zone p span { color: #a78bfa; font-weight: 600; }
   #file-input { display: none; }
 
-  /* ── セクションタイトル ── */
   .section-title {
     font-size: 0.8rem;
     font-weight: 600;
@@ -49,7 +48,7 @@
     margin-bottom: 12px;
   }
 
-  /* ── 拍子設定パネル ── */
+  /* ── 拍子設定 ── */
   #meter-panel {
     background: #16213e;
     border-radius: 10px;
@@ -77,7 +76,6 @@
   }
   .meter-row input:focus { outline: none; border-color: #a78bfa; }
   .meter-row input.measure-input { width: 90px; }
-
   .btn-small {
     background: #2d2d5a;
     border: 1px solid #4c4c7a;
@@ -89,7 +87,6 @@
     transition: background 0.15s;
   }
   .btn-small:hover { background: #3d3d7a; }
-
   .btn-del {
     background: none;
     border: none;
@@ -97,12 +94,11 @@
     font-size: 1.1rem;
     cursor: pointer;
     padding: 2px 6px;
-    line-height: 1;
     border-radius: 4px;
   }
   .btn-del:hover { background: #3a1a1a; }
 
-  /* ── トラック一覧 ── */
+  /* ── トラック ── */
   #track-panel {
     background: #16213e;
     border-radius: 10px;
@@ -121,70 +117,118 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 10px;
-  }
-  .track-name {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #c4b5fd;
-  }
-  .track-stats {
-    font-size: 0.78rem;
-    color: #888;
     margin-bottom: 8px;
   }
+  .track-name { font-size: 0.95rem; font-weight: 600; color: #c4b5fd; }
+  .track-stats { font-size: 0.78rem; color: #888; margin-bottom: 10px; }
 
-  /* ── 歌詞プレビュー ── */
+  /* ── 歌詞プレビュー（小節レイアウト） ── */
   .lyric-preview {
-    font-size: 1rem;
-    line-height: 2.2;
-    word-break: break-all;
     background: #0a2040;
     border-radius: 6px;
     padding: 10px 14px;
-    margin-top: 6px;
-    min-height: 44px;
-    position: relative;
+    overflow-x: auto;
   }
 
-  /* 各ノートの歌詞セル */
+  /* 小節行：小節番号ヘッダ ＋ ノート群を横並び */
+  .measure-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 4px;
+    gap: 0;
+  }
+
+  /* 小節番号ラベル */
+  .measure-label {
+    font-size: 0.62rem;
+    color: #4a4a8a;
+    width: 28px;
+    min-width: 28px;
+    padding-top: 6px;
+    text-align: right;
+    padding-right: 5px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+
+  /* 小節内ノート群 */
+  .measure-notes {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2px 1px;
+    padding: 2px 6px 2px 4px;
+    border-left: 1px solid #2a3a6a;
+    min-height: 32px;
+    flex: 1;
+  }
+
+  /* 小節区切り（最後の列は不要なので JS で制御） */
+  .measure-notes.last-measure {
+    border-right: none;
+  }
+
+  /* 各ノートセル */
   .lyric-cell {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    margin: 2px 1px;
-    vertical-align: middle;
   }
 
-  /* 歌詞文字スパン（クリックで編集） */
+  /* ツールチップ */
+  .note-tip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222244;
+    border: 1px solid #4a4a8a;
+    color: #ccc;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
+  }
+  .lyric-cell:hover .note-tip { display: block; }
+
+  /* 歌詞文字スパン */
   .lyric-char {
     display: inline-block;
-    min-width: 1.4em;
+    min-width: 1.5em;
     text-align: center;
     border-radius: 4px;
-    padding: 1px 3px;
+    padding: 2px 3px;
     cursor: pointer;
-    transition: background 0.1s, outline 0.1s;
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.5;
     border: 1px solid transparent;
+    transition: background 0.1s;
+    user-select: none;
   }
   .lyric-char.ok {
     color: #86efac;
-    border-color: transparent;
   }
-  .lyric-char.ok:hover {
-    background: #1a4030;
-    border-color: #86efac44;
-  }
+  .lyric-char.ok:hover { background: #1a4030; border-color: #86efac44; }
+
   .lyric-char.err {
     color: #f87171;
     background: #3a0a0a;
-    border-color: #f8717144;
+    border-color: #f8717155;
   }
-  .lyric-char.err:hover {
-    background: #4a1010;
-    border-color: #f87171aa;
+  .lyric-char.err:hover { background: #4a1010; }
+
+  .lyric-char.multi-ok {
+    /* 拗音2文字OK：緑系だが少し暗め */
+    color: #6ee7b7;
+    font-size: 0.82rem;
+    min-width: 2em;
   }
+  .lyric-char.multi-ok:hover { background: #1a3828; border-color: #6ee7b744; }
+
   .lyric-char.empty {
     color: #555;
     background: #2a1a1a;
@@ -193,74 +237,13 @@
     font-size: 0.72rem;
     min-width: 2em;
   }
-  .lyric-char.multi {
-    color: #fbbf24;
-    background: #2a1a00;
-    border-color: #fbbf2444;
-  }
-  .lyric-char.multi:hover {
-    background: #3a2a00;
-  }
 
-  /* ノート番号ツールチップ */
-  .lyric-cell .note-tip {
-    display: none;
-    position: absolute;
-    bottom: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: #ccc;
-    font-size: 0.68rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 10;
-  }
-  .lyric-cell:hover .note-tip { display: block; }
-
-  /* ── インライン編集ポップアップ ── */
-  #edit-popup {
-    display: none;
-    position: fixed;
-    background: #1e1e4a;
-    border: 1px solid #a78bfa;
-    border-radius: 10px;
-    padding: 14px 16px;
-    z-index: 1000;
-    box-shadow: 0 8px 32px #0008;
-    min-width: 200px;
-  }
-  #edit-popup .popup-label {
-    font-size: 0.75rem;
-    color: #888;
-    margin-bottom: 6px;
-  }
-  #edit-popup .popup-label span {
-    color: #c4b5fd;
-    font-weight: 600;
-  }
-  #edit-input {
-    width: 100%;
-    background: #0f3460;
-    border: 1px solid #a78bfa;
-    color: #e0e0e0;
-    border-radius: 6px;
-    padding: 7px 10px;
-    font-size: 1.1rem;
-    text-align: center;
-    outline: none;
-    ime-mode: active;
-  }
-  #edit-input.input-err { border-color: #f87171; }
-  #edit-popup .popup-hint {
+  .edit-hint {
     font-size: 0.72rem;
-    color: #666;
-    margin-top: 6px;
-    text-align: center;
+    color: #444;
+    margin-top: 8px;
+    text-align: right;
   }
-  #edit-popup .popup-hint.hint-err { color: #f87171; }
 
   /* ── ボタン ── */
   .btn-dl {
@@ -277,6 +260,18 @@
   }
   .btn-dl:hover { background: #6d28d9; }
 
+  /* バッジ */
+  .warn-badge {
+    display: inline-block;
+    background: #7a1a1a;
+    color: #f87171;
+    font-size: 0.72rem;
+    border-radius: 4px;
+    padding: 1px 7px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
   /* エラーバナー */
   #error-banner {
     background: #3a0a0a;
@@ -288,42 +283,48 @@
     font-size: 0.88rem;
     display: none;
   }
-
-  /* 警告バッジ */
-  .warn-badge {
-    display: inline-block;
-    background: #7a1a1a;
-    color: #f87171;
-    font-size: 0.72rem;
-    border-radius: 4px;
-    padding: 1px 7px;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-  .multi-badge {
-    background: #3a2a00;
-    color: #fbbf24;
-  }
-
   .track-empty { color: #555; font-style: italic; font-size: 0.82rem; }
 
-  /* 編集ヒント */
-  .edit-hint {
-    font-size: 0.74rem;
-    color: #555;
-    margin-top: 6px;
-    text-align: right;
+  /* ── ポップアップ ── */
+  #edit-popup {
+    display: none;
+    position: fixed;
+    background: #1e1e4a;
+    border: 1px solid #a78bfa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    z-index: 1000;
+    box-shadow: 0 8px 32px #0008;
+    min-width: 220px;
   }
+  #edit-popup .popup-label { font-size: 0.75rem; color: #888; margin-bottom: 6px; }
+  #edit-popup .popup-label span { color: #c4b5fd; font-weight: 600; }
+  #edit-input {
+    width: 100%;
+    background: #0f3460;
+    border: 1px solid #a78bfa;
+    color: #e0e0e0;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    outline: none;
+  }
+  #edit-input.input-err { border-color: #f87171; }
+  #edit-input.input-ok  { border-color: #86efac; }
+  .popup-hint { font-size: 0.72rem; color: #666; margin-top: 6px; text-align: center; }
+  .popup-hint.hint-err { color: #f87171; }
+  .popup-hint.hint-ok  { color: #86efac; }
 </style>
 </head>
 <body>
 
 <h1>SynthV2 → NEUTRINO MusicXML Converter</h1>
-
 <div id="error-banner"></div>
 
 <div id="drop-zone">
-  <p>MIDIファイルを<span>ドラッグ＆ドロップ</span>、または<span style="cursor:pointer" onclick="document.getElementById('file-input').click()">クリックして選択</span></p>
+  <p>MIDIファイルを<span>ドラッグ＆ドロップ</span>、または
+     <span style="cursor:pointer" onclick="document.getElementById('file-input').click()">クリックして選択</span></p>
   <p style="margin-top:8px;font-size:0.8rem;">SynthV2からエクスポートした .mid ファイル</p>
   <input type="file" id="file-input" accept=".mid,.midi">
 </div>
@@ -339,110 +340,148 @@
   <div id="track-list"></div>
 </div>
 
-<!-- インライン編集ポップアップ -->
 <div id="edit-popup">
-  <div class="popup-label" id="popup-label">ノート <span id="popup-note-info"></span></div>
+  <div class="popup-label">ノート <span id="popup-note-info"></span></div>
   <input type="text" id="edit-input" maxlength="10" autocomplete="off" spellcheck="false">
-  <div class="popup-hint" id="popup-hint">ひらがな1文字 or「ー」 / Enter で確定 / Esc でキャンセル</div>
+  <div class="popup-hint" id="popup-hint"></div>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════════════
-// MIDIパーサー（依存なし）
+// MIDIパーサー
 // ═══════════════════════════════════════════════════════
 function parseMidi(buffer) {
   const data = new DataView(buffer);
   let pos = 0;
-
-  const readUint32 = () => { const v = data.getUint32(pos); pos += 4; return v; };
-  const readUint16 = () => { const v = data.getUint16(pos); pos += 2; return v; };
-  const readUint8  = () => data.getUint8(pos++);
-  const readBytes  = n => { const b = []; for (let i=0;i<n;i++) b.push(readUint8()); return b; };
-  const readVarLen = () => {
-    let val=0, b;
-    do { b=readUint8(); val=(val<<7)|(b&0x7f); } while(b&0x80);
-    return val;
+  const ru32 = () => { const v=data.getUint32(pos); pos+=4; return v; };
+  const ru16 = () => { const v=data.getUint16(pos); pos+=2; return v; };
+  const ru8  = () => data.getUint8(pos++);
+  const rbytes = n => { const b=[]; for(let i=0;i<n;i++) b.push(ru8()); return b; };
+  const rvar = () => {
+    let val=0,b; do{b=ru8();val=(val<<7)|(b&0x7f);}while(b&0x80); return val;
   };
-  const bytesToStr = bytes => {
+  const b2s = bytes => {
     try { return new TextDecoder('utf-8').decode(new Uint8Array(bytes)); }
     catch(e) { return bytes.map(b=>String.fromCharCode(b)).join(''); }
   };
 
-  readUint32(); // MThd
-  readUint32(); // 6
-  const format       = readUint16();
-  const numTracks    = readUint16();
-  const timeDivision = readUint16();
-  const tracks = [];
+  ru32(); ru32(); // MThd + len
+  const format=ru16(), numTracks=ru16(), tpq=ru16();
+  const tracks=[];
 
-  for (let t = 0; t < numTracks; t++) {
-    readUint32(); // MTrk
-    const chunkLen = readUint32();
-    const chunkEnd = pos + chunkLen;
-    const events   = [];
-    let absTick    = 0;
-    let running    = 0;
-
-    while (pos < chunkEnd) {
-      const delta = readVarLen();
-      absTick += delta;
-      let sb = data.getUint8(pos);
-      if (sb & 0x80) { running = sb; pos++; } else { sb = running; }
-
-      const eType = (sb >> 4) & 0x0f;
-      const ch    = sb & 0x0f;
-
-      if (sb === 0xff) {
-        const mType = readUint8();
-        const mLen  = readVarLen();
-        const mData = readBytes(mLen);
-        const ev    = { tick: absTick, type: 'meta', metaType: mType };
-        if      (mType === 0x01) { ev.subtype='text';      ev.text=bytesToStr(mData); }
-        else if (mType === 0x03) { ev.subtype='trackName'; ev.text=bytesToStr(mData); }
-        else if (mType === 0x05) { ev.subtype='lyric';     ev.text=bytesToStr(mData); }
-        else if (mType === 0x51) { ev.subtype='setTempo';  ev.microsecondsPerBeat=(mData[0]<<16)|(mData[1]<<8)|mData[2]; }
-        else if (mType === 0x58) { ev.subtype='timeSignature'; ev.numerator=mData[0]; ev.denominator=Math.pow(2,mData[1]); }
-        else if (mType === 0x2f) { ev.subtype='endOfTrack'; }
-        else { ev.subtype='unknown'; }
+  for(let t=0;t<numTracks;t++){
+    ru32(); // MTrk
+    const clen=ru32(), cend=pos+clen;
+    const events=[]; let abs=0,run=0;
+    while(pos<cend){
+      abs+=rvar();
+      let sb=data.getUint8(pos);
+      if(sb&0x80){run=sb;pos++;}else{sb=run;}
+      const et=(sb>>4)&0x0f, ch=sb&0x0f;
+      if(sb===0xff){
+        const mt=ru8(),ml=rvar(),md=rbytes(ml);
+        const ev={tick:abs,type:'meta',metaType:mt};
+        if(mt===0x01){ev.subtype='text';     ev.text=b2s(md);}
+        else if(mt===0x03){ev.subtype='trackName';ev.text=b2s(md);}
+        else if(mt===0x05){ev.subtype='lyric';    ev.text=b2s(md);}
+        else if(mt===0x51){ev.subtype='setTempo'; ev.uspb=(md[0]<<16)|(md[1]<<8)|md[2];}
+        else if(mt===0x58){ev.subtype='timeSig';  ev.num=md[0];ev.den=Math.pow(2,md[1]);}
+        else if(mt===0x2f){ev.subtype='endOfTrack';}
+        else{ev.subtype='unknown';}
         events.push(ev);
-      } else if (sb===0xf0||sb===0xf7) {
-        readBytes(readVarLen());
-      } else {
-        const d1 = readUint8();
-        const ev = { tick: absTick, type:'channel', eventType:eType, channel:ch, d1 };
-        if (eType!==0x0c && eType!==0x0d) ev.d2 = readUint8();
-        if      (eType===0x09 && ev.d2>0) ev.subtype='noteOn';
-        else if (eType===0x09)             ev.subtype='noteOff';
-        else if (eType===0x08)             ev.subtype='noteOff';
-        else                               ev.subtype='other';
+      }else if(sb===0xf0||sb===0xf7){
+        rbytes(rvar());
+      }else{
+        const d1=ru8();
+        const ev={tick:abs,type:'channel',eventType:et,channel:ch,d1};
+        if(et!==0x0c&&et!==0x0d) ev.d2=ru8();
+        if(et===0x09&&ev.d2>0) ev.subtype='noteOn';
+        else if(et===0x09||et===0x08) ev.subtype='noteOff';
+        else ev.subtype='other';
         events.push(ev);
       }
     }
-    pos = chunkEnd;
-    tracks.push(events);
+    pos=cend; tracks.push(events);
   }
-  return { format, numTracks, timeDivision, tracks };
+  return {format,numTracks,tpq,tracks};
 }
 
 // ═══════════════════════════════════════════════════════
 // バリデーション
 // ═══════════════════════════════════════════════════════
-// 1文字 & ひらがな(U+3041-U+309F) or 長音(U+30FC) → OK
+// ひらがな小文字（っ除く）
+const SMALL_HIRA = /^[ぁぃぅぇぉゃゅょ]$/;
+// ひらがな通常文字（小文字・っ含む全体）
+const HIRA_ALL   = /^[\u3041-\u309f]$/;
+// 長音
+const CHOON      = /^\u30fc$/;
+
 function validateLyric(str) {
   if (!str || str.length === 0) return 'empty';
-  if (str.length > 1)           return 'multi';
-  if (/^[\u3041-\u309f\u30fc]$/.test(str)) return 'ok';
-  return 'err';
+
+  if (str.length === 1) {
+    if (HIRA_ALL.test(str) || CHOON.test(str)) return 'ok';
+    return 'err';
+  }
+
+  if (str.length === 2) {
+    const c0 = str[0], c1 = str[1];
+    // 通常ひらがな（っ以外）＋ 小文字ひらがな（っ除く）
+    const c0ok = HIRA_ALL.test(c0) && !/^っ$/.test(c0);
+    const c1ok = SMALL_HIRA.test(c1);
+    if (c0ok && c1ok) return 'multi-ok';
+    return 'multi-err';
+  }
+
+  return 'multi-err';
+}
+
+// ═══════════════════════════════════════════════════════
+// 小節番号計算ユーティリティ
+// ─────────────────────────────────────────────────────
+// meters: [{measureNum, beats, beatType}, ...]（昇順ソート済み）
+// tick から「何小節目か」「その小節の先頭tick」を返す
+// ═══════════════════════════════════════════════════════
+function buildMeasureMap(meters, tpq, totalTicks) {
+  // measureMap: tick区間 → 小節番号
+  // [{startTick, endTick, measureNum, beats, beatType}, ...]
+  const sorted = [...meters].sort((a,b) => a.measureNum - b.measureNum);
+
+  const map = [];
+  let measureNum = 1;
+  let curTick    = 0;
+  let mi         = 0; // sortedsのインデックス
+
+  // 最大小節数の上限（無限ループ防止）
+  const maxMeasures = 2000;
+
+  while (curTick < totalTicks + tpq * 8 && measureNum <= maxMeasures) {
+    // 現在の拍子
+    let beats = 4, beatType = 4;
+    for (const m of sorted) {
+      if (m.measureNum <= measureNum) { beats = m.beats; beatType = m.beatType; }
+    }
+    const mTicks = Math.round(tpq * 4 * beats / beatType);
+    map.push({ startTick: curTick, endTick: curTick + mTicks, measureNum, beats, beatType });
+    curTick += mTicks;
+    measureNum++;
+  }
+  return map;
+}
+
+function getMeasureNumForTick(map, tick) {
+  for (const m of map) {
+    if (tick >= m.startTick && tick < m.endTick) return m.measureNum;
+  }
+  return map[map.length - 1].measureNum;
 }
 
 // ═══════════════════════════════════════════════════════
 // アプリ状態
 // ═══════════════════════════════════════════════════════
-let parsedTracks   = [];
-let meterSettings  = [{ measure:1, beats:4, beatType:4 }];
-
-// editState: 現在編集中のポップアップ情報
-let editState = null; // { ti, ni, cellEl }
+let parsedTracks  = [];
+let meterSettings = [{ measureNum:1, beats:4, beatType:4 }];
+let editState     = null;
 
 // ═══════════════════════════════════════════════════════
 // ファイル読み込み
@@ -450,87 +489,71 @@ let editState = null; // { ti, ni, cellEl }
 const dropZone  = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
 
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave', ()  => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e => {
+dropZone.addEventListener('dragover', e=>{e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('dragleave', ()=>dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e=>{
   e.preventDefault(); dropZone.classList.remove('drag-over');
-  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
 });
-fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+fileInput.addEventListener('change', e=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
 
 function loadFile(file) {
   hideError();
   const reader = new FileReader();
   reader.onload = e => {
-    try {
-      const midi = parseMidi(e.target.result);
-      processMidi(midi);
-    } catch(err) { showError('MIDIの解析に失敗しました: ' + err.message); }
+    try { processMidi(parseMidi(e.target.result)); }
+    catch(err) { showError('MIDIの解析に失敗しました: ' + err.message); }
   };
   reader.readAsArrayBuffer(file);
 }
 
 function processMidi(midi) {
-  const tpq = midi.timeDivision;
+  const tpq = midi.tpq;
   parsedTracks = [];
 
-  // テンポ取得
   let uspb = 500000;
   for (const track of midi.tracks) {
     for (const ev of track) {
-      if (ev.subtype === 'setTempo') { uspb = ev.microsecondsPerBeat; break; }
+      if (ev.subtype === 'setTempo') { uspb = ev.uspb; break; }
     }
     break;
   }
   const bpm = Math.round(60000000 / uspb);
 
-  for (let ti = 0; ti < midi.tracks.length; ti++) {
+  for (let ti=0; ti<midi.tracks.length; ti++) {
     const events = midi.tracks[ti];
-
-    // トラック名
-    let name = `Track ${ti + 1}`;
+    let name = `Track ${ti+1}`;
     for (const ev of events) {
-      if (ev.subtype === 'trackName' && ev.text.trim()) { name = ev.text.trim(); break; }
+      if (ev.subtype==='trackName' && ev.text.trim()) { name=ev.text.trim(); break; }
     }
 
-    // 歌詞キューを作成
     const lyricQueue = [];
     for (const ev of events) {
-      if (ev.subtype === 'lyric' || ev.subtype === 'text') {
-        lyricQueue.push({ tick: ev.tick, text: ev.text });
-      }
+      if (ev.subtype==='lyric'||ev.subtype==='text')
+        lyricQueue.push({tick:ev.tick, text:ev.text});
     }
     let lyricIdx = 0;
-
-    // ノートOn/Off対応
-    const activeNotes = {};
-    const notes = [];
+    const active = {};
+    const notes  = [];
 
     for (const ev of events) {
-      if (ev.subtype === 'noteOn') {
-        // このtick以下の最後のlyricを取る
-        let lyric = '';
-        while (lyricIdx < lyricQueue.length && lyricQueue[lyricIdx].tick <= ev.tick) {
-          lyric = lyricQueue[lyricIdx].text;
-          lyricIdx++;
+      if (ev.subtype==='noteOn') {
+        let lyric='';
+        while (lyricIdx<lyricQueue.length && lyricQueue[lyricIdx].tick<=ev.tick) {
+          lyric=lyricQueue[lyricIdx].text; lyricIdx++;
         }
-        activeNotes[ev.d1] = { startTick: ev.tick, lyric };
-      } else if (ev.subtype === 'noteOff') {
-        const on = activeNotes[ev.d1];
+        active[ev.d1] = {startTick:ev.tick, lyric};
+      } else if (ev.subtype==='noteOff') {
+        const on = active[ev.d1];
         if (on) {
-          notes.push({
-            pitch:     ev.d1,
-            startTick: on.startTick,
-            duration:  ev.tick - on.startTick,
-            lyric:     on.lyric   // ← これがユーザー編集可能なフィールド
-          });
-          delete activeNotes[ev.d1];
+          notes.push({pitch:ev.d1, startTick:on.startTick,
+                      duration:ev.tick-on.startTick, lyric:on.lyric});
+          delete active[ev.d1];
         }
       }
     }
-
-    if (notes.length === 0) continue;
-    parsedTracks.push({ name, notes, bpm, tpq });
+    if (notes.length===0) continue;
+    parsedTracks.push({name, notes, bpm, tpq});
   }
 
   renderMeterPanel();
@@ -538,23 +561,22 @@ function processMidi(midi) {
 }
 
 // ═══════════════════════════════════════════════════════
-// 拍子設定UI
+// 拍子設定 UI
 // ═══════════════════════════════════════════════════════
 function renderMeterPanel() {
-  document.getElementById('meter-panel').style.display = 'block';
+  document.getElementById('meter-panel').style.display='block';
   renderMeterRows();
 }
-
 function renderMeterRows() {
-  const container = document.getElementById('meter-rows');
-  container.innerHTML = '';
-  meterSettings.forEach((m, i) => {
+  const c = document.getElementById('meter-rows');
+  c.innerHTML = '';
+  meterSettings.forEach((m,i) => {
     const row = document.createElement('div');
     row.className = 'meter-row';
     row.innerHTML = `
       <label>小節</label>
-      <input type="number" class="measure-input" value="${m.measure}" min="1"
-        onchange="updateMeter(${i},'measure',this.value)">
+      <input type="number" class="measure-input" value="${m.measureNum}" min="1"
+        onchange="updateMeter(${i},'measureNum',this.value)">
       <label>拍子</label>
       <input type="number" value="${m.beats}" min="1" max="32"
         onchange="updateMeter(${i},'beats',this.value)">
@@ -565,129 +587,164 @@ function renderMeterRows() {
         ? '<span style="font-size:0.78rem;color:#666;">（曲頭）</span>'
         : `<button class="btn-del" onclick="removeMeter(${i})">×</button>`}
     `;
-    container.appendChild(row);
+    c.appendChild(row);
   });
 }
-
 function updateMeter(i, key, val) {
-  meterSettings[i][key] = parseInt(val) || 1;
+  meterSettings[i][key] = parseInt(val)||1;
+  renderTrackPanel(); // 小節区切りに反映
 }
 function removeMeter(i) {
-  meterSettings.splice(i, 1);
+  meterSettings.splice(i,1);
   renderMeterRows();
+  renderTrackPanel();
 }
-document.getElementById('add-meter-btn').addEventListener('click', () => {
-  const last = meterSettings[meterSettings.length - 1].measure;
-  meterSettings.push({ measure: last + 4, beats: 4, beatType: 4 });
+document.getElementById('add-meter-btn').addEventListener('click', ()=>{
+  const last = meterSettings[meterSettings.length-1].measureNum;
+  meterSettings.push({measureNum:last+4, beats:4, beatType:4});
   renderMeterRows();
 });
 
 // ═══════════════════════════════════════════════════════
-// トラック一覧UI
+// トラック一覧 UI
 // ═══════════════════════════════════════════════════════
 function renderTrackPanel() {
-  document.getElementById('track-panel').style.display = 'block';
+  document.getElementById('track-panel').style.display='block';
   const list = document.getElementById('track-list');
-  list.innerHTML = '';
+  list.innerHTML='';
 
-  if (parsedTracks.length === 0) {
-    list.innerHTML = '<p class="track-empty">音符を含むトラックが見つかりませんでした</p>';
+  if (parsedTracks.length===0) {
+    list.innerHTML='<p class="track-empty">音符を含むトラックが見つかりませんでした</p>';
     return;
   }
-
-  parsedTracks.forEach((track, ti) => {
-    const card = document.createElement('div');
-    card.className = 'track-card';
-    card.dataset.ti = ti;
-
-    // バッジ計算
-    const errCount   = track.notes.filter(n => validateLyric(n.lyric) !== 'ok').length;
-    const multiCount = track.notes.filter(n => validateLyric(n.lyric) === 'multi').length;
-
-    let badges = '';
-    if (multiCount > 0) badges += `<span class="warn-badge multi-badge">⚠ 複数文字 ${multiCount}件</span>`;
-    if (errCount  > 0) badges += `<span class="warn-badge">⚠ エラー ${errCount}件</span>`;
-
-    card.innerHTML = `
-      <div class="track-header">
-        <div>
-          <span class="track-name">${escHtml(track.name)}</span>${badges}
-        </div>
-        <button class="btn-dl" onclick="downloadTrack(${ti})">↓ MusicXML DL</button>
-      </div>
-      <div class="track-stats">
-        ノート数: ${track.notes.length} ／ BPM: ${track.bpm} ／ TPQ: ${track.tpq}
-      </div>
-      <div class="lyric-preview" id="lyric-preview-${ti}"></div>
-      <div class="edit-hint">歌詞をクリックして編集 ／ 赤＝エラー ／ 黄＝複数文字</div>
-    `;
+  parsedTracks.forEach((_,ti) => {
+    const card = createTrackCard(ti);
     list.appendChild(card);
-    renderLyricCells(ti);
   });
 }
 
-// 歌詞セルを描画（編集後の再描画も兼ねる）
+function createTrackCard(ti) {
+  const track = parsedTracks[ti];
+  const errCount = track.notes.filter(n => {
+    const s=validateLyric(n.lyric); return s!=='ok'&&s!=='multi-ok';
+  }).length;
+
+  const card = document.createElement('div');
+  card.className='track-card';
+  card.dataset.ti=ti;
+  card.innerHTML=`
+    <div class="track-header">
+      <div>
+        <span class="track-name">${escHtml(track.name)}</span>
+        ${errCount>0?`<span class="warn-badge">⚠ エラー ${errCount}件</span>`:''}
+      </div>
+      <button class="btn-dl" onclick="downloadTrack(${ti})">↓ MusicXML DL</button>
+    </div>
+    <div class="track-stats">
+      ノート数: ${track.notes.length} ／ BPM: ${track.bpm} ／ TPQ: ${track.tpq}
+    </div>
+    <div class="lyric-preview" id="lyric-preview-${ti}"></div>
+    <div class="edit-hint">歌詞をクリックして編集 ／ Tab で次へ ／ Shift+Tab で前へ</div>
+  `;
+  // 歌詞セル描画
+  setTimeout(()=>renderLyricCells(ti), 0);
+  return card;
+}
+
+// ─────────────────────────────────────────────────────
+// 歌詞セル描画（小節区切り付き）
+// ─────────────────────────────────────────────────────
 function renderLyricCells(ti) {
   const track   = parsedTracks[ti];
   const preview = document.getElementById(`lyric-preview-${ti}`);
   if (!preview) return;
-  preview.innerHTML = '';
+  preview.innerHTML='';
 
+  // 小節マップ生成
+  const totalTicks = track.notes.reduce((mx,n)=>Math.max(mx,n.startTick+n.duration),0);
+  const measureMap = buildMeasureMap(meterSettings, track.tpq, totalTicks);
+
+  // ノートを小節ごとにグループ化
+  const byMeasure = {}; // measureNum -> [noteIndex, ...]
   track.notes.forEach((note, ni) => {
-    const status = validateLyric(note.lyric);
-    const cell   = document.createElement('span');
-    cell.className = 'lyric-cell';
-    cell.dataset.ti = ti;
-    cell.dataset.ni = ni;
-
-    // ツールチップ
-    const tip = document.createElement('span');
-    tip.className = 'note-tip';
-    const noteName = midiNoteToName(note.pitch);
-    tip.textContent = `#${ni + 1} ${noteName}`;
-    cell.appendChild(tip);
-
-    // 文字スパン
-    const charSpan = document.createElement('span');
-    charSpan.className = 'lyric-char ' + status;
-
-    if (status === 'empty') {
-      charSpan.textContent = '空';
-    } else if (status === 'multi') {
-      // 複数文字は全部表示（黄色）
-      charSpan.textContent = note.lyric;
-    } else {
-      charSpan.textContent = note.lyric;
-    }
-
-    charSpan.addEventListener('click', e => {
-      e.stopPropagation();
-      openEditPopup(ti, ni, cell, charSpan);
-    });
-
-    cell.appendChild(charSpan);
-    preview.appendChild(cell);
+    const mn = getMeasureNumForTick(measureMap, note.startTick);
+    if (!byMeasure[mn]) byMeasure[mn] = [];
+    byMeasure[mn].push(ni);
   });
 
-  // バッジ更新
-  updateTrackBadges(ti);
+  const measureNums = Object.keys(byMeasure).map(Number).sort((a,b)=>a-b);
+
+  measureNums.forEach((mn, rowIdx) => {
+    const row = document.createElement('div');
+    row.className = 'measure-row';
+
+    // 小節番号ラベル
+    const label = document.createElement('span');
+    label.className = 'measure-label';
+    label.textContent = mn;
+    row.appendChild(label);
+
+    // ノート群
+    const notesWrap = document.createElement('div');
+    notesWrap.className = 'measure-notes' +
+      (rowIdx === measureNums.length-1 ? ' last-measure' : '');
+
+    byMeasure[mn].forEach(ni => {
+      notesWrap.appendChild(makeLyricCell(ti, ni));
+    });
+
+    row.appendChild(notesWrap);
+    preview.appendChild(row);
+  });
+
+  updateTrackBadge(ti);
 }
 
-// バッジのみ更新
-function updateTrackBadges(ti) {
-  const track    = parsedTracks[ti];
-  const card     = document.querySelector(`.track-card[data-ti="${ti}"]`);
+function makeLyricCell(ti, ni) {
+  const note   = parsedTracks[ti].notes[ni];
+  const status = validateLyric(note.lyric);
+
+  const cell = document.createElement('span');
+  cell.className = 'lyric-cell';
+  cell.dataset.ti = ti;
+  cell.dataset.ni = ni;
+
+  // ツールチップ
+  const tip = document.createElement('span');
+  tip.className = 'note-tip';
+  tip.textContent = `#${ni+1} ${midiNoteToName(note.pitch)}`;
+  cell.appendChild(tip);
+
+  // 歌詞スパン
+  const span = document.createElement('span');
+  span.className = 'lyric-char ' + (
+    status==='ok'       ? 'ok'       :
+    status==='multi-ok' ? 'multi-ok' :
+    status==='empty'    ? 'empty'    : 'err'
+  );
+  span.textContent = status==='empty' ? '空' : (note.lyric||'');
+
+  span.addEventListener('click', e => {
+    e.stopPropagation();
+    openEditPopup(ti, ni, cell, span);
+  });
+
+  cell.appendChild(span);
+  return cell;
+}
+
+function updateTrackBadge(ti) {
+  const track = parsedTracks[ti];
+  const card  = document.querySelector(`.track-card[data-ti="${ti}"]`);
   if (!card) return;
   const nameEl   = card.querySelector('.track-name');
-  const errCount   = track.notes.filter(n => validateLyric(n.lyric) !== 'ok').length;
-  const multiCount = track.notes.filter(n => validateLyric(n.lyric) === 'multi').length;
-
-  // 既存バッジを削除
-  card.querySelectorAll('.warn-badge').forEach(b => b.remove());
-  let badgesHtml = '';
-  if (multiCount > 0) badgesHtml += `<span class="warn-badge multi-badge">⚠ 複数文字 ${multiCount}件</span>`;
-  if (errCount  > 0)  badgesHtml += `<span class="warn-badge">⚠ エラー ${errCount}件</span>`;
-  nameEl.insertAdjacentHTML('afterend', badgesHtml);
+  const errCount = track.notes.filter(n=>{
+    const s=validateLyric(n.lyric); return s!=='ok'&&s!=='multi-ok';
+  }).length;
+  card.querySelectorAll('.warn-badge').forEach(b=>b.remove());
+  if (errCount>0)
+    nameEl.insertAdjacentHTML('afterend',
+      `<span class="warn-badge">⚠ エラー ${errCount}件</span>`);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -698,264 +755,222 @@ const editInput = document.getElementById('edit-input');
 const popupHint = document.getElementById('popup-hint');
 
 function openEditPopup(ti, ni, cellEl, charSpan) {
-  // 既に開いてる場合は確定して閉じる
   if (editState) commitEdit();
 
-  const note     = parsedTracks[ti].notes[ni];
-  const noteName = midiNoteToName(note.pitch);
+  const note = parsedTracks[ti].notes[ni];
+  editState  = {ti, ni, cellEl, charSpan};
 
-  editState = { ti, ni, cellEl, charSpan };
-
-  // ポップアップ位置決め（セルの下）
   const rect = charSpan.getBoundingClientRect();
   popup.style.display = 'block';
-
-  // 画面端チェック
-  const pw = 210;
   let left = rect.left + window.scrollX;
   let top  = rect.bottom + window.scrollY + 6;
-  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  if (left + 230 > window.innerWidth - 8) left = window.innerWidth - 238;
   popup.style.left = left + 'px';
   popup.style.top  = top  + 'px';
 
-  // 初期値セット
-  document.getElementById('popup-note-info').textContent = `#${ni + 1}（${noteName}）`;
-  editInput.value = note.lyric === null || note.lyric === undefined ? '' : note.lyric;
+  document.getElementById('popup-note-info').textContent =
+    `#${ni+1}（${midiNoteToName(note.pitch)}）`;
+  editInput.value = note.lyric ?? '';
   updateInputFeedback(editInput.value);
   editInput.focus();
   editInput.select();
 }
 
 function updateInputFeedback(val) {
-  const status = validateLyric(val);
-  editInput.className = status === 'ok' ? '' : 'input-err';
-  if (status === 'ok') {
+  const s = validateLyric(val);
+  if (s==='ok'||s==='multi-ok') {
+    editInput.className = 'input-ok';
     popupHint.textContent = '✓ 有効な歌詞です';
-    popupHint.className   = 'popup-hint';
-  } else if (status === 'empty') {
-    popupHint.textContent = '歌詞を入力してください（ひらがな1文字 or ー）';
-    popupHint.className   = 'popup-hint hint-err';
-  } else if (status === 'multi') {
-    popupHint.textContent = `⚠ ${val.length}文字あります。1文字にしてください`;
-    popupHint.className   = 'popup-hint hint-err';
+    popupHint.className = 'popup-hint hint-ok';
+  } else if (s==='empty') {
+    editInput.className = 'input-err';
+    popupHint.textContent = 'ひらがな1文字 or「ー」を入力してください';
+    popupHint.className = 'popup-hint hint-err';
+  } else if (s==='multi-ok') {
+    editInput.className = 'input-ok';
+    popupHint.textContent = '✓ 拗音の組み合わせとして有効です';
+    popupHint.className = 'popup-hint hint-ok';
+  } else if (s==='multi-err') {
+    editInput.className = 'input-err';
+    popupHint.textContent = `⚠ ${val.length}文字。拗音以外の複数文字は使えません`;
+    popupHint.className = 'popup-hint hint-err';
   } else {
-    popupHint.textContent = '⚠ ひらがな1文字 or「ー」のみ使用できます';
-    popupHint.className   = 'popup-hint hint-err';
+    editInput.className = 'input-err';
+    popupHint.textContent = '⚠ ひらがな・長音（ー）以外は使えません';
+    popupHint.className = 'popup-hint hint-err';
   }
 }
 
-editInput.addEventListener('input', () => {
-  updateInputFeedback(editInput.value);
-});
+editInput.addEventListener('input', ()=>updateInputFeedback(editInput.value));
 
-editInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
+editInput.addEventListener('keydown', e=>{
+  if (e.key==='Enter') {
     e.preventDefault();
-    commitEdit();
+    commitEdit(); closePopup();
+  } else if (e.key==='Escape') {
     closePopup();
-  } else if (e.key === 'Escape') {
-    closePopup();
-  } else if (e.key === 'Tab') {
-    // Tabで次のノートへ
+  } else if (e.key==='Tab') {
     e.preventDefault();
-    const { ti, ni } = editState;
-    commitEdit();
-    closePopup();
-    const track = parsedTracks[ti];
-    const nextNi = e.shiftKey ? ni - 1 : ni + 1;
-    if (nextNi >= 0 && nextNi < track.notes.length) {
-      const nextCell    = document.querySelector(`.lyric-cell[data-ti="${ti}"][data-ni="${nextNi}"]`);
-      const nextChar    = nextCell?.querySelector('.lyric-char');
-      if (nextCell && nextChar) openEditPopup(ti, nextNi, nextCell, nextChar);
+    const {ti,ni} = editState;
+    commitEdit(); closePopup();
+    const track  = parsedTracks[ti];
+    const nextNi = e.shiftKey ? ni-1 : ni+1;
+    if (nextNi>=0 && nextNi<track.notes.length) {
+      const nextCell = document.querySelector(
+        `.lyric-cell[data-ti="${ti}"][data-ni="${nextNi}"]`);
+      const nextSpan = nextCell?.querySelector('.lyric-char');
+      if (nextCell && nextSpan) openEditPopup(ti, nextNi, nextCell, nextSpan);
     }
   }
 });
 
 function commitEdit() {
   if (!editState) return;
-  const { ti, ni } = editState;
-  const newVal = editInput.value;
-  // 空でもデータには保存（エラー表示のため）
-  parsedTracks[ti].notes[ni].lyric = newVal;
-  // セルを再描画
+  const {ti,ni} = editState;
+  parsedTracks[ti].notes[ni].lyric = editInput.value;
   renderLyricCells(ti);
   editState = null;
 }
-
 function closePopup() {
-  popup.style.display = 'none';
-  editState = null;
+  popup.style.display='none';
+  editState=null;
 }
-
-// ポップアップ外クリックで確定・閉じ
-document.addEventListener('click', e => {
-  if (editState && !popup.contains(e.target)) {
-    commitEdit();
-    closePopup();
-  }
+document.addEventListener('click', e=>{
+  if (editState && !popup.contains(e.target)) { commitEdit(); closePopup(); }
 });
 
 // ═══════════════════════════════════════════════════════
 // MusicXML 生成
 // ═══════════════════════════════════════════════════════
 function buildMusicXML(track) {
-  const { name, notes, bpm, tpq } = track;
+  const {name,notes,bpm,tpq} = track;
   const divisions = 480;
-  const meters = [...meterSettings].sort((a,b) => a.measure - b.measure);
+  const meters    = [...meterSettings].sort((a,b)=>a.measureNum-b.measureNum);
 
-  const tickToDivs = tick => Math.round(tick / tpq * divisions);
-
-  function midiToPitch(midi) {
+  const t2d  = tick => Math.round(tick/tpq*divisions);
+  const midi2pitch = midi => {
     const steps  = ['C','C','D','D','E','F','F','G','G','A','A','B'];
     const alters = [ 0,  1,  0,  1,  0,  0,  1,  0,  1,  0,  1,  0];
-    const pc = midi % 12;
-    return { step: steps[pc], alter: alters[pc], octave: Math.floor(midi/12)-1 };
-  }
-
-  function divsToType(divs) {
-    const q = divisions;
-    const table = [
+    const pc=midi%12;
+    return {step:steps[pc],alter:alters[pc],octave:Math.floor(midi/12)-1};
+  };
+  const d2t = divs => {
+    const q=divisions;
+    const tbl=[
       {d:q*4,type:'whole',dots:0},{d:q*3,type:'half',dots:1},
       {d:q*2,type:'half',dots:0},{d:q*1.5,type:'quarter',dots:1},
       {d:q,type:'quarter',dots:0},{d:q*0.75,type:'eighth',dots:1},
       {d:q*0.5,type:'eighth',dots:0},{d:q*0.25,type:'16th',dots:0},
       {d:q*0.125,type:'32nd',dots:0},
     ];
-    let best=table[table.length-1], minDiff=Infinity;
-    for (const row of table) {
-      const diff=Math.abs(divs-row.d);
-      if (diff<minDiff){minDiff=diff;best=row;}
-    }
+    let best=tbl[tbl.length-1],min=Infinity;
+    for(const r of tbl){const d=Math.abs(divs-r.d);if(d<min){min=d;best=r;}}
     return best;
-  }
-
+  };
   const getMeterAt = mn => {
-    let cur = meters[0];
-    for (const m of meters) { if (m.measure <= mn) cur = m; }
+    let cur=meters[0];
+    for(const m of meters){if(m.measureNum<=mn)cur=m;}
     return cur;
   };
-  const measureDivs = mn => {
-    const m = getMeterAt(mn);
-    return Math.round(divisions * 4 * m.beats / m.beatType);
+  const mDivs = mn => {
+    const m=getMeterAt(mn);
+    return Math.round(divisions*4*m.beats/m.beatType);
   };
 
-  const notesDivs = notes.map(n => ({
-    start:    tickToDivs(n.startTick),
-    duration: Math.max(1, tickToDivs(n.duration)),
-    pitch:    n.pitch,
-    lyric:    (n.lyric && n.lyric.trim()) ? n.lyric : 'ら'
+  const nd = notes.map(n=>({
+    start:   t2d(n.startTick),
+    dur:     Math.max(1,t2d(n.duration)),
+    pitch:   n.pitch,
+    lyric:   (n.lyric&&n.lyric.trim()) ? n.lyric : 'ら'
   }));
 
-  const noteXml = (pitch, dur, ti, lyric, tiedCont, tiedStart) => {
-    let x = '      <note>\n';
-    x += `        <pitch><step>${pitch.step}</step>`;
-    if (pitch.alter !== 0) x += `<alter>${pitch.alter}</alter>`;
-    x += `<octave>${pitch.octave}</octave></pitch>\n`;
-    x += `        <duration>${dur}</duration>\n`;
-    if (tiedCont)  x += '        <tie type="stop"/>\n';
-    if (tiedStart) x += '        <tie type="start"/>\n';
-    x += `        <type>${ti.type}</type>\n`;
-    if (ti.dots > 0) x += '        <dot/>\n';
-    if (!tiedCont) {
-      x += `        <lyric number="1"><syllabic>single</syllabic><text>${escXml(lyric)}</text></lyric>\n`;
+  const nxml = (p,dur,ti,lyric,tc,ts) => {
+    let x=`      <note>\n`;
+    x+=`        <pitch><step>${p.step}</step>`;
+    if(p.alter!==0)x+=`<alter>${p.alter}</alter>`;
+    x+=`<octave>${p.octave}</octave></pitch>\n`;
+    x+=`        <duration>${dur}</duration>\n`;
+    if(tc)x+=`        <tie type="stop"/>\n`;
+    if(ts)x+=`        <tie type="start"/>\n`;
+    x+=`        <type>${ti.type}</type>\n`;
+    if(ti.dots>0)x+=`        <dot/>\n`;
+    if(!tc){
+      x+=`        <lyric number="1"><syllabic>single</syllabic>`;
+      x+=`<text>${escXml(lyric)}</text></lyric>\n`;
     }
-    if (tiedCont || tiedStart) {
-      x += '        <notations>';
-      if (tiedCont)  x += '<tied type="stop"/>';
-      if (tiedStart) x += '<tied type="start"/>';
-      x += '</notations>\n';
+    if(tc||ts){
+      x+=`        <notations>`;
+      if(tc)x+=`<tied type="stop"/>`;
+      if(ts)x+=`<tied type="start"/>`;
+      x+=`</notations>\n`;
     }
-    x += '      </note>\n';
-    return x;
+    x+=`      </note>\n`; return x;
   };
-
-  const restXml = (dur, ti) =>
+  const rxml = (dur,ti) =>
     `      <note><rest/><duration>${dur}</duration><type>${ti.type}</type></note>\n`;
 
-  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  xml += '<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" ';
-  xml += '"http://www.musicxml.org/dtds/partwise.dtd">\n';
-  xml += '<score-partwise version="3.1">\n';
-  xml += '  <part-list>\n';
-  xml += `    <score-part id="P1"><part-name>${escXml(name)}</part-name></score-part>\n`;
-  xml += '  </part-list>\n';
-  xml += '  <part id="P1">\n';
+  let xml='<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml+='<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" ';
+  xml+='"http://www.musicxml.org/dtds/partwise.dtd">\n';
+  xml+='<score-partwise version="3.1">\n';
+  xml+='  <part-list>\n';
+  xml+=`    <score-part id="P1"><part-name>${escXml(name)}</part-name></score-part>\n`;
+  xml+='  </part-list>\n  <part id="P1">\n';
 
-  let measureNum = 1, absPos = 0, noteIdx = 0;
-  let prevMeter = null, pendingTie = null;
+  let mn=1,absPos=0,ni=0,prevM=null,pendTie=null;
 
-  while (noteIdx < notesDivs.length || pendingTie) {
-    const mDivs     = measureDivs(measureNum);
-    const mEnd      = absPos + mDivs;
-    const curMeter  = getMeterAt(measureNum);
-    const mChanged  = !prevMeter
-      || prevMeter.beats !== curMeter.beats
-      || prevMeter.beatType !== curMeter.beatType;
+  while(ni<nd.length||pendTie){
+    const mdivs=mDivs(mn), mEnd=absPos+mdivs;
+    const curM=getMeterAt(mn);
+    const mchg=!prevM||prevM.beats!==curM.beats||prevM.beatType!==curM.beatType;
 
-    xml += `    <measure number="${measureNum}">\n`;
-    if (measureNum === 1 || mChanged) {
-      xml += '      <attributes>\n';
-      xml += `        <divisions>${divisions}</divisions>\n`;
-      xml += `        <time><beats>${curMeter.beats}</beats><beat-type>${curMeter.beatType}</beat-type></time>\n`;
-      xml += '      </attributes>\n';
-      if (measureNum === 1) {
-        xml += `      <direction placement="above"><direction-type><metronome>`;
-        xml += `<beat-unit>quarter</beat-unit><per-minute>${bpm}</per-minute>`;
-        xml += `</metronome></direction-type></direction>\n`;
+    xml+=`    <measure number="${mn}">\n`;
+    if(mn===1||mchg){
+      xml+=`      <attributes>\n`;
+      xml+=`        <divisions>${divisions}</divisions>\n`;
+      xml+=`        <time><beats>${curM.beats}</beats><beat-type>${curM.beatType}</beat-type></time>\n`;
+      xml+=`      </attributes>\n`;
+      if(mn===1){
+        xml+=`      <direction placement="above"><direction-type>`;
+        xml+=`<metronome><beat-unit>quarter</beat-unit><per-minute>${bpm}</per-minute></metronome>`;
+        xml+=`</direction-type></direction>\n`;
       }
     }
 
-    let cursor = absPos;
-
-    if (pendingTie) {
-      const remaining = pendingTie.absEnd - absPos;
-      if (remaining > 0) {
-        const segDur    = Math.min(remaining, mDivs);
-        const isTiedEnd = pendingTie.absEnd > mEnd;
-        xml += noteXml(midiToPitch(pendingTie.pitch), segDur, divsToType(segDur),
-                       pendingTie.lyric, true, isTiedEnd);
-        cursor += segDur;
-        pendingTie = isTiedEnd ? pendingTie : null;
-      } else {
-        pendingTie = null;
-      }
+    let cur=absPos;
+    if(pendTie){
+      const rem=pendTie.absEnd-absPos;
+      if(rem>0){
+        const seg=Math.min(rem,mdivs);
+        const ite=pendTie.absEnd>mEnd;
+        xml+=nxml(midi2pitch(pendTie.pitch),seg,d2t(seg),pendTie.lyric,true,ite);
+        cur+=seg; if(!ite)pendTie=null;
+      } else pendTie=null;
     }
 
-    while (noteIdx < notesDivs.length) {
-      const note = notesDivs[noteIdx];
-      if (note.start >= mEnd) break;
-      if (note.start > cursor) {
-        const rd = Math.min(note.start, mEnd) - cursor;
-        xml += restXml(rd, divsToType(rd));
-        cursor += rd;
+    while(ni<nd.length){
+      const note=nd[ni];
+      if(note.start>=mEnd)break;
+      if(note.start>cur){
+        const rd=Math.min(note.start,mEnd)-cur;
+        xml+=rxml(rd,d2t(rd)); cur+=rd;
       }
-      const noteEnd    = note.start + note.duration;
-      const segDur     = Math.min(noteEnd, mEnd) - cursor;
-      const isTieStart = noteEnd > mEnd;
-      xml += noteXml(midiToPitch(note.pitch), segDur, divsToType(segDur),
-                     note.lyric, false, isTieStart);
-      cursor += segDur;
-      if (isTieStart) {
-        pendingTie = { pitch: note.pitch, lyric: note.lyric, absEnd: noteEnd };
-        noteIdx++;
-        break;
-      }
-      noteIdx++;
+      const ne=note.start+note.dur;
+      const seg=Math.min(ne,mEnd)-cur;
+      const its=ne>mEnd;
+      xml+=nxml(midi2pitch(note.pitch),seg,d2t(seg),note.lyric,false,its);
+      cur+=seg;
+      if(its){pendTie={pitch:note.pitch,lyric:note.lyric,absEnd:ne};ni++;break;}
+      ni++;
     }
 
-    if (cursor < mEnd) {
-      const rd = mEnd - cursor;
-      xml += restXml(rd, divsToType(rd));
-    }
-
-    xml += '    </measure>\n';
-    absPos = mEnd;
-    prevMeter = curMeter;
-    measureNum++;
-    if (noteIdx >= notesDivs.length && !pendingTie) break;
+    if(cur<mEnd){const rd=mEnd-cur;xml+=rxml(rd,d2t(rd));}
+    xml+=`    </measure>\n`;
+    absPos=mEnd; prevM=curM; mn++;
+    if(ni>=nd.length&&!pendTie)break;
   }
 
-  xml += '  </part>\n</score-partwise>';
+  xml+='  </part>\n</score-partwise>';
   return xml;
 }
 
@@ -963,13 +978,13 @@ function buildMusicXML(track) {
 // ダウンロード
 // ═══════════════════════════════════════════════════════
 function downloadTrack(ti) {
-  const track = parsedTracks[ti];
-  const xml   = buildMusicXML(track);
-  const blob  = new Blob([xml], { type: 'application/xml' });
-  const url   = URL.createObjectURL(blob);
-  const a     = document.createElement('a');
-  a.href      = url;
-  a.download  = `${track.name.replace(/[\\/:*?"<>|]/g,'_')}.musicxml`;
+  const track=parsedTracks[ti];
+  const xml=buildMusicXML(track);
+  const blob=new Blob([xml],{type:'application/xml'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`${track.name.replace(/[\\/:*?"<>|]/g,'_')}.musicxml`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -977,25 +992,21 @@ function downloadTrack(ti) {
 // ═══════════════════════════════════════════════════════
 // ユーティリティ
 // ═══════════════════════════════════════════════════════
-const NOTE_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-function midiNoteToName(midi) {
-  return NOTE_NAMES[midi % 12] + (Math.floor(midi / 12) - 1);
-}
+const NOTE_NAMES=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const midiNoteToName = midi =>
+  NOTE_NAMES[midi%12] + (Math.floor(midi/12)-1);
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escXml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-                  .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
-}
-function showError(msg) {
-  const b = document.getElementById('error-banner');
-  b.textContent = msg; b.style.display = 'block';
-}
-function hideError() {
-  document.getElementById('error-banner').style.display = 'none';
-}
+const escHtml = s => String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const escXml = s => String(s)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+const showError = msg => {
+  const b=document.getElementById('error-banner');
+  b.textContent=msg; b.style.display='block';
+};
+const hideError = () =>
+  document.getElementById('error-banner').style.display='none';
 </script>
 </body>
 </html>
